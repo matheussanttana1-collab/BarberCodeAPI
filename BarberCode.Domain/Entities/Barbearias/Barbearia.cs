@@ -21,21 +21,13 @@ public class Barbearia
 			return false;
 
 		return true;
-			
-	
-	}
-
-	public void AdicionarNovoFuncionario (string nome, string foto)
-	{
-		
-
 	}
 
 	public void AddServico()
 	{
 
 	}
-	public void AlterarHorarioFuncionamento () { }
+	
 
 
 	

@@ -26,7 +26,7 @@ var barbearia = new Barbearia()
 };
 
 // Criar um Barbeiro funcionário da barbearia
-var barbeiro = new Barbeiro(new Guid(),"João Silva", null, barbearia.Id)
+var barbeiro = new Barbeiro("João Silva", null, barbearia.Id)
 {
 
 };

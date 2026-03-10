@@ -9,7 +9,10 @@ public class Agenda
 {
 	public ICollection<Agendamento> Agendamentos { get;} = new List<Agendamento>();
 	public List<TimeOnly> HorarioAlmoço { get;} = new List<TimeOnly>();
-	public DateOnly DiaBloqueado { get; private set; } = new DateOnly();
+	//public DateOnly DiaBloqueado { get; private set; }
+	//public List<TimeOnly>HorarioBloquado { get; private set; }
+
+
 	
 
 
@@ -20,10 +23,10 @@ public class Agenda
 		HorarioAlmoço.Add(horarioInicio.AddMinutes(duracao));
 	}
 
-	public void BloquearDia(DateOnly dia)
-	{
-		DiaBloqueado = dia;
-	}
+	//public void BloquearDia(DateOnly dia, TimeOnly? hora, )
+	//{
+	//	DiaBloqueado = dia;
+	//}
 
 	private bool EstaDisponivel(DateOnly dia, TimeOnly horario, int duracaoMinutos)
 	{

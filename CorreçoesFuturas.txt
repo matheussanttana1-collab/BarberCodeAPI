@@ -13,6 +13,8 @@ Domain (Features Futuras)
 1.Adicionar CPF? ao Barbeiro(talvez necessario para realizar o pagamento)
 
 2.Controle De Custos
+
+3. Criar uma classe Base Para TipoDeSeviços e mudar a relação entre um serviço e barbearia
 ___________________________________________________________________
 
 Infra
