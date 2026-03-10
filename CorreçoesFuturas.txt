@@ -1,0 +1,28 @@
+Domain (Correções Necessarias)
+
+1. Domain: Tornar todas as Collections ReadOnly
+
+2.Nao passar uma entidade dentro de um metodo
+
+3. Exceções que nao permitam fazer agendamento, gerarSlots e etc no passado
+
+----------------------------------------------------
+
+Domain (Features Futuras)
+
+1.Adicionar CPF? ao Barbeiro(talvez necessario para realizar o pagamento)
+
+2.Controle De Custos
+___________________________________________________________________
+
+Infra
+
+1. Realizamento De Pagamentos Online(envolve API externa)
+
+2.Geolocalização(usando GoogleMaps)
+
+3.Emissão de Nota Fiscal( feita depois que o pagamento estiver Feito, tambem envolve API externa)
+
+
+
+
