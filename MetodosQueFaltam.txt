@@ -3,7 +3,8 @@
 		1.1.Bloquear Dia
 		1.2.Bloquear Hora
 		1.3.EditarAlmoço
-		
+		1.4.Cancelar Agentamento
+		1.5.
 	-Agenda
 		1.Dias Bloquados
 		2.Horas Bloqueadas

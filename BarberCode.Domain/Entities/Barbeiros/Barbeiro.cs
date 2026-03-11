@@ -1,6 +1,6 @@
 ﻿using BarberCode.Domain.Entities.Agendamentos;
 using BarberCode.Domain.Entities.Barbearias;
-using BarberCode.Domain.Entities.Barbeiro;
+
 
 namespace BarberCode.Domain.Entities.Barbeiros;
 
@@ -8,7 +8,7 @@ public class Barbeiro
 {
 	public Barbeiro(string name, string? fotoPerfil, Guid barbeariaId)
 	{
-		Id = new Guid();
+		Id = Guid.NewGuid();
 		Name = name;
 		FotoPerfil = fotoPerfil;
 		BarbeariaId = barbeariaId;
@@ -19,52 +19,62 @@ public class Barbeiro
 
 	}
 
-	public Guid Id { get;}
-	public string Name { get;}
+	public Guid Id { get; private set; }
+	public string Name { get; private set; }
 	public string? FotoPerfil { get; private set; }
-	public Guid BarbeariaId { get;}
-	public Barbearia BarbeariaQueTrabalha { get;}
-	public ICollection<Servico> ServicosPrestados { get;} = new List<Servico>();
-	public Agenda Agenda { get; } = new Agenda();
+	public Guid BarbeariaId { get; private set; }
+	public virtual Barbearia BarbeariaQueTrabalha { get; private set; }
+	public virtual ICollection<Agendamento> Agendamentos { get; private set; } = new List<Agendamento>();
+	public List<TimeOnly> HorarioAlmoco { get; private set; } = new List<TimeOnly>();
 
-
-	public List<TimeOnly> GerarSlotsDiponiveis (Barbearia barbearia,DateOnly diaEscolhido, Guid servicoId)
+	//--------------------------------- Metodos De Verificação de Horarios ------------------------------
+	private bool EstaDisponivel(DateOnly dia, TimeOnly horario, int duracaoMinutos)
 	{
-		var servicoEscolhido = ServicosPrestados.FirstOrDefault(s =>  s.Id == servicoId);
-		if (servicoEscolhido is null)
+		var fim = horario.AddMinutes(duracaoMinutos);
+		if (fim > HorarioAlmoco[0] && horario < HorarioAlmoco[1])
+			return false;
+
+		if (Agendamentos.Any(a => a.Dia == dia &&
+			horario < a.Horario.AddMinutes(a.Servico.Duracao) && fim > a.Horario))
+			return false;
+
+		return true;
+	}
+
+	public List<TimeOnly> HorariosDisponiveis(TimeOnly inicioExpediente, TimeOnly fimExpediente, DateOnly diaEscolhido,
+			int duracao)
+	{
+		List<TimeOnly> Slots = new List<TimeOnly>();
+
+
+		while (inicioExpediente < fimExpediente)
 		{
-			throw new Exception("Este Barbeiro Nao Oferece Esse Serviço");
+			if (EstaDisponivel(diaEscolhido, inicioExpediente, duracao))
+			{
+				Slots.Add(inicioExpediente);
+			}
+
+			inicioExpediente = inicioExpediente.AddMinutes(30);
 		}
-		return Agenda.HorariosDisponiveis(barbearia, diaEscolhido, servicoEscolhido.Duracao);
+		return Slots;
+	}
+	public void EditarHoraAlmoço(TimeOnly horarioInicio, int duracao)
+	{
+		HorarioAlmoco.Add(horarioInicio);
+		HorarioAlmoco.Add(horarioInicio.AddMinutes(duracao));
 	}
 
-	public void NovoAgendamento(ClienteInfo cliente, DateOnly dia,
-		TimeOnly horario, Guid servicoId) 
+	//---------------------------------- Metodos de Agendamento ----------------------------------------
+	public void NovoAgendamento(Agendamento agendamento)
 	{
-		var servicoEscolhido = ServicosPrestados.FirstOrDefault(s => s.Id == servicoId);
-		if (servicoEscolhido is null)
+		if (!EstaDisponivel(agendamento.Dia, agendamento.Horario, agendamento.Duracao))
 		{
-			throw new Exception("Este Barbeiro Nao Oferece Esse Serviço");
+			throw new Exception("Horario Indisponivel");
 		}
-		Agenda.NovoAgendamento(new Agendamento(this.Id, this.BarbeariaId, cliente, dia, horario, servicoId, 
-				servicoEscolhido.Duracao)
-		{ Servico = servicoEscolhido});
+		Agendamentos.Add(agendamento);
 	}
 
-	public void AdicionarServicos(Servico servico) 
-	{
-		if (ServicosPrestados.Any(s => s.Id == servico.Id))
-		{
-			throw new Exception("Serviço ja Adicionado a este Barbeiro");
-		}
 
-		ServicosPrestados.Add(servico);
-	}
-
-	public void EditarHorarioAlmoço()
-	{
-
-	}
 
 
 

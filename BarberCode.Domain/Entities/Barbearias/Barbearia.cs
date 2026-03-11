@@ -1,15 +1,26 @@
 ﻿namespace BarberCode.Domain.Entities.Barbearias;
 
 using Barbeiros;
+
 public class Barbearia
 {
-	public Guid Id { get; set; }
-	public string Name { get; set; }
-	public Endereco Endereco { get; set; }
-	public ICollection<HorarioFuncionamento> Funcionamento{ get; set; }
-	public ICollection<Barbeiro> Barbeiros { get; set; } = new List<Barbeiro>();
-	public ICollection<Servico> Servicos { get; set; } = new List<Servico>();
-	private int MaximoFuncionarios { get; set; } = 2;
+
+	private Barbearia () { }
+
+	public Barbearia(string name, Endereco endereco, List<HorarioFuncionamento> funcionamento)
+	{
+		Id = Guid.NewGuid();
+		Name = name;
+		Endereco = endereco;
+		Funcionamento = funcionamento;
+	}
+
+	public Guid Id { get; private set; }
+	public string Name { get; private set; }
+	public Endereco Endereco { get; private set; }
+	public List<HorarioFuncionamento> Funcionamento { get; private set; } = new List<HorarioFuncionamento>();
+	public virtual ICollection<Barbeiro> Barbeiros { get; private set; } = new List<Barbeiro>();
+	public virtual ICollection<Servico> Servicos { get; private set; } = new List<Servico>();
 
 	public bool EstaFuncionando(DateOnly dia, TimeOnly hora) 
 	{

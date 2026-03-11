@@ -1,10 +1,11 @@
-﻿namespace BarberCode.Domain.Entities.Barbearias;
+﻿using System.ComponentModel.Design;
+
+namespace BarberCode.Domain.Entities.Barbearias;
 
 public class Endereco
 {
-	public Endereco(int id, string lougradouro, string nome, int numero, string cidade, string estado)
+	public Endereco(string lougradouro, string nome, int numero, string cidade, string estado)
 	{
-		Id = id;
 		Lougradouro = lougradouro;
 		Nome = nome;
 		Numero = numero;
@@ -12,11 +13,12 @@ public class Endereco
 		Estado = estado;
 	}
 
-	public int Id { get;}
-	public string Lougradouro { get;}
-	public string Nome{ get;}
-	public int Numero { get;}
-	public string Cidade { get;}
-	public string Estado { get;}
+	private Endereco() { }
+
+	public string Lougradouro { get; private set; }
+	public string Nome { get; private set; }
+	public int Numero { get; private set; }
+	public string Cidade { get; private set; }
+	public string Estado { get; private set; }
 
 }

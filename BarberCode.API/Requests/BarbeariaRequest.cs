@@ -9,4 +9,7 @@ public class BarbeariaRequest
 
     [Required(ErrorMessage = "Endereço é obrigatório")]
     public EnderecoRequest Endereco { get; set; }
+
+    [Required(ErrorMessage = "Horários de funcionamento são obrigatórios")]
+    public List<HorarioFuncionamentoRequest> Funcionamento { get; set; } = new List<HorarioFuncionamentoRequest>();
 }

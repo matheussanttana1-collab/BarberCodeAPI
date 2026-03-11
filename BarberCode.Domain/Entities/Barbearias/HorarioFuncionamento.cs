@@ -1,14 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BarberCode.Domain.Entities.Barbearias;
+﻿namespace BarberCode.Domain.Entities.Barbearias;
 
 public class HorarioFuncionamento
 {
-	public DayOfWeek dia {  get; set; }
-	public TimeOnly Incio { get; set; }
-	public TimeOnly Fim { get; set; }
+	public DayOfWeek dia { get; private set; }
+	public TimeOnly Incio { get; private set; }
+	public TimeOnly Fim { get; private set; }
+
+	// Construtor privado para EF Core
+	private HorarioFuncionamento() { }
+
+	// Construtor público
+	public HorarioFuncionamento(DayOfWeek dia, TimeOnly incio, TimeOnly fim)
+	{
+		if (incio >= fim)
+			throw new ArgumentException("Horário de início deve ser menor que o fim");
+
+		this.dia = dia;
+		Incio = incio;
+		Fim = fim;
+	}
 }
