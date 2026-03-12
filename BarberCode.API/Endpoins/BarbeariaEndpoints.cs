@@ -42,8 +42,17 @@ public static class BarbeariaEndpoints
 
         group.MapPost("/", async (BarbeariaRequest request, BarberCodeContext db) =>
         {
-            var babearia = new Barbearia(request.Nome,request.Endereco)
-            return TypedResults.Created($"/api/Barbearia/{Guid.Empty}", new BarbeariaResponse(Guid.Empty, "", null));
+            var endereco = new Endereco(request.Endereco.Logradouro, request.Endereco.Nome, request.Endereco.Numero,
+                request.Endereco.Cidade, request.Endereco.Estado);
+            List<HorarioFuncionamento> horarios = [];
+			foreach (var item in request.Funcionamento)
+			{
+                horarios.Add(new HorarioFuncionamento(item.Dia,item.Incio,item.Fim));
+			}
+			var babearia = new Barbearia(request.Nome, endereco ,horarios);
+            db.Add(babearia);
+            db.SaveChanges();
+            return TypedResults.Created();
         })
         .WithName("CreateBarbearia")
         .WithOpenApi();
