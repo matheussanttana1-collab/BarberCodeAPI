@@ -1,12 +1,20 @@
-using BarberCode.Infra.Banco;
-using Microsoft.EntityFrameworkCore;
 using BarberCode.API.Endpoins;
+using BarberCode.Application.Interfaces;
+using BarberCode.Application.Profiles;
+using BarberCode.Infra.Banco;
+using BarberCode.Infra.Repositories;
+using BarberCodeService.UseCases;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("BarberCodeConnection");
 builder.Services.AddDbContext<BarberCodeContext>(opts => opts.UseLazyLoadingProxies().UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+builder.Services.AddAutoMapper(cfg => { }, typeof(BarbeariaProfile));
+
+builder.Services.AddScoped<CriarBarbeariaUseCase>();
+builder.Services.AddScoped<IBarbeariaRepository, BarbeariaRepository>();
 
 builder.Services.AddControllers();
 
@@ -21,6 +29,8 @@ builder.Services.AddSwaggerGen(c =>
 		Description = "API para gerenciamento de barbearias e agendamentos"
 	});
 });
+
+
 
 var app = builder.Build();
 

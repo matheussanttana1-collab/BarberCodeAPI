@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.OpenApi;
 using BarberCode.Service.Responses;
 using BarberCode.Service.Requests;
+using Microsoft.AspNetCore.Mvc;
+using BarberCodeService.UseCases;
 namespace BarberCode.API.Endpoins;
 
 public static class BarbeariaEndpoints
@@ -40,19 +42,10 @@ public static class BarbeariaEndpoints
         .WithName("UpdateBarbearia")
         .WithOpenApi();
 
-        group.MapPost("/", async (BarbeariaRequest request, BarberCodeContext db) =>
+        group.MapPost("/", async (BarbeariaRequest request, CriarBarbeariaUseCase criarCase) =>
         {
-            var endereco = new Endereco(request.Endereco.Logradouro, request.Endereco.Nome, request.Endereco.Numero,
-                request.Endereco.Cidade, request.Endereco.Estado);
-            List<HorarioFuncionamento> horarios = [];
-			foreach (var item in request.Funcionamento)
-			{
-                horarios.Add(new HorarioFuncionamento(item.Dia,item.Incio,item.Fim));
-			}
-			var babearia = new Barbearia(request.Nome, endereco ,horarios);
-            db.Add(babearia);
-            db.SaveChanges();
-            return TypedResults.Created();
+            criarCase.Execute(request);
+            return Results.Ok();
         })
         .WithName("CreateBarbearia")
         .WithOpenApi();

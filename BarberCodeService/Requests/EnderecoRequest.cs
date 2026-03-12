@@ -5,7 +5,7 @@ namespace BarberCode.Service.Requests;
 public class EnderecoRequest
 {
 	[Required(ErrorMessage = "Logradouro é obrigatório")]
-	public string Logradouro { get; set; }
+	public string Lougradouro { get; set; }
 
 	[Required(ErrorMessage = "Nome é obrigatório")]
 	public string Nome { get; set; }

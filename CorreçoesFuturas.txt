@@ -4,7 +4,9 @@ Domain (Correções Necessarias)
 
 2.Nao passar uma entidade dentro de um metodo
 
-3. Exceções que nao permitam fazer agendamento, gerarSlots e etc no passado
+3. Lançamento + Tratação de Exceções
+	3.1 Exceções que nao permitam fazer agendamento, gerarSlots e etc no passado
+	3.2 Exeções de duplicação de agendamentos/barbearias 
 
 ----------------------------------------------------
 
@@ -24,6 +26,8 @@ Infra
 2.Geolocalização(usando GoogleMaps)
 
 3.Emissão de Nota Fiscal( feita depois que o pagamento estiver Feito, tambem envolve API externa)
+
+4. Deletar Em Cascata Se a Barbearia morrer, o Serviço/Endereco/Horario morre junto
 
 
 
