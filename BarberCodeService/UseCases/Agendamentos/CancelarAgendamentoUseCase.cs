@@ -1,4 +1,4 @@
-namespace BarberCodeService.UseCases;
+namespace BarberCode.Application.UseCases.Agendamentos;
 
 public class CancelarAgendamentoUseCase
 {

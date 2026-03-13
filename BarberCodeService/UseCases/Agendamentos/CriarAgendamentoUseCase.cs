@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BarberCode.Application.UseCases;
+namespace BarberCode.Application.UseCases.Agendamentos;
 
 internal class CriarAgendamentoUseCase
 {

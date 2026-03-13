@@ -1,13 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using BarberCode.Domain.Entities.Barbearias;
+﻿using BarberCode.Domain.Entities.Barbearias;
 using BarberCode.Infra.Banco;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.OpenApi;
 using BarberCode.Service.Responses;
 using BarberCode.Service.Requests;
-using Microsoft.AspNetCore.Mvc;
-using BarberCodeService.UseCases;
+using BarberCode.Application.UseCases;
+
 namespace BarberCode.API.Endpoins;
+
 
 public static class BarbeariaEndpoints
 {
@@ -45,7 +44,8 @@ public static class BarbeariaEndpoints
         group.MapPost("/", async (BarbeariaRequest request, CriarBarbeariaUseCase criarCase) =>
         {
             criarCase.Execute(request);
-            return Results.Ok();
+
+            return Results.Created();
         })
         .WithName("CreateBarbearia")
         .WithOpenApi();

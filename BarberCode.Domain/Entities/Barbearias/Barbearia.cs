@@ -7,7 +7,7 @@ public class Barbearia
 
 	private Barbearia () { }
 
-	public Barbearia(string name, Endereco endereco, List<HorarioFuncionamento> funcionamento)
+	public Barbearia(string name, Endereco endereco, IEnumerable<HorarioFuncionamento> funcionamento)
 	{
 		Id = Guid.NewGuid();
 		Name = name;
@@ -18,7 +18,7 @@ public class Barbearia
 	public Guid Id { get; private set; }
 	public string Name { get; private set; }
 	public Endereco Endereco { get; private set; }
-	public List<HorarioFuncionamento> Funcionamento { get; private set; } = new List<HorarioFuncionamento>();
+	public IEnumerable<HorarioFuncionamento> Funcionamento { get; private set; } = new List<HorarioFuncionamento>();
 	public virtual ICollection<Barbeiro> Barbeiros { get; private set; } = new List<Barbeiro>();
 	public virtual ICollection<Servico> Servicos { get; private set; } = new List<Servico>();
 

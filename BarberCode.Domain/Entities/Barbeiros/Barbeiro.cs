@@ -6,12 +6,13 @@ namespace BarberCode.Domain.Entities.Barbeiros;
 
 public class Barbeiro
 {
-	public Barbeiro(string name, string? fotoPerfil, Guid barbeariaId)
+	public Barbeiro(string name, string? fotoPerfil, Guid barbeariaId, List<TimeOnly> horarioAlmoco)
 	{
 		Id = Guid.NewGuid();
 		Name = name;
 		FotoPerfil = fotoPerfil;
 		BarbeariaId = barbeariaId;
+		HorarioAlmoco = horarioAlmoco;
 	}
 
 	public Barbeiro()

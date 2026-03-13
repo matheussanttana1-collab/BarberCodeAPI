@@ -5,13 +5,14 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.OpenApi;
 using BarberCode.Service.Responses;
 using BarberCode.Service.Requests;
+using BarberCode.Application.UseCases.Barbeiros;
 namespace BarberCode.API.Endpoins;
 
 public static class BarbeiroEndpoints
 {
     public static void MapBarbeiroEndpoints(this IEndpointRouteBuilder routes)
     {
-        var group = routes.MapGroup("/api/barbearias/{barbeariaId}/Barbeiro").WithTags(nameof(Barbeiro));
+        var group = routes.MapGroup("/api/barbearia/{barbeariaId}/Barbeiro").WithTags(nameof(Barbeiro));
 
         group.MapGet("/", async (BarberCodeContext db) =>
         {
@@ -40,12 +41,11 @@ public static class BarbeiroEndpoints
         .WithName("UpdateBarbeiro")
         .WithOpenApi();
 
-        group.MapPost("/", async (BarbeiroRequest request, BarberCodeContext db) =>
+        group.MapPost("/", async (Guid barbeariaId,BarbeiroRequest request, CriarBarbeiroUseCase useCase) =>
         {
-            // TODO: Implementar CreateBarbeiro
-            // Receber BarbeiroRequest
-            // Retornar BarbeiroResponse
-            return TypedResults.Created($"/api/Barbeiro/{Guid.Empty}", new BarbeiroResponse(Guid.Empty, "", null));
+            useCase.Execute(request, barbeariaId);
+
+            return Results.Created();
         })
         .WithName("CreateBarbeiro")
         .WithOpenApi();

@@ -1,9 +1,10 @@
 using BarberCode.API.Endpoins;
 using BarberCode.Application.Interfaces;
 using BarberCode.Application.Profiles;
+using BarberCode.Application.UseCases;
+using BarberCode.Application.UseCases.Barbeiros;
 using BarberCode.Infra.Banco;
 using BarberCode.Infra.Repositories;
-using BarberCodeService.UseCases;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,8 @@ builder.Services.AddAutoMapper(cfg => { }, typeof(BarbeariaProfile));
 
 builder.Services.AddScoped<CriarBarbeariaUseCase>();
 builder.Services.AddScoped<IBarbeariaRepository, BarbeariaRepository>();
+builder.Services.AddScoped<CriarBarbeiroUseCase>();
+builder.Services.AddScoped<IBarbeiroRepository, BarbeiroRepository>();
 
 builder.Services.AddControllers();
 

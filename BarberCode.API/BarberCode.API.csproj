@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.12">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.12" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
@@ -24,7 +25,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BarberCode.Domain\BarberCode.Domain.csproj" />
     <ProjectReference Include="..\BarberCode.Infra\BarberCode.Infra.csproj" />
-    <ProjectReference Include="..\BarberCodeService\BarberCode.Service.csproj" />
+    <ProjectReference Include="..\BarberCodeService\BarberCode.Application.csproj" />
   </ItemGroup>
 
 </Project>
