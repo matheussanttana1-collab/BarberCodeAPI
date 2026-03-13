@@ -10,7 +10,7 @@ namespace BarberCode.Application.Interfaces;
 
 public interface IServicoRepository
 {
-	void SalvarBarbeiro(Servico servico);
+	void SalvarServico(Servico servico);
 	Servico BuscarServicoPor(Guid Id);
 	void DeletarServico(Servico servico);
 	public void Atualizar(Servico servico);

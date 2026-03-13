@@ -7,7 +7,7 @@ public class HorarioFuncionamento
 	public TimeOnly Fim { get; private set; }
 
 	// Construtor privado para EF Core
-	private HorarioFuncionamento() { }
+	protected HorarioFuncionamento() { }
 
 	// Construtor público
 	public HorarioFuncionamento(DayOfWeek dia, TimeOnly incio, TimeOnly fim)

@@ -6,6 +6,6 @@ public interface IBarbeariaRepository
 {
 	void SalvarBarbearia(Barbearia barbearia);
 	Barbearia? BuscarBarbeariaPor(Guid id);
-	void AtualizarBarbearia(Barbearia barbearia);
+	void AtualizarBarbearia();
 	void DeletarBarbearia(Barbearia barbearia);
 }

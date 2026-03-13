@@ -5,7 +5,7 @@ using Barbeiros;
 public class Barbearia
 {
 
-	private Barbearia () { }
+	protected Barbearia () { }
 
 	public Barbearia(string name, Endereco endereco, IEnumerable<HorarioFuncionamento> funcionamento)
 	{
@@ -34,13 +34,17 @@ public class Barbearia
 		return true;
 	}
 
-	public void AddServico()
+	public void AddServico(string name, string descricao, int duracao)
 	{
-
+		if(Servicos.Any(s => s.Name == name))
+		{
+			throw new Exception("Servico Ja Cadastrado");
+		}
+		Servicos.Add(new Servico(name,duracao,descricao,this.Id));
 	}
 	
 
-
+	
 	
 
 	

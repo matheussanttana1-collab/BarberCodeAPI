@@ -15,7 +15,7 @@ public class Barbeiro
 		HorarioAlmoco = horarioAlmoco;
 	}
 
-	public Barbeiro()
+	protected Barbeiro()
 	{
 
 	}

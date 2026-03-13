@@ -19,9 +19,8 @@ public class BarbeariaRepository : IBarbeariaRepository
 		_context = context;
 	}
 
-	public void AtualizarBarbearia(Barbearia barbearia)
+	public void AtualizarBarbearia()
 	{
-		_context.barbearias.Update(barbearia);
 		_context.SaveChanges();
 	}
 

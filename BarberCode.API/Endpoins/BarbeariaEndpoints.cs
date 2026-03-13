@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using BarberCode.Service.Responses;
 using BarberCode.Service.Requests;
 using BarberCode.Application.UseCases;
+using BarberCode.Application.UseCases.Servicos;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BarberCode.API.Endpoins;
 

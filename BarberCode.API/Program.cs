@@ -3,6 +3,7 @@ using BarberCode.Application.Interfaces;
 using BarberCode.Application.Profiles;
 using BarberCode.Application.UseCases;
 using BarberCode.Application.UseCases.Barbeiros;
+using BarberCode.Application.UseCases.Servicos;
 using BarberCode.Infra.Banco;
 using BarberCode.Infra.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,9 @@ builder.Services.AddScoped<CriarBarbeariaUseCase>();
 builder.Services.AddScoped<IBarbeariaRepository, BarbeariaRepository>();
 builder.Services.AddScoped<CriarBarbeiroUseCase>();
 builder.Services.AddScoped<IBarbeiroRepository, BarbeiroRepository>();
+builder.Services.AddScoped<CriarServicoUseCase>();
+builder.Services.AddScoped<IServicoRepository, ServicoRepository>();
+
 
 builder.Services.AddControllers();
 
@@ -60,5 +64,7 @@ app.MapControllers();
 app.MapBarbeariaEndpoints();
 
 app.MapBarbeiroEndpoints();
+
+app.MapServicoEndpoints();
 
 app.Run();

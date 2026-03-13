@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BarberCode.Infra.Migrations
 {
     [DbContext(typeof(BarberCodeContext))]
-    [Migration("20260311143835_fixRelacionamentos")]
-    partial class fixRelacionamentos
+    [Migration("20260313213957_corrigindo relacao servico-Barbearia")]
+    partial class corrigindorelacaoservicoBarbearia
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -84,10 +84,7 @@ namespace BarberCode.Infra.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<int>("BarbeariaId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("BarbeariaId1")
+                    b.Property<Guid>("BarbeariaId")
                         .HasColumnType("char(36)");
 
                     b.Property<string>("Descricao")
@@ -102,7 +99,7 @@ namespace BarberCode.Infra.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BarbeariaId1");
+                    b.HasIndex("BarbeariaId");
 
                     b.ToTable("servicos");
                 });
@@ -256,7 +253,7 @@ namespace BarberCode.Infra.Migrations
                 {
                     b.HasOne("BarberCode.Domain.Entities.Barbearias.Barbearia", "Barbearia")
                         .WithMany("Servicos")
-                        .HasForeignKey("BarbeariaId1")
+                        .HasForeignKey("BarbeariaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
