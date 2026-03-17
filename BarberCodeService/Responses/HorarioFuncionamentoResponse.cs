@@ -1,7 +1,9 @@
 namespace BarberCode.Service.Responses;
 
-public record HorarioFuncionamentoResponse(
-    DayOfWeek Dia,
-    TimeOnly Incio,
-    TimeOnly Fim
-);
+public class HorarioFuncionamentoResponse 
+{
+	public DayOfWeek Dia { get; set; }
+	public TimeOnly Incio { get; set; }
+	public TimeOnly Fim { get; set; }
+
+}

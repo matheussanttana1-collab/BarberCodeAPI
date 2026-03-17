@@ -27,7 +27,14 @@ Infra
 
 3.Emissão de Nota Fiscal( feita depois que o pagamento estiver Feito, tambem envolve API externa)
 
-4. Deletar Em Cascata Se a Barbearia morrer, o Serviço/Endereco/Horario morre junto
+4. Deletar Em Cascata Se a Barbearia morrer, o Serviço/Endereco/Horario morre junto-
+
+-------------------------------------------------------------------------------------------------------
+Api
+
+1.Criação de Um ResultPatterns para tratamento de Exceptions
+
+2.MediatR para Injeção de Dependencias
 
 
 

@@ -25,7 +25,7 @@ public class Barbeiro
 	public string? FotoPerfil { get; private set; }
 	public Guid BarbeariaId { get; private set; }
 	public virtual Barbearia BarbeariaQueTrabalha { get; private set; }
-	public virtual ICollection<Agendamento> Agendamentos { get; private set; } = new List<Agendamento>();
+	public virtual ICollection<Agendamento> Agendamentos { get; protected set; } = new List<Agendamento>();
 	public List<TimeOnly> HorarioAlmoco { get; private set; } = new List<TimeOnly>();
 
 	//--------------------------------- Metodos De Verificação de Horarios ------------------------------
@@ -36,7 +36,7 @@ public class Barbeiro
 			return false;
 
 		if (Agendamentos.Any(a => a.Dia == dia &&
-			horario < a.Horario.AddMinutes(a.Servico.Duracao) && fim > a.Horario))
+			horario < a.Horario.AddMinutes(a.Duracao) && fim > a.Horario))
 			return false;
 
 		return true;
@@ -66,13 +66,17 @@ public class Barbeiro
 	}
 
 	//---------------------------------- Metodos de Agendamento ----------------------------------------
-	public void NovoAgendamento(Agendamento agendamento)
+	public Agendamento NovoAgendamento(ClienteInfo cliente, DateOnly dia, TimeOnly horario, int duracao, Guid servicoId)
 	{
-		if (!EstaDisponivel(agendamento.Dia, agendamento.Horario, agendamento.Duracao))
+		if (!EstaDisponivel(dia,horario,duracao))
 		{
 			throw new Exception("Horario Indisponivel");
 		}
+
+		var agendamento = new Agendamento(this.Id, this.BarbeariaId, cliente, dia, horario, duracao, servicoId);
 		Agendamentos.Add(agendamento);
+
+		return agendamento;
 	}
 
 

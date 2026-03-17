@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BarberCode.Infra.Migrations
 {
     [DbContext(typeof(BarberCodeContext))]
-    [Migration("20260313213957_corrigindo relacao servico-Barbearia")]
-    partial class corrigindorelacaoservicoBarbearia
+    [Migration("20260316152058_fix Agendamentos")]
+    partial class fixAgendamentos
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,10 +34,13 @@ namespace BarberCode.Infra.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("BarbeariaID")
+                    b.Property<Guid>("BarbeariaId")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("BarbeiroID")
+                    b.Property<Guid>("BarbeiroId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("BarbeiroId1")
                         .HasColumnType("char(36)");
 
                     b.Property<DateOnly>("Dia")
@@ -54,9 +57,11 @@ namespace BarberCode.Infra.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BarbeariaID");
+                    b.HasIndex("BarbeariaId");
 
-                    b.HasIndex("BarbeiroID");
+                    b.HasIndex("BarbeiroId");
+
+                    b.HasIndex("BarbeiroId1");
 
                     b.HasIndex("ServicoId");
 
@@ -135,13 +140,19 @@ namespace BarberCode.Infra.Migrations
                 {
                     b.HasOne("BarberCode.Domain.Entities.Barbearias.Barbearia", "Barbearia")
                         .WithMany()
-                        .HasForeignKey("BarbeariaID")
+                        .HasForeignKey("BarbeariaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BarberCode.Domain.Entities.Barbeiros.Barbeiro", null)
+                        .WithMany("Agendamentos")
+                        .HasForeignKey("BarbeiroId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BarberCode.Domain.Entities.Barbeiros.Barbeiro", "Barbeiro")
-                        .WithMany("Agendamentos")
-                        .HasForeignKey("BarbeiroID")
+                        .WithMany()
+                        .HasForeignKey("BarbeiroId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

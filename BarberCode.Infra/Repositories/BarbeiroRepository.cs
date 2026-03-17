@@ -1,4 +1,5 @@
 ﻿using BarberCode.Application.Interfaces;
+using BarberCode.Domain.Entities.Agendamentos;
 using BarberCode.Domain.Entities.Barbearias;
 using BarberCode.Domain.Entities.Barbeiros;
 using BarberCode.Infra.Banco;
@@ -19,10 +20,14 @@ public class BarbeiroRepository : IBarbeiroRepository
 		_context = context;
 	}
 
-	public void AtualizarBarbeiro(Barbeiro barbeiro)
+	public void AtualizarBarbeiro()
 	{
-		_context.barbeiros.Update(barbeiro);
 		_context.SaveChanges();
+	}
+
+	public IEnumerable<Barbeiro> BuscarBarbeiros (Guid BarbeariaId) 
+	{
+		return _context.barbeiros.Where(b => b.BarbeariaId == BarbeariaId);
 	}
 
 	public Barbeiro? BuscarBarbeiroPor(Guid id)
@@ -42,4 +47,5 @@ public class BarbeiroRepository : IBarbeiroRepository
 		_context.barbeiros.Add(barbeiro);
 		_context.SaveChanges();
 	}
+
 }

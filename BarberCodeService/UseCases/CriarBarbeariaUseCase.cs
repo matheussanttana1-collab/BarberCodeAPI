@@ -15,10 +15,12 @@ public class CriarBarbeariaUseCase
 		_mapper = mapper;
 	}
 
-	public void Execute(BarbeariaRequest request)
+	public Barbearia Execute(BarbeariaRequest request)
 	{  
 		Barbearia barbearia = _mapper.Map<Barbearia>(request);
 
 		_repository.SalvarBarbearia(barbearia);
+
+		return barbearia;
 	}
 }

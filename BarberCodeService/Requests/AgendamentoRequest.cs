@@ -13,8 +13,10 @@ public class AgendamentoRequest
     [Required(ErrorMessage = "ServicoId é obrigatório")]
     public Guid ServicoId { get; set; }
 
+    [Required(ErrorMessage = "Dia é obrigatório")]
+    public DateOnly Dia { get; set; }
     [Required(ErrorMessage = "Horário é obrigatório")]
-    public DateTime Horario { get; set; }
+    public TimeOnly Horario { get; set; }
 
     [Required(ErrorMessage = "Cliente é obrigatório")]
     public ClienteInfoRequest Cliente { get; set; }

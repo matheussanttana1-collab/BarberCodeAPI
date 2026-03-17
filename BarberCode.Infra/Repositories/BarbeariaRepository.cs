@@ -24,6 +24,10 @@ public class BarbeariaRepository : IBarbeariaRepository
 		_context.SaveChanges();
 	}
 
+	public IEnumerable<Barbearia> BuscarBarbearias () 
+	{
+		return _context.barbearias.ToList();
+	}
 	public Barbearia? BuscarBarbeariaPor(Guid id)
 	{
 		var barbearia = _context.barbearias.FirstOrDefault(b => b.Id == id);

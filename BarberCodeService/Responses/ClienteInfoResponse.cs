@@ -1,6 +1,7 @@
 namespace BarberCode.Service.Responses;
 
-public record ClienteInfoResponse(
-    string Nome,
-    int Telefone
-);
+public class ClienteInfoResponse {
+	public string Nome { get; set; }
+	public int Telefone { get; set; }
+}
+    

@@ -1,4 +1,5 @@
-﻿using BarberCode.Domain.Entities.Barbeiros;
+﻿using BarberCode.Domain.Entities.Agendamentos;
+using BarberCode.Domain.Entities.Barbeiros;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,10 @@ namespace BarberCode.Application.Interfaces;
 
 public interface IBarbeiroRepository
 {
+	
 	void SalvarBarbeiro(Barbeiro barbeiro);
+	IEnumerable<Barbeiro> BuscarBarbeiros(Guid barbeariaId);
 	Barbeiro? BuscarBarbeiroPor(Guid Id);
 	void DeletarBarbeiro(Barbeiro barbeiro);
-	public void AtualizarBarbeiro(Barbeiro barbeiro);
+	void AtualizarBarbeiro();
 }

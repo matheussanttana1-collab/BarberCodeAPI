@@ -7,13 +7,13 @@ namespace BarberCode.API.Endpoins;
 
 public static class ServicoEndpoints
 {
-    public static void MapServicoEndpoints (this IEndpointRouteBuilder routes)
+    public static void MapServicoEndpoints(this IEndpointRouteBuilder routes)
     {
         var group = routes.MapGroup("/api/Barbearia/{barbeariaId}/Servico").WithTags(nameof(Servico));
 
         group.MapGet("/", () =>
         {
-            
+
         })
         .WithName("GetAllServicos")
         .WithOpenApi();
@@ -25,19 +25,19 @@ public static class ServicoEndpoints
         .WithName("GetServicoById")
         .WithOpenApi();
 
-        group.MapPut("/{id}", (int id, Servico input) =>
+        group.MapPut("/{id}", (int id) =>
         {
             return TypedResults.NoContent();
         })
         .WithName("UpdateServico")
         .WithOpenApi();
 
-        group.MapPost("/", (Guid barbeariaId,ServicoRequest request, CriarServicoUseCase useCase) =>
+        group.MapPost("/", (Guid barbeariaId, ServicoRequest request, CriarServicoUseCase useCase) =>
         {
             useCase.Execute(barbeariaId, request);
 
             return Results.Created();
-		})
+        })
         .WithName("CreateServico")
         .WithOpenApi();
 

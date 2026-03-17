@@ -14,6 +14,6 @@ public class BarbeiroProfile : Profile
 {
 	public BarbeiroProfile()
 	{
-		CreateMap<Barbeiro, BarbeiroResponse>();
+		CreateMap<BarbeiroResponse, Barbeiro>();
 	}
 }

@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.OpenApi;
 using BarberCode.Service.Responses;
 using BarberCode.Service.Requests;
 using BarberCode.Application.UseCases.Barbeiros;
+using BarberCode.Application.Interfaces;
+using AutoMapper;
 namespace BarberCode.API.Endpoins;
 
 public static class BarbeiroEndpoints
@@ -14,20 +16,24 @@ public static class BarbeiroEndpoints
     {
         var group = routes.MapGroup("/api/barbearia/{barbeariaId}/Barbeiro").WithTags(nameof(Barbeiro));
 
-        group.MapGet("/", async (BarberCodeContext db) =>
+        group.MapGet("/", async (Guid barbeariaId, IBarbeiroRepository repo, IMapper mapper) =>
         {
-            // TODO: Implementar GetAllBarbeiros
-            // Retornar List<BarbeiroResponse>
-            return await Task.FromResult(Enumerable.Empty<BarbeiroResponse>());
+            var barbeiros = repo.BuscarBarbeiros(barbeariaId);
+            return await Task.FromResult(mapper.Map<List<BarbeiroResponse>>(barbeiros));
         })
         .WithName("GetAllBarbeiros")
         .WithOpenApi();
 
-        group.MapGet("/{id}", async Task<Results<Ok<BarbeiroResponse>, NotFound>> (Guid id, BarberCodeContext db) =>
+        group.MapGet("/{id}", async Task<Results<Ok<BarbeiroResponse>, NotFound>> (Guid id, IBarbeiroRepository repo
+        , IMapper mapper) =>
         {
-            // TODO: Implementar GetBarbeiroById
-            // Retornar BarbeiroResponse
-            return TypedResults.NotFound();
+            var barbeiro = repo.BuscarBarbeiroPor(id);
+            if (barbeiro is null)
+            {
+                return TypedResults.NotFound();
+            }
+
+            return TypedResults.Ok(mapper.Map<BarbeiroResponse>(barbeiro));
         })
         .WithName("GetBarbeiroById")
         .WithOpenApi();
@@ -41,7 +47,7 @@ public static class BarbeiroEndpoints
         .WithName("UpdateBarbeiro")
         .WithOpenApi();
 
-        group.MapPost("/", async (Guid barbeariaId,BarbeiroRequest request, CriarBarbeiroUseCase useCase) =>
+        group.MapPost("/", async (Guid barbeariaId, BarbeiroRequest request, CriarBarbeiroUseCase useCase) =>
         {
             useCase.Execute(request, barbeariaId);
 

@@ -1,11 +1,7 @@
 ﻿using AutoMapper;
 using BarberCode.Domain.Entities.Agendamentos;
 using BarberCode.Service.Requests;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using BarberCode.Service.Responses;
 
 namespace BarberCode.Application.Profiles;
 
@@ -13,6 +9,7 @@ public class AgendamentoProfile : Profile
 {
 	public AgendamentoProfile()
 	{
-		CreateMap<AgendamentoRequest, Agendamento>();
+		CreateMap<Agendamento, AgendamentoResponse>();
+		CreateMap<ClienteInfo, ClienteInfoResponse>();
 	}
 }

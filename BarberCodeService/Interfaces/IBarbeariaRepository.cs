@@ -4,6 +4,7 @@ namespace BarberCode.Application.Interfaces;
 
 public interface IBarbeariaRepository
 {
+	IEnumerable<Barbearia> BuscarBarbearias();
 	void SalvarBarbearia(Barbearia barbearia);
 	Barbearia? BuscarBarbeariaPor(Guid id);
 	void AtualizarBarbearia();

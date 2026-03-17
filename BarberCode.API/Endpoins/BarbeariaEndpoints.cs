@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using BarberCode.Service.Responses;
 using BarberCode.Service.Requests;
 using BarberCode.Application.UseCases;
-using BarberCode.Application.UseCases.Servicos;
-using Microsoft.AspNetCore.Mvc;
+using BarberCode.Application.Interfaces;
+using AutoMapper;
 
 namespace BarberCode.API.Endpoins;
 
@@ -16,25 +16,30 @@ public static class BarbeariaEndpoints
     {
         var group = routes.MapGroup("/api/Barbearia").WithTags(nameof(Barbearia));
 
-        group.MapGet("/", async (BarberCodeContext db) =>
+        group.MapGet("/", async (IBarbeariaRepository repo, IMapper mapper) =>
         {
-            // TODO: Implementar GetAllBarbearia
-            // Retornar List<BarbeariaResponse>
-            return await Task.FromResult(Enumerable.Empty<BarbeariaResponse>());
+            var barbearias = repo.BuscarBarbearias();
+
+            return mapper.Map<List<BarbeariaResponse>>(barbearias);
         })
         .WithName("GetAllBarbearia")
         .WithOpenApi();
 
-        group.MapGet("/{id}", async Task<Results<Ok<BarbeariaResponse>, NotFound>> (Guid id, BarberCodeContext db) =>
+        group.MapGet("/{id}", async Task<Results<Ok<BarbeariaResponse>, NotFound>> (Guid id,
+        IBarbeariaRepository repo, IMapper mapper) =>
         {
-            // TODO: Implementar GetBarbeariaById
-            // Retornar BarbeariaResponse
-            return TypedResults.NotFound();
+            var barbearia = repo.BuscarBarbeariaPor(id);
+            if (barbearia is null)
+            {
+                return TypedResults.NotFound();
+            }
+
+            return TypedResults.Ok(mapper.Map<BarbeariaResponse>(barbearia));
         })
         .WithName("GetBarbeariaById")
         .WithOpenApi();
 
-        group.MapPut("/{id}", async Task<Results<Ok, NotFound>> (Guid id, BarbeariaRequest request, BarberCodeContext db) =>
+        group.MapPut("/{id}", async Task<Results<Ok, NotFound>> (Guid id, BarbeariaRequest request) =>
         {
             // TODO: Implementar UpdateBarbearia
             // Receber BarbeariaRequest
@@ -43,9 +48,9 @@ public static class BarbeariaEndpoints
         .WithName("UpdateBarbearia")
         .WithOpenApi();
 
-        group.MapPost("/", async (BarbeariaRequest request, CriarBarbeariaUseCase criarCase) =>
+        group.MapPost("/", async (BarbeariaRequest request, CriarBarbeariaUseCase useCase) =>
         {
-            criarCase.Execute(request);
+            useCase.Execute(request);
 
             return Results.Created();
         })
@@ -60,4 +65,5 @@ public static class BarbeariaEndpoints
         .WithName("DeleteBarbearia")
         .WithOpenApi();
     }
+
 }

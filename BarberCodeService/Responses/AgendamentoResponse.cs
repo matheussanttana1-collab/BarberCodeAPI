@@ -1,13 +1,13 @@
 namespace BarberCode.Service.Responses;
 
-public record AgendamentoResponse(
-    Guid Id,
-    Guid BarbeiroId,
-    string BarbeiroNome,
-    Guid BarbeariaId,
-    string BarbeariaNome,
-    Guid ServicoId,
-    string ServicoNome,
-    DateTime Horario,
-    ClienteInfoResponse Cliente
-);
+
+public class AgendamentoResponse 
+{
+	public Guid Id {  get; set; }
+	public Guid BarbeiroId { get; set; }
+	public Guid BarbeariaId { get; set; }
+	public Guid ServicoId { get; set; }
+	public DateOnly Dia {  get; set; }
+	public TimeOnly Horario { get; set; }
+	public ClienteInfoResponse Cliente { get; set; }
+}
