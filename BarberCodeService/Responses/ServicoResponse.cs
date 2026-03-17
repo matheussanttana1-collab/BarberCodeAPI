@@ -1,8 +1,8 @@
 namespace BarberCode.Service.Responses;
 
-public record ServicoResponse(
-    Guid Id,
-    string Nome,
-    int Duracao,
-    string Descricao
-);
+public class ServicoResponse {
+	public Guid Id { get; set; }
+	public string Name { get; set; }
+	public int Duracao { get; set; }
+	public string Descricao { get; set; }
+};

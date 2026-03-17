@@ -1,8 +1,12 @@
-﻿using BarberCode.Application.UseCases.Servicos;
+﻿using AutoMapper;
+using BarberCode.Application.Interfaces;
+using BarberCode.Application.UseCases.Servicos;
 using BarberCode.Domain.Entities.Barbearias;
 using BarberCode.Service.Requests;
+using BarberCode.Service.Responses;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.OpenApi;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 namespace BarberCode.API.Endpoins;
 
 public static class ServicoEndpoints
@@ -11,16 +15,24 @@ public static class ServicoEndpoints
     {
         var group = routes.MapGroup("/api/Barbearia/{barbeariaId}/Servico").WithTags(nameof(Servico));
 
-        group.MapGet("/", () =>
+        group.MapGet("/", (Guid BarbeariaId, IServicoRepository repo, IMapper mapper) =>
         {
+            var servico = repo.BuscarServicos(BarbeariaId);
 
+            return Results.Ok(mapper.Map<List<ServicoResponse>>(servico));
         })
         .WithName("GetAllServicos")
         .WithOpenApi();
 
-        group.MapGet("/{id}", (int id) =>
+        group.MapGet("/{id}", (Guid Id, IServicoRepository repo, IMapper mapper) =>
         {
-            //return new Servico { ID = id };
+            var servico = repo.BuscarServicoPor(Id);
+
+            if (servico is null)
+                return Results.NotFound("Servico Não Encontrado");
+
+            return Results.Ok(mapper.Map<ServicoResponse>(servico));
+
         })
         .WithName("GetServicoById")
         .WithOpenApi();

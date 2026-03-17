@@ -25,9 +25,15 @@ public class ServicoRepository : IServicoRepository
 		_context.SaveChanges();
 	}
 
-	public Servico BuscarServicoPor(Guid Id)
+	public IEnumerable<Servico> BuscarServicos (Guid BarbeariaId) 
 	{
-		throw new NotImplementedException();
+		var servicos = _context.servicos.Where(s => s.BarbeariaId == BarbeariaId).ToList();
+		return servicos;
+	}
+	public Servico? BuscarServicoPor(Guid Id)
+	{
+		var servico = _context.servicos.FirstOrDefault(s => s.Id == Id);
+		return servico;
 	}
 
 	public void DeletarServico(Servico servico)
