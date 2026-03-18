@@ -1,4 +1,4 @@
-namespace BarberCode.Application.UseCases;
+namespace BarberCode.Application.UseCases.Barbearias;
 using AutoMapper;
 using BarberCode.Application.Interfaces;
 using BarberCode.Domain.Entities.Barbearias;

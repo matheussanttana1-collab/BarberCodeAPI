@@ -34,6 +34,12 @@ public class Barbearia
 		return true;
 	}
 
+	public HorarioFuncionamento? ExpedienteDia(DateOnly diaEscolhido) 
+	{
+		return Funcionamento.FirstOrDefault(f => f.dia == diaEscolhido.DayOfWeek);
+
+	}
+
 	public void AddServico(string name, string descricao, int duracao)
 	{
 		if(Servicos.Any(s => s.Name == name))

@@ -4,8 +4,6 @@ using BarberCode.Application.UseCases.Agendamentos;
 using BarberCode.Domain.Entities.Agendamentos;
 using BarberCode.Service.Requests;
 using BarberCode.Service.Responses;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.OpenApi;
 namespace BarberCode.API.Endpoins;
 
 public static class AgendamentoEndpoints
@@ -27,7 +25,7 @@ public static class AgendamentoEndpoints
 
         group.MapGet("/{id}", (Guid Id, IAgendamentoRepository repo, IMapper mapper) =>
         {
-            var agendamento = repo.BuscarAgendadamentoPor(Id);
+            var agendamento = repo.BuscarAgendadamentoPorId(Id);
 
             if (agendamento == null)
             {
@@ -35,9 +33,6 @@ public static class AgendamentoEndpoints
             }
 
             return Results.Ok(mapper.Map<AgendamentoResponse>(agendamento));
-
-
-
         })
         .WithName("GetAgendamentoById")
         .WithOpenApi();
@@ -57,9 +52,10 @@ public static class AgendamentoEndpoints
         .WithName("CreateAgendamento")
         .WithOpenApi();
 
-        group.MapDelete("/{id}", (int id) =>
+        group.MapDelete("/{id}", (Guid id,CancelarAgendamentoUseCase useCase) =>
         {
-            //return TypedResults.Ok(new Agendamento { ID = id });
+            useCase.Execute(id);
+            return Results.NoContent();
         })
         .WithName("DeleteAgendamento")
         .WithOpenApi();

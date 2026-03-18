@@ -8,6 +8,7 @@ using BarberCode.Service.Requests;
 using BarberCode.Application.UseCases.Barbeiros;
 using BarberCode.Application.Interfaces;
 using AutoMapper;
+using BarberCode.Application.Responses;
 namespace BarberCode.API.Endpoins;
 
 public static class BarbeiroEndpoints
@@ -38,6 +39,16 @@ public static class BarbeiroEndpoints
         .WithName("GetBarbeiroById")
         .WithOpenApi();
 
+        group.MapGet("/{barbeiroId}/Slots", async Task<Results<Ok<GerarSlotsResponse>, NotFound>> (Guid barbeiroId, Guid BarbeiariaId
+        , DateOnly diaEscolhido, Guid servicoId, GerarSlotsUseCase useCase) =>
+        {
+           var slots = useCase.Execute(barbeiroId, BarbeiariaId, servicoId, diaEscolhido);
+
+            return TypedResults.Ok(slots);
+        })
+        .WithName("GetGerarSlotsBarbeiro")
+        .WithOpenApi();
+
         group.MapPut("/{id}", async Task<Results<Ok, NotFound>> (Guid id, BarbeiroRequest request, BarberCodeContext db) =>
         {
             // TODO: Implementar UpdateBarbeiro
@@ -56,10 +67,10 @@ public static class BarbeiroEndpoints
         .WithName("CreateBarbeiro")
         .WithOpenApi();
 
-        group.MapDelete("/{id}", async Task<Results<Ok, NotFound>> (Guid id, BarberCodeContext db) =>
+        group.MapDelete("/{id}", async Task<Results<NoContent, NotFound>> (Guid id, DeletarBarbeiroUseCase useCase) =>
         {
-            // TODO: Implementar DeleteBarbeiro
-            return TypedResults.NotFound();
+            useCase.Execute(id);
+            return TypedResults.NoContent();
         })
         .WithName("DeleteBarbeiro")
         .WithOpenApi();

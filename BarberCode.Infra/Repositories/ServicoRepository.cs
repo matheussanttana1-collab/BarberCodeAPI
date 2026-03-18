@@ -38,7 +38,8 @@ public class ServicoRepository : IServicoRepository
 
 	public void DeletarServico(Servico servico)
 	{
-		throw new NotImplementedException();
+		_context.Remove(servico);
+		_context.SaveChanges();
 	}
 
 	public void Atualizar(Servico servico)

@@ -3,9 +3,9 @@ using BarberCode.Infra.Banco;
 using Microsoft.AspNetCore.Http.HttpResults;
 using BarberCode.Service.Responses;
 using BarberCode.Service.Requests;
-using BarberCode.Application.UseCases;
 using BarberCode.Application.Interfaces;
 using AutoMapper;
+using BarberCode.Application.UseCases.Barbearias;
 
 namespace BarberCode.API.Endpoins;
 
@@ -57,10 +57,10 @@ public static class BarbeariaEndpoints
         .WithName("CreateBarbearia")
         .WithOpenApi();
 
-        group.MapDelete("/{id}", async Task<Results<Ok, NotFound>> (Guid id, BarberCodeContext db) =>
+        group.MapDelete("/{id}", async Task<Results<NoContent, NotFound>> (Guid id, DeletarBarbeariaUseCase useCase) =>
         {
-            // TODO: Implementar DeleteBarbearia
-            return TypedResults.NotFound();
+            useCase.Execute(id);
+            return TypedResults.NoContent();
         })
         .WithName("DeleteBarbearia")
         .WithOpenApi();

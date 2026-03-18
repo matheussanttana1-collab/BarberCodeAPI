@@ -1,82 +1,40 @@
-# Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
-[Ww][Ii][Nn]32/
-[Aa][Rr][Mm]/
-[Aa][Rr][Mm]64/
-bld/
-[Bb]in/
-[Oo]bj/
-[Ll]og/
-[Ll]ogs/
+# Build e compilação
+bin/
+obj/
+out/
+publish/
 
-# Visual Studio cache/options directory
+# Visual Studio
 .vs/
-
-# Visual Studio Code
-.vscode/
-*.code-workspace
-
-# Rider
-.idea/
-*.sln.iml
-*.swp
-*.swo
-*~
-
-# User-specific files
 *.suo
 *.user
 *.userosscache
 *.sln.docstates
 
-# Build folder
-/publish/
-
-# NuGet Packages
+# NuGet
+packages/
 *.nupkg
 *.snupkg
-*.nupkg.metadata
-
-# NuGet Package Restore
 .nuget/
 
-# Entity Framework
-*.edmx.diagram
-
-# BeatPulse health checks data
-healthchecksdb
-
-# dotnet user-secrets
+# Configurações locais e segredos
+appsettings.Local.json
 secrets.json
+launchSettings.json
 
-# Application Insights
-ApplicationInsights.config
+# Testes e cobertura
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
 
-# Local test settings
-appsettings.local.json
-appsettings.Development.json
-
-# Coverage
-OpenCover/
-
-# Node modules (if using npm packages)
-node_modules/
-npm-debug.log
-yarn-error.log
-
-# Miscellaneous
+# Logs
 *.log
-*.tmp
-*.temp
-Thumbs.db
-Desktop.ini
-.DS_Store
+logs/
 
-# Pasta para lembrar depois
-LembrarDepois/
- *txt
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Pasta pessoal de anotações
+LembrarDepois/*.txt

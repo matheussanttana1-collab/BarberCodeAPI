@@ -53,9 +53,10 @@ public static class ServicoEndpoints
         .WithName("CreateServico")
         .WithOpenApi();
 
-        group.MapDelete("/{id}", (int id) =>
+        group.MapDelete("/{id}", (Guid id, DeletarServicoUseCase useCase) =>
         {
-            //return TypedResults.Ok(new Servico { ID = id });
+            useCase.Execute(id);
+            return Results.NoContent();
         })
         .WithName("DeleteServico")
         .WithOpenApi();

@@ -24,7 +24,7 @@ public class AgendamentoRepository : IAgendamentoRepository
 		
 	}
 
-	public Agendamento? BuscarAgendadamentoPor(Guid id)
+	public Agendamento? BuscarAgendadamentoPorId(Guid id)
 	{
 		var agendamento = _context.agendamentos.FirstOrDefault(a => a.Id == id);
 		return agendamento;

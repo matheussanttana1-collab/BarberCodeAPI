@@ -1,6 +1,26 @@
+﻿using BarberCode.Application.Interfaces;
+using BarberCode.Domain.Entities.Agendamentos;
+using BarberCode.Service.Requests;
+
+
 namespace BarberCode.Application.UseCases.Agendamentos;
 
 public class CancelarAgendamentoUseCase
 {
-	// TODO: Implementar lógica
+	private readonly IAgendamentoRepository _repo;
+
+	public CancelarAgendamentoUseCase(IAgendamentoRepository repo)
+	{
+		_repo = repo;
+	}
+
+	public void Execute (Guid Id) {
+
+		var agendamento = _repo.BuscarAgendadamentoPorId(Id);
+
+		if (agendamento is null)
+			throw new Exception("Agendamento não Encontrado");
+
+		_repo.DeletarAgendadamento(agendamento);
+	}
 }

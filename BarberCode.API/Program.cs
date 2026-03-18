@@ -1,8 +1,8 @@
 using BarberCode.API.Endpoins;
 using BarberCode.Application.Interfaces;
 using BarberCode.Application.Profiles;
-using BarberCode.Application.UseCases;
 using BarberCode.Application.UseCases.Agendamentos;
+using BarberCode.Application.UseCases.Barbearias;
 using BarberCode.Application.UseCases.Barbeiros;
 using BarberCode.Application.UseCases.Servicos;
 using BarberCode.Infra.Banco;
@@ -24,6 +24,12 @@ builder.Services.AddScoped<CriarServicoUseCase>();
 builder.Services.AddScoped<IServicoRepository, ServicoRepository>();
 builder.Services.AddScoped<CriarAgendamentoUseCase>();
 builder.Services.AddScoped<IAgendamentoRepository, AgendamentoRepository>();
+builder.Services.AddScoped<GerarSlotsUseCase>();
+builder.Services.AddScoped<DeletarBarbeariaUseCase>();
+builder.Services.AddScoped<DeletarBarbeiroUseCase>();
+builder.Services.AddScoped<DeletarServicoUseCase>();
+builder.Services.AddScoped<CancelarAgendamentoUseCase>();
+
 
 
 builder.Services.AddControllers();
