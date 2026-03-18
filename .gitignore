@@ -37,4 +37,4 @@ logs/
 Thumbs.db
 
 # Pasta pessoal de anotações
-LembrarDepois/*.txt
+**/LembrarDepois/*.txt
