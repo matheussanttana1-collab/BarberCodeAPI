@@ -48,6 +48,10 @@ public class Barbearia
 		}
 		Servicos.Add(new Servico(name,duracao,descricao,this.Id));
 	}
+
+	public void AlterarEndereco (Endereco novoEndereco) {
+		Endereco = novoEndereco;
+	}
 	
 
 	

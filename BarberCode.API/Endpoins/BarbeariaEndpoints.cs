@@ -57,7 +57,15 @@ public static class BarbeariaEndpoints
         .WithName("CreateBarbearia")
         .WithOpenApi();
 
-        group.MapDelete("/{id}", async Task<Results<NoContent, NotFound>> (Guid id, DeletarBarbeariaUseCase useCase) =>
+        group.MapPatch("/{id}/endereco", async Task<Results<NoContent, NotFound>> (Guid id, EnderecoRequest request
+        , AlterarEnderecoUseCase useCase) => {
+
+            useCase.Execute(id, request);
+            return TypedResults.NoContent();
+        });
+
+
+		group.MapDelete("/{id}", async Task<Results<NoContent, NotFound>> (Guid id, DeletarBarbeariaUseCase useCase) =>
         {
             useCase.Execute(id);
             return TypedResults.NoContent();

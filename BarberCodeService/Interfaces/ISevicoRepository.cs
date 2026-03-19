@@ -8,6 +8,6 @@ public interface IServicoRepository
 	IEnumerable<Servico> BuscarServicos(Guid barbeariaId);
 	Servico? BuscarServicoPor(Guid Id);
 	void DeletarServico(Servico servico);
-	public void Atualizar(Servico servico);
+	public void AtualizarServico();
 
 }

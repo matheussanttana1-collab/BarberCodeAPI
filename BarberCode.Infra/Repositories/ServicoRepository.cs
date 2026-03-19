@@ -42,8 +42,8 @@ public class ServicoRepository : IServicoRepository
 		_context.SaveChanges();
 	}
 
-	public void Atualizar(Servico servico)
+	public void AtualizarServico()
 	{
-		throw new NotImplementedException();
+		_context.SaveChanges();
 	}
 }

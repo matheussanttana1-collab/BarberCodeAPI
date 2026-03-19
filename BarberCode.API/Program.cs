@@ -29,6 +29,7 @@ builder.Services.AddScoped<DeletarBarbeariaUseCase>();
 builder.Services.AddScoped<DeletarBarbeiroUseCase>();
 builder.Services.AddScoped<DeletarServicoUseCase>();
 builder.Services.AddScoped<CancelarAgendamentoUseCase>();
+builder.Services.AddScoped<AlterarEnderecoUseCase>();
 
 
 

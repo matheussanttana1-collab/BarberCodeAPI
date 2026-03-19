@@ -1,11 +1,6 @@
 ﻿using BarberCode.Application.Interfaces;
 using BarberCode.Domain.Entities.Agendamentos;
 using BarberCode.Infra.Banco;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BarberCode.Infra.Repositories;
 
