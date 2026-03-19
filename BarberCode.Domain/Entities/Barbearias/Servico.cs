@@ -26,4 +26,13 @@ public class Servico
 	public Guid BarbeariaId { get; private set; }
 	public virtual Barbearia Barbearia { get; private set; }
 
+	public void AlterarServico (string? nome, string? descricao, int? duracao) {
+		if (nome is not null) 
+			Name = nome;
+		if (descricao is not null) 
+			Descricao = descricao;
+		if (duracao is not null)
+			Duracao = duracao.Value;
+	}
+
 }

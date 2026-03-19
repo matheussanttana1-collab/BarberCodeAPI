@@ -11,5 +11,5 @@ public class BarbeariaRequest
     public EnderecoRequest Endereco { get; set; }
 
     [Required(ErrorMessage = "Horários de funcionamento são obrigatórios")]
-    public IEnumerable<HorarioFuncionamentoRequest> Funcionamento { get; set; } = new List<HorarioFuncionamentoRequest>();
+    public List<HorarioFuncionamentoRequest> Funcionamento { get; set; } = new List<HorarioFuncionamentoRequest>();
 }

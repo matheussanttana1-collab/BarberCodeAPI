@@ -2,10 +2,6 @@
   <Folder Name="/Itens de Solução/">
     <File Path=".gitignore" />
   </Folder>
-  <Folder Name="/LembrarDepois/">
-    <File Path="CorreçoesFuturas.txt" />
-    <File Path="MetodosQueFaltam.txt" />
-  </Folder>
   <Project Path="BarberCode.API/BarberCode.API.csproj" Id="b2666bf2-1dd1-41c9-9035-6640310b94eb" />
   <Project Path="BarberCode.Domain/BarberCode.Domain.csproj" Id="17f66fd1-a852-41e4-b066-0ae0ff7e5eaf" />
   <Project Path="BarberCode.Infra/BarberCode.Infra.csproj" Id="be758221-e72e-44fd-8bda-0bbb9990856a" />

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BarberCode.Application.Interfaces;
+using BarberCode.Application.Requests;
 using BarberCode.Application.UseCases.Servicos;
 using BarberCode.Domain.Entities.Barbearias;
 using BarberCode.Service.Requests;
@@ -37,8 +38,9 @@ public static class ServicoEndpoints
         .WithName("GetServicoById")
         .WithOpenApi();
 
-        group.MapPut("/{id}", (int id) =>
+        group.MapPatch("/{id}", (Guid id, AtualizarServicoRequest request, AlterarServicoUseCase useCase) =>
         {
+            useCase.Execute(id, request);
             return TypedResults.NoContent();
         })
         .WithName("UpdateServico")
