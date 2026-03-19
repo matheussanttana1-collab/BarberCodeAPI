@@ -3,14 +3,14 @@
 public class ClienteInfo
 {
 	public string Name { get; private set; }
-	public int Phone { get; private set; }
+	public string Celular { get; private set; }
 
 	
 	protected ClienteInfo() { }
 
-	public ClienteInfo(string name, int phone)
+	public ClienteInfo(string name, string celular)
 	{
 		Name = name;
-		Phone = phone;
+		Celular = celular;
 	}
 }

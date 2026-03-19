@@ -69,14 +69,14 @@ public class Barbeiro
 	}
 
 	//---------------------------------- Metodos de Agendamento ----------------------------------------
-	public Agendamento NovoAgendamento(ClienteInfo cliente, DateOnly dia, TimeOnly horario, int duracao, Guid servicoId)
+	public Agendamento NovoAgendamento(Guid clienteId, DateOnly dia, TimeOnly horario, int duracao, Guid servicoId)
 	{
 		if (!EstaDisponivel(dia,horario,duracao))
 		{
 			throw new Exception("Horario Indisponivel");
 		}
 
-		var agendamento = new Agendamento(this.Id, this.BarbeariaId, cliente, dia, horario, duracao, servicoId);
+		var agendamento = new Agendamento(this.Id, this.BarbeariaId, clienteId, dia, horario, duracao, servicoId);
 		Agendamentos.Add(agendamento);
 
 		return agendamento;

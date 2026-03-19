@@ -9,7 +9,8 @@ public class AgendamentoProfile : Profile
 {
 	public AgendamentoProfile()
 	{
-		CreateMap<Agendamento, AgendamentoResponse>();
+		CreateMap<Agendamento, AgendamentoResponse>()
+		.ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()));
 		CreateMap<ClienteInfo, ClienteInfoResponse>();
 	}
 }

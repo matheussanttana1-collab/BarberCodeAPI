@@ -11,7 +11,8 @@ public class Agendamento
 	public virtual Barbeiro Barbeiro { get; private set; }
 	public Guid BarbeariaId { get; private set; }
 	public virtual Barbearia Barbearia { get; private set; }
-	public ClienteInfo Cliente { get; private set; }
+	public Guid ClienteId { get; private set; }
+	public virtual ClienteInfo Cliente { get; private set; }
 	public DateOnly Dia { get; private set; }
 	public TimeOnly Horario { get; private set; }
 	public int Duracao { get; private set; }
@@ -23,13 +24,13 @@ public class Agendamento
 	{
 	}
 
-	public Agendamento(Guid barbeiroId, Guid barbeariaId,ClienteInfo cliente, DateOnly dia, 
+	public Agendamento(Guid barbeiroId, Guid barbeariaId,Guid clienteId, DateOnly dia, 
 		TimeOnly horario,int duracao, Guid servicoId)
 	{
 		Id = Guid.NewGuid();
 		BarbeiroId = barbeiroId;
 		BarbeariaId = barbeariaId;
-		Cliente = cliente;
+		ClienteId = clienteId;
 		Dia = dia;
 		Horario = horario;
 		Duracao = duracao;
