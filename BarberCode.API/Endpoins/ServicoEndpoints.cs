@@ -5,9 +5,6 @@ using BarberCode.Application.UseCases.Servicos;
 using BarberCode.Domain.Entities.Barbearias;
 using BarberCode.Service.Requests;
 using BarberCode.Service.Responses;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.OpenApi;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 namespace BarberCode.API.Endpoins;
 
 public static class ServicoEndpoints

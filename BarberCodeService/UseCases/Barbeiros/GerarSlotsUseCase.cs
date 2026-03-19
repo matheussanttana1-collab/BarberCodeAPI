@@ -14,13 +14,13 @@ public class GerarSlotsUseCase
 {
 	private readonly IBarbeariaRepository _barbeariaRepo;
 	private readonly IBarbeiroRepository _barbeiroRep;
-	private readonly IMapper _mapper;
 
-	public GerarSlotsUseCase(IBarbeariaRepository barbeariaRepo, IBarbeiroRepository barbeiroRep, IMapper mapper)
+
+	public GerarSlotsUseCase(IBarbeariaRepository barbeariaRepo, IBarbeiroRepository barbeiroRep)
 	{
 		_barbeariaRepo = barbeariaRepo;
 		_barbeiroRep = barbeiroRep;
-		_mapper = mapper;
+	
 	}
 
 	public GerarSlotsResponse Execute (Guid barbeiroId, Guid barbeariaId, Guid servicoId, DateOnly dia)

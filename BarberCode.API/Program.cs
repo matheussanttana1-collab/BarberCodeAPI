@@ -32,6 +32,9 @@ builder.Services.AddScoped<CancelarAgendamentoUseCase>();
 builder.Services.AddScoped<AlterarEnderecoUseCase>();
 builder.Services.AddScoped<AlterarServicoUseCase>();
 builder.Services.AddScoped<AlterarHorarioFuncionamentoUseCase>();
+builder.Services.AddScoped<AlterarBarbeiroUseCase>();
+builder.Services.AddScoped<ConcluirAgendamentoUseCase>();
+
 
 
 

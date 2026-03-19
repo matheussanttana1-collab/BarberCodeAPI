@@ -12,9 +12,10 @@ public static class AgendamentoEndpoints
     {
         var group = routes.MapGroup("/api/Agendamento").WithTags(nameof(Agendamento));
 
-        group.MapGet("/Barbeiro/{BarbeiroId}", (Guid barbeiroId, IAgendamentoRepository repo, IMapper mapper) =>
+        group.MapGet("/Barbeiro/{BarbeiroId}", (Guid barbeiroId, IAgendamentoRepository repo, IMapper mapper,
+		 StatusAgendamento? status) =>
         {
-            var agendamentos = repo.BuscarAgendamentos(barbeiroId);
+            var agendamentos = repo.BuscarAgendamentos(barbeiroId,status);
 
             return Results.Ok(mapper.Map<List<AgendamentoResponse>>(agendamentos));
         })
@@ -23,9 +24,9 @@ public static class AgendamentoEndpoints
 
 
 
-        group.MapGet("/{id}", (Guid Id, IAgendamentoRepository repo, IMapper mapper) =>
+        group.MapGet("/{id}", (Guid id, IAgendamentoRepository repo,IMapper mapper) =>
         {
-            var agendamento = repo.BuscarAgendadamentoPorId(Id);
+            var agendamento = repo.BuscarAgendadamentoPorId(id);
 
             if (agendamento == null)
             {
@@ -37,9 +38,10 @@ public static class AgendamentoEndpoints
         .WithName("GetAgendamentoById")
         .WithOpenApi();
 
-        group.MapPut("/{id}", () =>
+        group.MapPatch("/{id}", (Guid id,ConcluirAgendamentoUseCase useCase) =>
         {
-            return TypedResults.NoContent();
+            useCase.Execute(id);
+            return Results.NoContent();
         })
         .WithName("UpdateAgendamento")
         .WithOpenApi();

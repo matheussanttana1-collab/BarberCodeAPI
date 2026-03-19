@@ -1,6 +1,7 @@
 ﻿using BarberCode.Application.Interfaces;
 using BarberCode.Domain.Entities.Agendamentos;
 using BarberCode.Infra.Banco;
+using System.Net.NetworkInformation;
 
 namespace BarberCode.Infra.Repositories;
 
@@ -25,8 +26,9 @@ public class AgendamentoRepository : IAgendamentoRepository
 		return agendamento;
 	}
 
-	public IEnumerable<Agendamento> BuscarAgendamentos(Guid BarbeiroId) {
-		var agendamentos = _context.agendamentos.Where(a => a.BarbeiroId == BarbeiroId);
+	public IEnumerable<Agendamento> BuscarAgendamentos(Guid BarbeiroId, StatusAgendamento? status) {
+		var agendamentos = _context.agendamentos.Where(a => a.BarbeiroId == BarbeiroId).
+		Where(a => status == null || a.Status == status);
 		return agendamentos;
 	}
 

@@ -1,6 +1,6 @@
 ﻿
 namespace BarberCode.Application.Requests;
 
-public record AtualizarBarbeiroRequest (string? nome)
+public record AtualizarBarbeiroRequest (string? nome, TimeOnly? horarioAlmoco)
 {
 }

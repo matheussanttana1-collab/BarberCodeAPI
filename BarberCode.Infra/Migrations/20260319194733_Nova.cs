@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BarberCode.Infra.Migrations
 {
     /// <inheritdoc />
-    public partial class fixAgendamentos : Migration
+    public partial class Nova : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,8 +48,7 @@ namespace BarberCode.Infra.Migrations
                     FotoPerfil = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     BarbeariaId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    HorarioAlmoco = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    HorarioAlmoco = table.Column<TimeOnly>(type: "time(6)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -123,7 +122,8 @@ namespace BarberCode.Infra.Migrations
                     Dia = table.Column<DateOnly>(type: "date", nullable: false),
                     Horario = table.Column<TimeOnly>(type: "time(6)", nullable: false),
                     Duracao = table.Column<int>(type: "int", nullable: false),
-                    ServicoId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    ServicoId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -159,7 +159,6 @@ namespace BarberCode.Infra.Migrations
                 table: "agendamentos",
                 column: "BarbeiroId");
 
-        
             migrationBuilder.CreateIndex(
                 name: "IX_agendamentos_ServicoId",
                 table: "agendamentos",

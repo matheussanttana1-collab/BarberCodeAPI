@@ -5,7 +5,7 @@ public interface IAgendamentoRepository
 {
 	void SalvarAgendadamento(Agendamento agendamento);
 	Agendamento? BuscarAgendadamentoPorId(Guid id);
-	IEnumerable<Agendamento> BuscarAgendamentos(Guid barbeiroId);
+	IEnumerable<Agendamento> BuscarAgendamentos(Guid barbeiroId, StatusAgendamento? status);
 	void AtualizarAgendadamento();
 	void DeletarAgendadamento(Agendamento agendamento);
 }

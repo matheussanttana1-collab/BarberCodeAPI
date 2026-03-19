@@ -17,6 +17,7 @@ public class Agendamento
 	public int Duracao { get; private set; }
 	public Guid ServicoId { get; private set; }
 	public virtual Servico Servico { get; private set; }
+	public StatusAgendamento Status {  get; private set; }
 
 	protected Agendamento()
 	{
@@ -33,5 +34,15 @@ public class Agendamento
 		Horario = horario;
 		Duracao = duracao;
 		ServicoId = servicoId;
+		Status = StatusAgendamento.Pendente;
+	}
+
+	public void ConcluirAgendamento()
+	{
+		if (Status == StatusAgendamento.Concluido)
+			throw new Exception("Agendamento Ja foi Concluido");
+
+		Status = StatusAgendamento.Concluido;
+
 	}
 }

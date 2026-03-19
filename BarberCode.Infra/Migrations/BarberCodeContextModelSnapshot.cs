@@ -37,9 +37,6 @@ namespace BarberCode.Infra.Migrations
                     b.Property<Guid>("BarbeiroId")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("BarbeiroId1")
-                        .HasColumnType("char(36)");
-
                     b.Property<DateOnly>("Dia")
                         .HasColumnType("date");
 
@@ -52,13 +49,14 @@ namespace BarberCode.Infra.Migrations
                     b.Property<Guid>("ServicoId")
                         .HasColumnType("char(36)");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("BarbeariaId");
 
                     b.HasIndex("BarbeiroId");
-
-                    b.HasIndex("BarbeiroId1");
 
                     b.HasIndex("ServicoId");
 
@@ -118,9 +116,8 @@ namespace BarberCode.Infra.Migrations
                     b.Property<string>("FotoPerfil")
                         .HasColumnType("longtext");
 
-                    b.PrimitiveCollection<string>("HorarioAlmoco")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<TimeOnly>("HorarioAlmoco")
+                        .HasColumnType("time(6)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -141,15 +138,9 @@ namespace BarberCode.Infra.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BarberCode.Domain.Entities.Barbeiros.Barbeiro", null)
+                    b.HasOne("BarberCode.Domain.Entities.Barbeiros.Barbeiro", "Barbeiro")
                         .WithMany("Agendamentos")
                         .HasForeignKey("BarbeiroId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BarberCode.Domain.Entities.Barbeiros.Barbeiro", "Barbeiro")
-                        .WithMany()
-                        .HasForeignKey("BarbeiroId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
