@@ -16,14 +16,16 @@ var connectionString = builder.Configuration.GetConnectionString("BarberCodeConn
 builder.Services.AddDbContext<BarberCodeContext>(opts => opts.UseLazyLoadingProxies().UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 builder.Services.AddAutoMapper(cfg => { }, typeof(BarbeariaProfile));
 
-builder.Services.AddScoped<CriarBarbeariaUseCase>();
-builder.Services.AddScoped<IBarbeariaRepository, BarbeariaRepository>();
-builder.Services.AddScoped<CriarBarbeiroUseCase>();
-builder.Services.AddScoped<IBarbeiroRepository, BarbeiroRepository>();
-builder.Services.AddScoped<CriarServicoUseCase>();
-builder.Services.AddScoped<IServicoRepository, ServicoRepository>();
-builder.Services.AddScoped<CriarAgendamentoUseCase>();
 builder.Services.AddScoped<IAgendamentoRepository, AgendamentoRepository>();
+builder.Services.AddScoped<IServicoRepository, ServicoRepository>();
+builder.Services.AddScoped<IBarbeiroRepository, BarbeiroRepository>();
+builder.Services.AddScoped<IBarbeariaRepository, BarbeariaRepository>();
+builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+
+builder.Services.AddScoped<CriarBarbeariaUseCase>();
+builder.Services.AddScoped<CriarBarbeiroUseCase>();
+builder.Services.AddScoped<CriarServicoUseCase>();
+builder.Services.AddScoped<CriarAgendamentoUseCase>();
 builder.Services.AddScoped<GerarSlotsUseCase>();
 builder.Services.AddScoped<DeletarBarbeariaUseCase>();
 builder.Services.AddScoped<DeletarBarbeiroUseCase>();
@@ -34,6 +36,7 @@ builder.Services.AddScoped<AlterarServicoUseCase>();
 builder.Services.AddScoped<AlterarHorarioFuncionamentoUseCase>();
 builder.Services.AddScoped<AlterarBarbeiroUseCase>();
 builder.Services.AddScoped<ConcluirAgendamentoUseCase>();
+
 
 
 

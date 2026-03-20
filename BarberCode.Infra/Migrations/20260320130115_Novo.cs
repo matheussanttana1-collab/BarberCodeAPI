@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BarberCode.Infra.Migrations
 {
     /// <inheritdoc />
-    public partial class Nova : Migration
+    public partial class Novo : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -35,6 +35,22 @@ namespace BarberCode.Infra.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_barbearias", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "clientes",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Name = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Celular = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_clientes", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -116,9 +132,7 @@ namespace BarberCode.Infra.Migrations
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     BarbeiroId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     BarbeariaId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Cliente_Name = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Cliente_Phone = table.Column<int>(type: "int", nullable: false),
+                    ClienteId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     Dia = table.Column<DateOnly>(type: "date", nullable: false),
                     Horario = table.Column<TimeOnly>(type: "time(6)", nullable: false),
                     Duracao = table.Column<int>(type: "int", nullable: false),
@@ -141,6 +155,12 @@ namespace BarberCode.Infra.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
+                        name: "FK_agendamentos_clientes_ClienteId",
+                        column: x => x.ClienteId,
+                        principalTable: "clientes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_agendamentos_servicos_ServicoId",
                         column: x => x.ServicoId,
                         principalTable: "servicos",
@@ -158,6 +178,11 @@ namespace BarberCode.Infra.Migrations
                 name: "IX_agendamentos_BarbeiroId",
                 table: "agendamentos",
                 column: "BarbeiroId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_agendamentos_ClienteId",
+                table: "agendamentos",
+                column: "ClienteId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_agendamentos_ServicoId",
@@ -186,6 +211,9 @@ namespace BarberCode.Infra.Migrations
 
             migrationBuilder.DropTable(
                 name: "barbeiros");
+
+            migrationBuilder.DropTable(
+                name: "clientes");
 
             migrationBuilder.DropTable(
                 name: "servicos");

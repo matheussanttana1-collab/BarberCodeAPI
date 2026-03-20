@@ -13,7 +13,7 @@ public static class AgendamentoEndpoints
         var group = routes.MapGroup("/api/Agendamento").WithTags(nameof(Agendamento));
 
         group.MapGet("/Barbeiro/{BarbeiroId}", (Guid barbeiroId, IAgendamentoRepository repo, IMapper mapper,
-		 StatusAgendamento? status) =>
+		 StatusAgendamento? status, Guid? cliente) =>
         {
             var agendamentos = repo.BuscarAgendamentos(barbeiroId,status);
 

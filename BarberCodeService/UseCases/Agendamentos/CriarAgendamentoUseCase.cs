@@ -4,6 +4,7 @@ using BarberCode.Service.Requests;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,13 +16,15 @@ public class CriarAgendamentoUseCase
 	private readonly IBarbeiroRepository _barbeiroRepo;
 	private readonly IBarbeariaRepository _barbeariaRepo;
 	private readonly IAgendamentoRepository _agendamentoRepo;
+	private readonly IClienteRepository _clienteRepo;
 
 	public CriarAgendamentoUseCase(IBarbeiroRepository barbeiroRepo, IBarbeariaRepository barbeariaRepo
-	, IAgendamentoRepository agendamentoRepo)
+	, IAgendamentoRepository agendamentoRepo,IClienteRepository clienteRepo)
 	{
 		_barbeariaRepo = barbeariaRepo;
 		_barbeiroRepo = barbeiroRepo;
 		_agendamentoRepo = agendamentoRepo;
+		_clienteRepo = clienteRepo;
 	}
 	public void Execute (AgendamentoRequest request)
 	{
@@ -34,10 +37,14 @@ public class CriarAgendamentoUseCase
 		var servico = barbearia.Servicos.FirstOrDefault(s => s.Id == request.ServicoId);
 		if (servico is null)
 			throw new ApplicationException("Barbearia escolhida nao oferece este serviço");
-		ClienteInfo cliente = new ClienteInfo(request.Cliente.Nome, request.Cliente.Telefone);
-
+		var cliente = _clienteRepo.BuscarClientePeloTelefone(request.Cliente.Celular);
+		if (cliente is null)
+		{
+			cliente = new ClienteInfo(request.Cliente.Nome, request.Cliente.Celular);
+			_clienteRepo.SalvarCliente(cliente);
+		}
 		barbearia.EstaFuncionando(request.Dia, request.Horario);
-		var agendamento = barbeiro.NovoAgendamento(cliente,request.Dia,request.Horario,servico.Duracao,request.ServicoId);
+		var agendamento = barbeiro.NovoAgendamento(cliente.Id,request.Dia,request.Horario,servico.Duracao,request.ServicoId);
 
 		_agendamentoRepo.SalvarAgendadamento(agendamento);
 	}

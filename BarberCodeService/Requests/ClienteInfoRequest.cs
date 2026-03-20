@@ -7,5 +7,5 @@ public class ClienteInfoRequest
 
 	public string Nome { get; set; }
 
-	public int Telefone { get; set; }
+	public string Celular { get; set; }
 }

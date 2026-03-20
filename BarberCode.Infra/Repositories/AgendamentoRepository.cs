@@ -26,6 +26,11 @@ public class AgendamentoRepository : IAgendamentoRepository
 		return agendamento;
 	}
 
+	public Agendamento? BuscarAgendamentoDoCliente(Guid id, Guid ClienteId)
+	{
+		throw new NotImplementedException();
+	}
+
 	public IEnumerable<Agendamento> BuscarAgendamentos(Guid BarbeiroId, StatusAgendamento? status) {
 		var agendamentos = _context.agendamentos.Where(a => a.BarbeiroId == BarbeiroId).
 		Where(a => status == null || a.Status == status);

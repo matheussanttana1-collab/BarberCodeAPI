@@ -37,6 +37,9 @@ namespace BarberCode.Infra.Migrations
                     b.Property<Guid>("BarbeiroId")
                         .HasColumnType("char(36)");
 
+                    b.Property<Guid>("ClienteId")
+                        .HasColumnType("char(36)");
+
                     b.Property<DateOnly>("Dia")
                         .HasColumnType("date");
 
@@ -58,9 +61,30 @@ namespace BarberCode.Infra.Migrations
 
                     b.HasIndex("BarbeiroId");
 
+                    b.HasIndex("ClienteId");
+
                     b.HasIndex("ServicoId");
 
                     b.ToTable("agendamentos");
+                });
+
+            modelBuilder.Entity("BarberCode.Domain.Entities.Agendamentos.ClienteInfo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Celular")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("clientes");
                 });
 
             modelBuilder.Entity("BarberCode.Domain.Entities.Barbearias.Barbearia", b =>
@@ -144,38 +168,23 @@ namespace BarberCode.Infra.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BarberCode.Domain.Entities.Agendamentos.ClienteInfo", "Cliente")
+                        .WithMany()
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BarberCode.Domain.Entities.Barbearias.Servico", "Servico")
                         .WithMany()
                         .HasForeignKey("ServicoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("BarberCode.Domain.Entities.Agendamentos.ClienteInfo", "Cliente", b1 =>
-                        {
-                            b1.Property<Guid>("AgendamentoId")
-                                .HasColumnType("char(36)");
-
-                            b1.Property<string>("Name")
-                                .IsRequired()
-                                .HasColumnType("longtext");
-
-                            b1.Property<int>("Phone")
-                                .HasColumnType("int");
-
-                            b1.HasKey("AgendamentoId");
-
-                            b1.ToTable("agendamentos");
-
-                            b1.WithOwner()
-                                .HasForeignKey("AgendamentoId");
-                        });
-
                     b.Navigation("Barbearia");
 
                     b.Navigation("Barbeiro");
 
-                    b.Navigation("Cliente")
-                        .IsRequired();
+                    b.Navigation("Cliente");
 
                     b.Navigation("Servico");
                 });
