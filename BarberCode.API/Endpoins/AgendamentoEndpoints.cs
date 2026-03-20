@@ -12,8 +12,8 @@ public static class AgendamentoEndpoints
     {
         var group = routes.MapGroup("/api/Agendamento").WithTags(nameof(Agendamento));
 
-        group.MapGet("/Barbeiro/{BarbeiroId}", (Guid barbeiroId, IAgendamentoRepository repo, IMapper mapper,
-		 StatusAgendamento? status, Guid? cliente) =>
+        group.MapGet("/Barbeiro/{BarbeiroId}", (Guid barbeiroId, IAgendamentoRepository repo, 
+        IMapper mapper,StatusAgendamento? status) =>
         {
             var agendamentos = repo.BuscarAgendamentos(barbeiroId,status);
 
@@ -38,7 +38,7 @@ public static class AgendamentoEndpoints
         .WithName("GetAgendamentoById")
         .WithOpenApi();
 
-        group.MapPatch("/{id}", (Guid id,ConcluirAgendamentoUseCase useCase) =>
+        group.MapPatch("/{id}/Concluir", (Guid id,ConcluirAgendamentoUseCase useCase) =>
         {
             useCase.Execute(id);
             return Results.NoContent();

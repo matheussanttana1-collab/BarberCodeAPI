@@ -1,4 +1,4 @@
-﻿using BarberCode.Domain.Entities.Agendamentos;
+﻿using BarberCode.Domain.Entities.Barbearias;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -12,4 +12,6 @@ public interface IClienteRepository
 {
 	void SalvarCliente(ClienteInfo cliente);
 	ClienteInfo? BuscarClientePeloTelefone(string telefone);
+
+	IEnumerable<ClienteInfo> BuscarClientes(Guid BarbeariaId);
 }

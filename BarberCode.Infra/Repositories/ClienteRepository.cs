@@ -1,5 +1,5 @@
 ﻿using BarberCode.Application.Interfaces;
-using BarberCode.Domain.Entities.Agendamentos;
+using BarberCode.Domain.Entities.Barbearias;
 using BarberCode.Infra.Banco;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -28,5 +28,12 @@ public class ClienteRepository : IClienteRepository
 	{
 		_context.clientes.Add(cliente);
 		_context.SaveChanges();
+	}
+
+	public IEnumerable<ClienteInfo> BuscarClientes(Guid barbeariaId) 
+	{
+		var clientes = _context.clientes.Where(c => c.BarbeariaId == barbeariaId);
+
+		return clientes;
 	}
 }

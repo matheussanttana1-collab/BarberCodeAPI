@@ -1,5 +1,6 @@
 ﻿using BarberCode.Application.Interfaces;
 using BarberCode.Domain.Entities.Agendamentos;
+using BarberCode.Domain.Entities.Barbearias;
 using BarberCode.Service.Requests;
 using System;
 using System.Collections.Generic;
@@ -40,7 +41,7 @@ public class CriarAgendamentoUseCase
 		var cliente = _clienteRepo.BuscarClientePeloTelefone(request.Cliente.Celular);
 		if (cliente is null)
 		{
-			cliente = new ClienteInfo(request.Cliente.Nome, request.Cliente.Celular);
+			cliente = new ClienteInfo(request.Cliente.Nome, request.Cliente.Celular, barbearia.Id);
 			_clienteRepo.SalvarCliente(cliente);
 		}
 		barbearia.EstaFuncionando(request.Dia, request.Horario);

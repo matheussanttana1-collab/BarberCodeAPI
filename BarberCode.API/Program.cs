@@ -31,6 +31,7 @@ builder.Services.AddScoped<DeletarBarbeariaUseCase>();
 builder.Services.AddScoped<DeletarBarbeiroUseCase>();
 builder.Services.AddScoped<DeletarServicoUseCase>();
 builder.Services.AddScoped<CancelarAgendamentoUseCase>();
+builder.Services.AddScoped<CancelarAgendamentoClienteUseCase>();
 builder.Services.AddScoped<AlterarEnderecoUseCase>();
 builder.Services.AddScoped<AlterarServicoUseCase>();
 builder.Services.AddScoped<AlterarHorarioFuncionamentoUseCase>();
@@ -86,5 +87,7 @@ app.MapBarbeiroEndpoints();
 app.MapServicoEndpoints();
 
 app.MapAgendamentoEndpoints();
+
+app.MapClienteInfoEndpoints();
 
 app.Run();

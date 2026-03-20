@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BarberCode.Infra.Migrations
 {
     [DbContext(typeof(BarberCodeContext))]
-    [Migration("20260320130115_Novo")]
+    [Migration("20260320143235_Novo")]
     partial class Novo
     {
         /// <inheritdoc />
@@ -71,25 +71,6 @@ namespace BarberCode.Infra.Migrations
                     b.ToTable("agendamentos");
                 });
 
-            modelBuilder.Entity("BarberCode.Domain.Entities.Agendamentos.ClienteInfo", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Celular")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("clientes");
-                });
-
             modelBuilder.Entity("BarberCode.Domain.Entities.Barbearias.Barbearia", b =>
                 {
                     b.Property<Guid>("Id")
@@ -103,6 +84,30 @@ namespace BarberCode.Infra.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("barbearias");
+                });
+
+            modelBuilder.Entity("BarberCode.Domain.Entities.Barbearias.ClienteInfo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("BarbeariaId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Celular")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BarbeariaId");
+
+                    b.ToTable("clientes");
                 });
 
             modelBuilder.Entity("BarberCode.Domain.Entities.Barbearias.Servico", b =>
@@ -171,7 +176,7 @@ namespace BarberCode.Infra.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BarberCode.Domain.Entities.Agendamentos.ClienteInfo", "Cliente")
+                    b.HasOne("BarberCode.Domain.Entities.Barbearias.ClienteInfo", "Cliente")
                         .WithMany()
                         .HasForeignKey("ClienteId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -260,6 +265,15 @@ namespace BarberCode.Infra.Migrations
                     b.Navigation("Funcionamento");
                 });
 
+            modelBuilder.Entity("BarberCode.Domain.Entities.Barbearias.ClienteInfo", b =>
+                {
+                    b.HasOne("BarberCode.Domain.Entities.Barbearias.Barbearia", null)
+                        .WithMany("Clientes")
+                        .HasForeignKey("BarbeariaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("BarberCode.Domain.Entities.Barbearias.Servico", b =>
                 {
                     b.HasOne("BarberCode.Domain.Entities.Barbearias.Barbearia", "Barbearia")
@@ -285,6 +299,8 @@ namespace BarberCode.Infra.Migrations
             modelBuilder.Entity("BarberCode.Domain.Entities.Barbearias.Barbearia", b =>
                 {
                     b.Navigation("Barbeiros");
+
+                    b.Navigation("Clientes");
 
                     b.Navigation("Servicos");
                 });

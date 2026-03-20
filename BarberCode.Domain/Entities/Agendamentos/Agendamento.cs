@@ -46,4 +46,10 @@ public class Agendamento
 		Status = StatusAgendamento.Concluido;
 
 	}
+
+	public void ValidarCancelamento(Guid clienteId)
+	{
+		if (clienteId != ClienteId || Status == StatusAgendamento.Concluido)
+			throw new Exception("Cliente não tem permissão para cancelar esse Agendamento");
+	}
 }

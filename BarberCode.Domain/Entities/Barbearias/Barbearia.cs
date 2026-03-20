@@ -21,6 +21,7 @@ public class Barbearia
 	public List<HorarioFuncionamento> Funcionamento { get; private set; } = new List<HorarioFuncionamento>();
 	public virtual ICollection<Barbeiro> Barbeiros { get; private set; } = new List<Barbeiro>();
 	public virtual ICollection<Servico> Servicos { get; private set; } = new List<Servico>();
+	public virtual ICollection<ClienteInfo> Clientes { get; private set; } = new List<ClienteInfo>();
 
 	public bool EstaFuncionando(DateOnly dia, TimeOnly hora) 
 	{

@@ -14,4 +14,8 @@
     <ProjectReference Include="..\BarberCode.Domain\BarberCode.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UseCases\Clientes\" />
+  </ItemGroup>
+
 </Project>

@@ -1,5 +1,6 @@
 ﻿using BarberCode.Application.Interfaces;
 using BarberCode.Domain.Entities.Agendamentos;
+using BarberCode.Domain.Entities.Barbeiros;
 using BarberCode.Infra.Banco;
 using System.Net.NetworkInformation;
 
@@ -26,14 +27,17 @@ public class AgendamentoRepository : IAgendamentoRepository
 		return agendamento;
 	}
 
-	public Agendamento? BuscarAgendamentoDoCliente(Guid id, Guid ClienteId)
+	public IEnumerable<Agendamento> BuscarAgendamentosDoCliente(Guid clienteId)
 	{
-		throw new NotImplementedException();
+		var agendamentos = _context.agendamentos.Where(a => a.ClienteId == clienteId).
+		Where(a => a.Status == StatusAgendamento.Pendente).ToList();
+		return agendamentos;
+
 	}
 
 	public IEnumerable<Agendamento> BuscarAgendamentos(Guid BarbeiroId, StatusAgendamento? status) {
 		var agendamentos = _context.agendamentos.Where(a => a.BarbeiroId == BarbeiroId).
-		Where(a => status == null || a.Status == status);
+		Where(a => status == null || a.Status == status).ToList();
 		return agendamentos;
 	}
 

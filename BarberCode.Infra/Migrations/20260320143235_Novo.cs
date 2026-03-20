@@ -39,22 +39,6 @@ namespace BarberCode.Infra.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "clientes",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Name = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Celular = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_clientes", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "barbeiros",
                 columns: table => new
                 {
@@ -71,6 +55,29 @@ namespace BarberCode.Infra.Migrations
                     table.PrimaryKey("PK_barbeiros", x => x.Id);
                     table.ForeignKey(
                         name: "FK_barbeiros_barbearias_BarbeariaId",
+                        column: x => x.BarbeariaId,
+                        principalTable: "barbearias",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "clientes",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Name = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Celular = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    BarbeariaId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_clientes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_clientes_barbearias_BarbeariaId",
                         column: x => x.BarbeariaId,
                         principalTable: "barbearias",
                         principalColumn: "Id",
@@ -192,6 +199,11 @@ namespace BarberCode.Infra.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_barbeiros_BarbeariaId",
                 table: "barbeiros",
+                column: "BarbeariaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_clientes_BarbeariaId",
+                table: "clientes",
                 column: "BarbeariaId");
 
             migrationBuilder.CreateIndex(
