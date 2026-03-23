@@ -41,13 +41,13 @@ public class Barbearia
 
 	}
 
-	public void AddServico(string name, string descricao, int duracao)
+	public void AddServico(string name, string descricao, int duracao, double preco)
 	{
 		if(Servicos.Any(s => s.Name == name))
 		{
 			throw new Exception("Servico Ja Cadastrado");
 		}
-		Servicos.Add(new Servico(name,duracao,descricao,this.Id));
+		Servicos.Add(new Servico(name,duracao,descricao,preco,this.Id));
 	}
 
 	public void AlterarEndereco (Endereco novoEndereco) {
