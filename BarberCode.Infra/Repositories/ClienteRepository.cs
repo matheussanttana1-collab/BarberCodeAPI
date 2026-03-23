@@ -19,21 +19,21 @@ public class ClienteRepository : IClienteRepository
 		_context = context;
 	}
 
-	public ClienteInfo? BuscarClientePeloTelefone(string telefone)
+	public async Task<ClienteInfo?> BuscarClientePeloTelefoneAsync(string telefone)
 	{
-		return _context.clientes.FirstOrDefault(c => c.Celular == telefone);
+		return await _context.clientes.FirstOrDefaultAsync(c => c.Celular == telefone);
 	}
 
-	public void SalvarCliente(ClienteInfo cliente)
+	public async Task SalvarClienteAsync(ClienteInfo cliente)
 	{
 		_context.clientes.Add(cliente);
-		_context.SaveChanges();
+		await _context.SaveChangesAsync();
 	}
 
-	public IEnumerable<ClienteInfo> BuscarClientes(Guid barbeariaId) 
+	public async Task<IEnumerable<ClienteInfo>> BuscarClientesAsync(Guid barbeariaId)
 	{
-		var clientes = _context.clientes.Where(c => c.BarbeariaId == barbeariaId);
-
-		return clientes;
+		return await _context.clientes
+			.Where(c => c.BarbeariaId == barbeariaId)
+			.ToListAsync();
 	}
 }

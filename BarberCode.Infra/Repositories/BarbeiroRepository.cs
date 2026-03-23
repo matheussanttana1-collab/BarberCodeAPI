@@ -3,6 +3,7 @@ using BarberCode.Domain.Entities.Agendamentos;
 using BarberCode.Domain.Entities.Barbearias;
 using BarberCode.Domain.Entities.Barbeiros;
 using BarberCode.Infra.Banco;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,32 +21,35 @@ public class BarbeiroRepository : IBarbeiroRepository
 		_context = context;
 	}
 
-	public void AtualizarBarbeiro()
+	public async Task AtualizarBarbeiroAsync()
 	{
-		_context.SaveChanges();
+		await _context.SaveChangesAsync();
 	}
 
-	public IEnumerable<Barbeiro> BuscarBarbeiros (Guid BarbeariaId) 
+	public async Task<IEnumerable<Barbeiro>> BuscarBarbeirosAsync(Guid barbeariaId)
 	{
-		return _context.barbeiros.Where(b => b.BarbeariaId == BarbeariaId);
+		return await _context.barbeiros
+			.Where(b => b.BarbeariaId == barbeariaId)
+			.ToListAsync();
 	}
 
-	public Barbeiro? BuscarBarbeiroPor(Guid id)
+	public async Task<Barbeiro?> BuscarBarbeiroPorAsync(Guid id)
 	{
-		var barbeiro = _context.barbeiros.FirstOrDefault(b => b.Id == id);
-		return barbeiro;
+		return await _context.barbeiros
+			.Include(b => b.Agendamentos)
+			.FirstOrDefaultAsync(b => b.Id == id);
 	}
 
-	public void DeletarBarbeiro(Barbeiro barbeiro)
+	public async Task DeletarBarbeiroAsync(Barbeiro barbeiro)
 	{
 		_context.barbeiros.Remove(barbeiro);
-		_context.SaveChanges();
+		await _context.SaveChangesAsync();
 	}
 
-	public void SalvarBarbeiro(Barbeiro barbeiro)
+	public async Task SalvarBarbeiroAsync(Barbeiro barbeiro)
 	{
 		_context.barbeiros.Add(barbeiro);
-		_context.SaveChanges();
+		await _context.SaveChangesAsync();
 	}
 
 }

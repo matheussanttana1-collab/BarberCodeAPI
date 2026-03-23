@@ -16,15 +16,15 @@ public class ConcluirAgendamentoUseCase
 		_repo = repo;
 	}
 
-	public void Execute(Guid Id)
+	public async Task ExecuteAsync(Guid Id)
 	{
-		var agendamento = _repo.BuscarAgendadamentoPorId(Id);
+		var agendamento = await _repo.BuscarAgendadamentoPorIdAsync(Id);
 
 		if (agendamento is null)
 			throw new Exception("Agendamento não Encontrado");
 
 		agendamento.ConcluirAgendamento();
-		_repo.AtualizarAgendadamento();
+		await _repo.AtualizarAgendadamentoAsync();
 	}
 
 }

@@ -12,15 +12,15 @@ public class DeletarServicoUseCase
 		_repo = repo;
 	}
 
-	public void Execute (Guid id)
+	public async Task ExecuteAsync (Guid id)
 	{
-		var servico = _repo.BuscarServicoPor(id);
+		var servico = await _repo.BuscarServicoPorAsync(id);
 
 		if (servico is null)
 		{
 			throw new Exception("Servico não Encontrado");
 		}
 
-		_repo.DeletarServico(servico);	
+		await _repo.DeletarServicoAsync(servico);	
 	}
 }

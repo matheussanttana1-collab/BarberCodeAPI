@@ -27,26 +27,34 @@ public class CriarAgendamentoUseCase
 		_agendamentoRepo = agendamentoRepo;
 		_clienteRepo = clienteRepo;
 	}
-	public void Execute (AgendamentoRequest request)
+	public async Task<Guid> ExecuteAsync(AgendamentoRequest request)
 	{
-		var barbearia = _barbeariaRepo.BuscarBarbeariaPor(request.BarbeariaId);
+		var barbearia = await _barbeariaRepo.BuscarBarbeariaPorAsync(request.BarbeariaId);
 		if (barbearia is null)
-			throw new ApplicationException("Barbearia Não Cadastrada");
-		var barbeiro = _barbeiroRepo.BuscarBarbeiroPor(request.BarbeiroId);
+			throw new  Exception("Barbearia não cadastrada.");
+
+		var barbeiro = await _barbeiroRepo.BuscarBarbeiroPorAsync(request.BarbeiroId);
 		if (barbeiro is null)
-			throw new ApplicationException("Barbeiro não cadastrado, ou nao pertence a esta Barbearia");
+			throw new Exception("Barbeiro não cadastrado");
+
 		var servico = barbearia.Servicos.FirstOrDefault(s => s.Id == request.ServicoId);
 		if (servico is null)
-			throw new ApplicationException("Barbearia escolhida nao oferece este serviço");
-		var cliente = _clienteRepo.BuscarClientePeloTelefone(request.Cliente.Celular);
+			throw new Exception("Barbearia escolhida não oferece este serviço.");
+
+		var cliente = await _clienteRepo.BuscarClientePeloTelefoneAsync(request.Cliente.Celular);
 		if (cliente is null)
 		{
 			cliente = new ClienteInfo(request.Cliente.Nome, request.Cliente.Celular, barbearia.Id);
-			_clienteRepo.SalvarCliente(cliente);
+			await _clienteRepo.SalvarClienteAsync(cliente);
 		}
-		barbearia.EstaFuncionando(request.Dia, request.Horario);
-		var agendamento = barbeiro.NovoAgendamento(cliente.Id,request.Dia,request.Horario,servico.Duracao,request.ServicoId);
 
-		_agendamentoRepo.SalvarAgendadamento(agendamento);
+		barbearia.EstaFuncionando(request.Dia, request.Horario);
+
+		var agendamento = barbeiro.NovoAgendamento(cliente.Id, request.Dia, request.Horario, servico.Duracao, request.ServicoId);
+
+		await _agendamentoRepo.SalvarAgendadamentoAsync(agendamento);
+
+		return agendamento.Id;
 	}
 }
+

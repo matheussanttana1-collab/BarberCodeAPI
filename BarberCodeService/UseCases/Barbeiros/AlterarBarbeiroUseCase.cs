@@ -13,15 +13,15 @@ public class AlterarBarbeiroUseCase
 		_repo = repo;
 	}
 
-	public void Execute(Guid id, AtualizarBarbeiroRequest request)
+	public async Task ExecuteAsync(Guid id, AtualizarBarbeiroRequest request)
 	{
-		var barbeiro = _repo.BuscarBarbeiroPor(id);
+		var barbeiro = await _repo.BuscarBarbeiroPorAsync(id);
 
 		if (barbeiro == null)
 			throw new Exception("Barbeiro não Encontrado");
 
 		barbeiro.AlterarBarbeiro(request.nome, request.horarioAlmoco);
 
-		_repo.AtualizarBarbeiro();
+		await _repo.AtualizarBarbeiroAsync();
 	} 
 }

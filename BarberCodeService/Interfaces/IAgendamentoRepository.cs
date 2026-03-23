@@ -3,12 +3,12 @@ namespace BarberCode.Application.Interfaces;
 
 public interface IAgendamentoRepository
 {
-	void SalvarAgendadamento(Agendamento agendamento);
-	Agendamento? BuscarAgendadamentoPorId(Guid id);
-	IEnumerable<Agendamento> BuscarAgendamentosDoCliente(Guid ClienteId);
-	IEnumerable<Agendamento> BuscarAgendamentos(Guid barbeiroId, StatusAgendamento? status);
-	void AtualizarAgendadamento();
-	void DeletarAgendadamento(Agendamento agendamento);
+	Task SalvarAgendadamentoAsync(Agendamento agendamento);
+	Task<Agendamento?> BuscarAgendadamentoPorIdAsync(Guid id);
+	Task<IEnumerable<Agendamento>> BuscarAgendamentosDoClienteAsync(Guid ClienteId);
+	Task<IEnumerable<Agendamento>> BuscarAgendamentosAsync(Guid barbeiroId, StatusAgendamento? status);
+	Task AtualizarAgendadamentoAsync();
+	Task DeletarAgendadamentoAsync(Agendamento agendamento);
 	
 }
 	

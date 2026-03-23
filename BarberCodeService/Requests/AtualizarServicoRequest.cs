@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace BarberCode.Application.Requests;
 
-public record AtualizarServicoRequest (string? name, string? descricao, int? duracao)
+public record AtualizarServicoRequest (string? name, string? descricao, int? duracao, double? preco)
 {
 }

@@ -8,20 +8,21 @@ namespace BarberCode.Application.UseCases.Servicos;
 public class CriarServicoUseCase
 {
 	private readonly IServicoRepository _repo;
-	private readonly IMapper _mapper;
+
 
 	public CriarServicoUseCase(IServicoRepository repo
 		, IMapper mapper)
 	{
 		_repo = repo;
-		_mapper = mapper;
 	}
 
-	public void Execute(Guid BarbeariaId,ServicoRequest request)
+	public async Task<Guid> ExecuteAsync(Guid barbeariaId,ServicoRequest request)
 	{
-		var servico = new Servico(request.Name, request.Duracao, request.Descricao, BarbeariaId);
+		var servico = new Servico(request.Name, request.Duracao, request.Descricao, barbeariaId, request.Preco);
 		
-		_repo.SalvarServico(servico);
+		await _repo.SalvarServicoAsync(servico);
+
+		return servico.Id;
 		
 	}
 

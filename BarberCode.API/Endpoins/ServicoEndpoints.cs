@@ -9,55 +9,51 @@ namespace BarberCode.API.Endpoins;
 
 public static class ServicoEndpoints
 {
-    public static void MapServicoEndpoints(this IEndpointRouteBuilder routes)
-    {
-        var group = routes.MapGroup("/api/Barbearia/{barbeariaId}/Servico").WithTags(nameof(Servico));
+	public static void MapServicoEndpoints(this IEndpointRouteBuilder routes)
+	{
+		var group = routes.MapGroup("/api/Barbearia/{barbeariaId}/Servico").WithTags(nameof(Servico));
 
-        group.MapGet("/", (Guid BarbeariaId, IServicoRepository repo, IMapper mapper) =>
-        {
-            var servico = repo.BuscarServicos(BarbeariaId);
+		group.MapGet("/", async (Guid barbeariaId, IServicoRepository repo, IMapper mapper) =>
+		{
+			var servicos = await repo.BuscarServicosAsync(barbeariaId);
+			return Results.Ok(mapper.Map<List<ServicoResponse>>(servicos));
+		})
+		.WithName("GetAllServicos")
+		.WithOpenApi();
 
-            return Results.Ok(mapper.Map<List<ServicoResponse>>(servico));
-        })
-        .WithName("GetAllServicos")
-        .WithOpenApi();
+		group.MapGet("/{id}", async (Guid id, IServicoRepository repo, IMapper mapper) =>
+		{
+			var servico = await repo.BuscarServicoPorAsync(id);
+			if (servico is null)
+				return Results.NotFound("Serviço não encontrado.");
 
-        group.MapGet("/{id}", (Guid Id, IServicoRepository repo, IMapper mapper) =>
-        {
-            var servico = repo.BuscarServicoPor(Id);
+			return Results.Ok(mapper.Map<ServicoResponse>(servico));
+		})
+		.WithName("GetServicoById")
+		.WithOpenApi();
 
-            if (servico is null)
-                return Results.NotFound("Servico Não Encontrado");
+		group.MapPatch("/{id}", async (Guid id, AtualizarServicoRequest request, AlterarServicoUseCase useCase) =>
+		{
+			await useCase.ExecuteAsync(id, request);
+			return Results.NoContent();
+		})
+		.WithName("UpdateServico")
+		.WithOpenApi();
 
-            return Results.Ok(mapper.Map<ServicoResponse>(servico));
+		group.MapPost("/", async (Guid barbeariaId, ServicoRequest request, CriarServicoUseCase useCase) =>
+		{
+			var id = await useCase.ExecuteAsync(barbeariaId, request);
+			return Results.Created($"/api/Servicos/{id}", new { id });
+		})
+		.WithName("CreateServico")
+		.WithOpenApi();
 
-        })
-        .WithName("GetServicoById")
-        .WithOpenApi();
-
-        group.MapPatch("/{id}", (Guid id, AtualizarServicoRequest request, AlterarServicoUseCase useCase) =>
-        {
-            useCase.Execute(id, request);
-            return TypedResults.NoContent();
-        })
-        .WithName("UpdateServico")
-        .WithOpenApi();
-
-        group.MapPost("/", (Guid barbeariaId, ServicoRequest request, CriarServicoUseCase useCase) =>
-        {
-            useCase.Execute(barbeariaId, request);
-
-            return Results.Created();
-        })
-        .WithName("CreateServico")
-        .WithOpenApi();
-
-        group.MapDelete("/{id}", (Guid id, DeletarServicoUseCase useCase) =>
-        {
-            useCase.Execute(id);
-            return Results.NoContent();
-        })
-        .WithName("DeleteServico")
-        .WithOpenApi();
-    }
+		group.MapDelete("/{id}", async (Guid id, DeletarServicoUseCase useCase) =>
+		{
+			await useCase.ExecuteAsync(id);
+			return Results.NoContent();
+		})
+		.WithName("DeleteServico")
+		.WithOpenApi();
+	}
 }

@@ -2,6 +2,7 @@
 using BarberCode.Domain.Entities.Agendamentos;
 using BarberCode.Domain.Entities.Barbeiros;
 using BarberCode.Infra.Banco;
+using Microsoft.EntityFrameworkCore;
 using System.Net.NetworkInformation;
 
 namespace BarberCode.Infra.Repositories;
@@ -15,41 +16,42 @@ public class AgendamentoRepository : IAgendamentoRepository
 		_context = context;
 	}
 
-	public void AtualizarAgendadamento()
+	public async Task AtualizarAgendadamentoAsync()
 	{
 		_context.SaveChanges();
-		
+
 	}
 
-	public Agendamento? BuscarAgendadamentoPorId(Guid id)
+	public async Task<Agendamento?> BuscarAgendadamentoPorIdAsync(Guid id)
 	{
-		var agendamento = _context.agendamentos.FirstOrDefault(a => a.Id == id);
-		return agendamento;
+		return await _context.agendamentos.FirstOrDefaultAsync(a => a.Id == id);
 	}
 
-	public IEnumerable<Agendamento> BuscarAgendamentosDoCliente(Guid clienteId)
+	public async Task<IEnumerable<Agendamento>> BuscarAgendamentosDoClienteAsync(Guid clienteId)
 	{
-		var agendamentos = _context.agendamentos.Where(a => a.ClienteId == clienteId).
-		Where(a => a.Status == StatusAgendamento.Pendente).ToList();
-		return agendamentos;
-
+		return await _context.agendamentos
+			.Where(a => a.ClienteId == clienteId)
+			.Where(a => a.Status == StatusAgendamento.Pendente)
+			.ToListAsync();
 	}
 
-	public IEnumerable<Agendamento> BuscarAgendamentos(Guid BarbeiroId, StatusAgendamento? status) {
-		var agendamentos = _context.agendamentos.Where(a => a.BarbeiroId == BarbeiroId).
-		Where(a => status == null || a.Status == status).ToList();
-		return agendamentos;
+	public async Task<IEnumerable<Agendamento>> BuscarAgendamentosAsync(Guid barbeiroId, StatusAgendamento? status)
+	{
+		return await _context.agendamentos
+			.Where(a => a.BarbeiroId == barbeiroId)
+			.Where(a => status == null || a.Status == status)
+			.ToListAsync();
 	}
 
-	public void DeletarAgendadamento(Agendamento agendamento)
+	public async Task DeletarAgendadamentoAsync(Agendamento agendamento)
 	{
 		_context.agendamentos.Remove(agendamento);
-		_context.SaveChanges();
+		await _context.SaveChangesAsync();
 	}
 
-	public void SalvarAgendadamento(Agendamento agendamento)
+	public async Task SalvarAgendadamentoAsync(Agendamento agendamento)
 	{
 		_context.agendamentos.Add(agendamento);
-		_context.SaveChanges();
+		await _context.SaveChangesAsync();
 	}
 }

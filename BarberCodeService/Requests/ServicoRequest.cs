@@ -11,4 +11,5 @@ public class ServicoRequest
 
     [Required(ErrorMessage = "Descrição é obrigatória")]
     public string Descricao { get; set; }
+    public double Preco { get; set; }
 }

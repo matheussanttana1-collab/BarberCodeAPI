@@ -1,6 +1,7 @@
 ﻿using BarberCode.Application.Interfaces;
 using BarberCode.Domain.Entities.Barbearias;
 using BarberCode.Infra.Banco;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,30 +20,30 @@ public class BarbeariaRepository : IBarbeariaRepository
 		_context = context;
 	}
 
-	public void AtualizarBarbearia()
+	public async Task AtualizarBarbeariaAsync()
 	{
-		_context.SaveChanges();
+		await _context.SaveChangesAsync();
 	}
 
-	public IEnumerable<Barbearia> BuscarBarbearias () 
+	public async Task<IEnumerable<Barbearia>> BuscarBarbeariasAsync()
 	{
-		return _context.barbearias.ToList();
-	}
-	public Barbearia? BuscarBarbeariaPor(Guid id)
-	{
-		var barbearia = _context.barbearias.FirstOrDefault(b => b.Id == id);
-		return barbearia;
+		return await _context.barbearias.ToListAsync();
 	}
 
-	public void DeletarBarbearia(Barbearia barbearia)
+	public async Task<Barbearia?> BuscarBarbeariaPorAsync(Guid id)
+	{
+		return await _context.barbearias.FirstOrDefaultAsync(b => b.Id == id);
+	}
+
+	public async Task DeletarBarbeariaAsync(Barbearia barbearia)
 	{
 		_context.barbearias.Remove(barbearia);
-		_context.SaveChanges();
+		await _context.SaveChangesAsync();
 	}
 
-	public void SalvarBarbearia(Barbearia barbearia)
+	public async Task SalvarBarbeariaAsync(Barbearia barbearia)
 	{
 		_context.barbearias.Add(barbearia);
-		_context.SaveChanges();
+		await _context.SaveChangesAsync();
 	}
 }

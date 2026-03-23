@@ -11,17 +11,16 @@ public class CancelarAgendamentoClienteUseCase
 		_repo = repo;
 	}
 
-	public void Execute(Guid clienteId, Guid agendamentoId)
+	public async Task ExecuteAsync(Guid clienteId, Guid agendamentoId)
 	{
-
-		var agendamento = _repo.BuscarAgendadamentoPorId(agendamentoId);
+		var agendamento = await _repo.BuscarAgendadamentoPorIdAsync(agendamentoId);
 
 		if (agendamento is null)
 			throw new Exception("Agendamento não Encontrado");
 
 		agendamento.ValidarCancelamento(clienteId);
 
-		_repo.DeletarAgendadamento(agendamento);
+		await _repo.DeletarAgendadamentoAsync(agendamento);
 	}
 
 }

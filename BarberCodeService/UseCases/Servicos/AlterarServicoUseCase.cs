@@ -13,14 +13,14 @@ public class AlterarServicoUseCase
 		_repo = repo;
 	}
 
-	public void Execute (Guid id, AtualizarServicoRequest request) 
+	public async Task ExecuteAsync (Guid id, AtualizarServicoRequest request) 
 	{
-		var servico = _repo.BuscarServicoPor(id);
+		var servico = await _repo.BuscarServicoPorAsync(id);
 		if (servico is null)
 			throw new Exception("Servico nao Encontrado");
 
 		servico.AlterarServico(request.name, request.descricao, request.duracao);
 
-		_repo.AtualizarServico();
+		await _repo.AtualizarServicoAsync();
 	}
 }

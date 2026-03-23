@@ -1,6 +1,7 @@
 ﻿using BarberCode.Application.Interfaces;
 using BarberCode.Domain.Entities.Barbearias;
 using BarberCode.Infra.Banco;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -19,31 +20,32 @@ public class ServicoRepository : IServicoRepository
 		_context = context;
 	}
 
-	public void SalvarServico(Servico servico)
+	public async Task SalvarServicoAsync(Servico servico)
 	{
 		_context.servicos.Add(servico);
-		_context.SaveChanges();
+		await _context.SaveChangesAsync();
 	}
 
-	public IEnumerable<Servico> BuscarServicos (Guid BarbeariaId) 
+	public async Task<IEnumerable<Servico>> BuscarServicosAsync(Guid barbeariaId)
 	{
-		var servicos = _context.servicos.Where(s => s.BarbeariaId == BarbeariaId).ToList();
-		return servicos;
-	}
-	public Servico? BuscarServicoPor(Guid Id)
-	{
-		var servico = _context.servicos.FirstOrDefault(s => s.Id == Id);
-		return servico;
+		return await _context.servicos
+			.Where(s => s.BarbeariaId == barbeariaId)
+			.ToListAsync();
 	}
 
-	public void DeletarServico(Servico servico)
+	public async Task<Servico?> BuscarServicoPorAsync(Guid id)
 	{
-		_context.Remove(servico);
-		_context.SaveChanges();
+		return await _context.servicos.FirstOrDefaultAsync(s => s.Id == id);
 	}
 
-	public void AtualizarServico()
+	public async Task DeletarServicoAsync(Servico servico)
 	{
-		_context.SaveChanges();
+		_context.servicos.Remove(servico);
+		await _context.SaveChangesAsync();
+	}
+
+	public async Task AtualizarServicoAsync()
+	{
+		await _context.SaveChangesAsync();
 	}
 }

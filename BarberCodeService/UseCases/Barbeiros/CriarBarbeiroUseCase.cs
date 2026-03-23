@@ -9,20 +9,20 @@ public class CriarBarbeiroUseCase
 {
 
 	private readonly IBarbeiroRepository _barbeiroRepo;
-	private readonly IMapper _mapper;
+	
 
-	public CriarBarbeiroUseCase(IBarbeiroRepository barbeiroRepo
-		, IMapper mapper)
+	public CriarBarbeiroUseCase(IBarbeiroRepository barbeiroRepo)
 	{
 		_barbeiroRepo = barbeiroRepo;
-		_mapper = mapper;
+
 	}
 
-	public void Execute(BarbeiroRequest request, Guid barbeariaId)
+	public async Task<Guid> ExecuteAsync(BarbeiroRequest request, Guid barbeariaId)
 	{
 		var barbeiro = new Barbeiro(request.Nome,request.FotoPerfil,barbeariaId, request.HorarioAlmoco);
 
-		_barbeiroRepo.SalvarBarbeiro(barbeiro);
+		await _barbeiroRepo.SalvarBarbeiroAsync(barbeiro);
 
+		return barbeiro.Id;
 	}
 }

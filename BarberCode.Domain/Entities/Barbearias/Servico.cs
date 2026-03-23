@@ -10,12 +10,13 @@ public class Servico
 
 	}
 
-	public Servico(string name, int duracao, string? descricao, Guid barbeariaId)
+	public Servico(string name, int duracao, string? descricao,double preco, Guid barbeariaId)
 	{
 		Id = Guid.NewGuid();
 		Name = name;
 		Duracao = duracao;
 		Descricao = descricao;
+		Preco = preco;
 		BarbeariaId = barbeariaId;
 	}
 
@@ -23,6 +24,8 @@ public class Servico
 	public string Name { get; private set; }
 	public int Duracao { get; private set; }
 	public string? Descricao { get; private set; }
+
+	public double Preco { get; private set; }
 	public Guid BarbeariaId { get; private set; }
 	public virtual Barbearia Barbearia { get; private set; }
 

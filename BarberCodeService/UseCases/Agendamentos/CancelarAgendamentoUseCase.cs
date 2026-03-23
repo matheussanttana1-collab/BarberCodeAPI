@@ -14,13 +14,13 @@ public class CancelarAgendamentoUseCase
 		_repo = repo;
 	}
 
-	public void Execute (Guid Id) {
+	public async Task ExecuteAsync (Guid Id) {
 
-		var agendamento = _repo.BuscarAgendadamentoPorId(Id);
+		var agendamento = await _repo.BuscarAgendadamentoPorIdAsync(Id);
 
 		if (agendamento is null)
 			throw new Exception("Agendamento não Encontrado");
 
-		_repo.DeletarAgendadamento(agendamento);
+		await _repo.DeletarAgendadamentoAsync(agendamento);
 	}
 }

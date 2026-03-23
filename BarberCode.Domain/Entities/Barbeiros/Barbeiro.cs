@@ -68,6 +68,11 @@ public class Barbeiro
 			HorarioAlmoco = horarioAlmoco.Value;
 	}
 
+	public void AlterarFoto (string caminho)
+	{
+		FotoPerfil = caminho;
+	}
+
 	//---------------------------------- Metodos de Agendamento ----------------------------------------
 	public Agendamento NovoAgendamento(Guid clienteId, DateOnly dia, TimeOnly horario, int duracao, Guid servicoId)
 	{

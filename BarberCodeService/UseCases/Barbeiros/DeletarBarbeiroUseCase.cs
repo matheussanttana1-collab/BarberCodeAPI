@@ -16,13 +16,13 @@ public class DeletarBarbeiroUseCase
 		_repo = repo;
 	}
 
-	public void Execute(Guid id) 
+	public async Task ExecuteAsync(Guid id) 
 	{
-		var barbeiro = _repo.BuscarBarbeiroPor(id);
+		var barbeiro = await _repo.BuscarBarbeiroPorAsync(id);
 
 		if (barbeiro == null)
 			throw new Exception("Barbeiro não Encontrado");
 
-		_repo.DeletarBarbeiro(barbeiro);	
+		await _repo.DeletarBarbeiroAsync(barbeiro);
 	}
 }

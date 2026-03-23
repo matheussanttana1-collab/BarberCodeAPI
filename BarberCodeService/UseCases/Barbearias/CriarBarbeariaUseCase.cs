@@ -15,12 +15,12 @@ public class CriarBarbeariaUseCase
 		_mapper = mapper;
 	}
 
-	public Barbearia Execute(BarbeariaRequest request)
+	public async Task<Guid> ExecuteAsync(BarbeariaRequest request)
 	{  
 		Barbearia barbearia = _mapper.Map<Barbearia>(request);
 
-		_repository.SalvarBarbearia(barbearia);
+		await _repository.SalvarBarbeariaAsync(barbearia);
 
-		return barbearia;
+		return barbearia.Id;
 	}
 }

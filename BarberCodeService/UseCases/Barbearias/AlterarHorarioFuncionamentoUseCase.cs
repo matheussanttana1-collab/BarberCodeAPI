@@ -13,17 +13,15 @@ namespace BarberCode.Application.UseCases.Barbearias;
 public class AlterarHorarioFuncionamentoUseCase
 {
 	private readonly IBarbeariaRepository _repo;
-	private readonly IMapper _mapper;
-
 
 	public AlterarHorarioFuncionamentoUseCase(IBarbeariaRepository repo)
 	{
 		_repo = repo;
 	}
 
-	public void Execute (Guid id, List<HorarioFuncionamentoRequest> request)
+	public async Task ExecuteAsync (Guid id, List<HorarioFuncionamentoRequest> request)
 	{
-		var barbearia = _repo.BuscarBarbeariaPor(id);
+		var barbearia = await _repo.BuscarBarbeariaPorAsync(id);
 		if (barbearia == null)
 			throw new Exception("Barbearia não Encontrado");
 		var horarios = request
@@ -32,6 +30,6 @@ public class AlterarHorarioFuncionamentoUseCase
 
 		barbearia.AlterarFuncionamento(horarios);
 
-		_repo.AtualizarBarbearia();
+		await _repo.AtualizarBarbeariaAsync();
 	}	
 }

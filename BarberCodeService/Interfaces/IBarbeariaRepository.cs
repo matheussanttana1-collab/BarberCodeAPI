@@ -4,9 +4,9 @@ namespace BarberCode.Application.Interfaces;
 
 public interface IBarbeariaRepository
 {
-	IEnumerable<Barbearia> BuscarBarbearias();
-	void SalvarBarbearia(Barbearia barbearia);
-	Barbearia? BuscarBarbeariaPor(Guid id);
-	void AtualizarBarbearia();
-	void DeletarBarbearia(Barbearia barbearia);
+	Task<IEnumerable<Barbearia>> BuscarBarbeariasAsync();
+	Task SalvarBarbeariaAsync(Barbearia barbearia);
+	Task<Barbearia?> BuscarBarbeariaPorAsync(Guid id);
+	Task  AtualizarBarbeariaAsync();
+	Task  DeletarBarbeariaAsync(Barbearia barbearia);
 }

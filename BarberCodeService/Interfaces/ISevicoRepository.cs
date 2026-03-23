@@ -4,10 +4,9 @@ namespace BarberCode.Application.Interfaces;
 
 public interface IServicoRepository
 {
-	void SalvarServico(Servico servico);
-	IEnumerable<Servico> BuscarServicos(Guid barbeariaId);
-	Servico? BuscarServicoPor(Guid Id);
-	void DeletarServico(Servico servico);
-	public void AtualizarServico();
-
+	Task SalvarServicoAsync(Servico servico);
+	Task<IEnumerable<Servico>> BuscarServicosAsync(Guid barbeariaId);
+	Task<Servico?> BuscarServicoPorAsync(Guid Id);
+	Task DeletarServicoAsync(Servico servico);
+	Task AtualizarServicoAsync();
 }
