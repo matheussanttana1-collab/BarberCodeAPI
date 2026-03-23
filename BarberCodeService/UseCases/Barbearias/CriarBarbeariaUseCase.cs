@@ -15,7 +15,7 @@ public class CriarBarbeariaUseCase
 		_mapper = mapper;
 	}
 
-	public async Task<Guid> ExecuteAsync(BarbeariaRequest request)
+	public async Task<Guid> ExecuteAsync(CriarBarbeariaRequest request)
 	{  
 		Barbearia barbearia = _mapper.Map<Barbearia>(request);
 

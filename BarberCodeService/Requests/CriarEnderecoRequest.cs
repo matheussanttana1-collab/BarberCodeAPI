@@ -1,7 +1,10 @@
-namespace BarberCode.Service.Responses;
+using System.ComponentModel.DataAnnotations;
 
-public class EnderecoResponse {
-	public string Logradouro {  get; set; }
+namespace BarberCode.Service.Requests;
+
+public class CriarEnderecoRequest
+{
+	public string Logradouro { get; set; }
 	public int Numero { get; set; }
 	public string Bairro { get; set; }
 	public string Cidade { get; set; }

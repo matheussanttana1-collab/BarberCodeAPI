@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace BarberCode.Service.Requests;
-
-public class BarbeiroRequest
+ 
+public class CriarBarbeiroRequest
 {
+
     [Required(ErrorMessage = "Nome é obrigatório")]
     public string Nome { get; set; }
     [Required(ErrorMessage = "O Horario de Almoço é obrigatório")]

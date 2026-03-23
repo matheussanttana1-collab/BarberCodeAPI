@@ -2,7 +2,7 @@
 
 namespace BarberCode.Service.Requests;
 
-public class AgendamentoRequest
+public class CriarAgendamentoRequest
 {
     [Required(ErrorMessage = "BarbeiroId é obrigatório")]
     public Guid BarbeiroId { get; set; }
@@ -19,5 +19,5 @@ public class AgendamentoRequest
     public TimeOnly Horario { get; set; }
 
     [Required(ErrorMessage = "Cliente é obrigatório")]
-    public ClienteInfoRequest Cliente { get; set; }
+    public CriarClienteInfoRequest Cliente { get; set; }
 }

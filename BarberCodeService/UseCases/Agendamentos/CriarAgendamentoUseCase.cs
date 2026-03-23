@@ -27,7 +27,7 @@ public class CriarAgendamentoUseCase
 		_agendamentoRepo = agendamentoRepo;
 		_clienteRepo = clienteRepo;
 	}
-	public async Task<Guid> ExecuteAsync(AgendamentoRequest request)
+	public async Task<Guid> ExecuteAsync(CriarAgendamentoRequest request)
 	{
 		var barbearia = await _barbeariaRepo.BuscarBarbeariaPorAsync(request.BarbeariaId);
 		if (barbearia is null)

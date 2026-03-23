@@ -4,6 +4,8 @@ using BarberCode.Service.Requests;
 using BarberCode.Application.Interfaces;
 using AutoMapper;
 using BarberCode.Application.UseCases.Barbearias;
+using FluentValidation;
+using BarberCode.Application.Validators;
 
 namespace BarberCode.API.Endpoins;
 
@@ -32,15 +34,19 @@ public static class BarbeariaEndpoints
 		.WithName("GetBarbeariaById")
 		.WithOpenApi();
 
-		group.MapPost("/", async (BarbeariaRequest request, CriarBarbeariaUseCase useCase) =>
+		group.MapPost("/", async (CriarBarbeariaRequest request, CriarBarbeariaUseCase useCase,
+		IValidator<CriarBarbeariaRequest> validator) =>
 		{
+			var resultado = await validator.ValidateAsync(request);
+			if (!resultado.IsValid)
+				return Results.ValidationProblem(resultado.ToDictionary());
 			var id = await useCase.ExecuteAsync(request);
 			return Results.Created($"/api/Barbearias/{id}", new { id });
 		})
 		.WithName("CreateBarbearia")
 		.WithOpenApi();
 
-		group.MapPatch("/{id}/endereco", async (Guid id, EnderecoRequest request, AlterarEnderecoUseCase useCase) =>
+		group.MapPatch("/{id}/endereco", async (Guid id, CriarEnderecoRequest request, AlterarEnderecoUseCase useCase) =>
 		{
 			await useCase.ExecuteAsync(id, request);
 			return Results.NoContent();
@@ -48,7 +54,7 @@ public static class BarbeariaEndpoints
 		.WithName("AlterarEndereco")
 		.WithOpenApi();
 
-		group.MapPatch("/{id}/funcionamento", async (Guid id, List<HorarioFuncionamentoRequest> request,
+		group.MapPatch("/{id}/funcionamento", async (Guid id, List<CriarHorarioFuncionamentoRequest> request,
 			AlterarHorarioFuncionamentoUseCase useCase) =>
 		{
 			await useCase.ExecuteAsync(id, request);

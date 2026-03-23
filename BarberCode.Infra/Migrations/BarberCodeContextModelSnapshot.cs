@@ -74,6 +74,10 @@ namespace BarberCode.Infra.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<string>("Celular")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -125,6 +129,9 @@ namespace BarberCode.Infra.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<double>("Preco")
+                        .HasColumnType("double");
 
                     b.HasKey("Id");
 
@@ -201,6 +208,14 @@ namespace BarberCode.Infra.Migrations
                             b1.Property<Guid>("BarbeariaId")
                                 .HasColumnType("char(36)");
 
+                            b1.Property<string>("Bairro")
+                                .IsRequired()
+                                .HasColumnType("longtext");
+
+                            b1.Property<string>("CEP")
+                                .IsRequired()
+                                .HasColumnType("longtext");
+
                             b1.Property<string>("Cidade")
                                 .IsRequired()
                                 .HasColumnType("longtext");
@@ -209,11 +224,7 @@ namespace BarberCode.Infra.Migrations
                                 .IsRequired()
                                 .HasColumnType("longtext");
 
-                            b1.Property<string>("Lougradouro")
-                                .IsRequired()
-                                .HasColumnType("longtext");
-
-                            b1.Property<string>("Nome")
+                            b1.Property<string>("Logradouro")
                                 .IsRequired()
                                 .HasColumnType("longtext");
 
@@ -242,7 +253,7 @@ namespace BarberCode.Infra.Migrations
                             b1.Property<TimeOnly>("Fim")
                                 .HasColumnType("time(6)");
 
-                            b1.Property<TimeOnly>("Incio")
+                            b1.Property<TimeOnly>("Inicio")
                                 .HasColumnType("time(6)");
 
                             b1.Property<int>("dia")

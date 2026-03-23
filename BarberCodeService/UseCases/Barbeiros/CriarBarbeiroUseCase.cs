@@ -17,7 +17,7 @@ public class CriarBarbeiroUseCase
 
 	}
 
-	public async Task<Guid> ExecuteAsync(BarbeiroRequest request, Guid barbeariaId)
+	public async Task<Guid> ExecuteAsync(CriarBarbeiroRequest request, Guid barbeariaId)
 	{
 		var barbeiro = new Barbeiro(request.Nome,request.FotoPerfil,barbeariaId, request.HorarioAlmoco);
 

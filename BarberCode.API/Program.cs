@@ -6,9 +6,11 @@ using BarberCode.Application.UseCases.Agendamentos;
 using BarberCode.Application.UseCases.Barbearias;
 using BarberCode.Application.UseCases.Barbeiros;
 using BarberCode.Application.UseCases.Servicos;
+using BarberCode.Application.Validators;
 using BarberCode.Infra;
 using BarberCode.Infra.Banco;
 using BarberCode.Infra.Repositories;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +22,7 @@ builder.Services.AddAutoMapper(cfg => { }, typeof(BarbeariaProfile));
 
 builder.Services.AddApplication();
 builder.Services.addInfra();
+builder.Services.AddValidatorsFromAssemblyContaining<CriarBarbeariaValidator>();
 
 
 builder.Services.AddControllers();
@@ -35,6 +38,8 @@ builder.Services.AddSwaggerGen(c =>
 		Description = "API para gerenciamento de barbearias e agendamentos"
 	});
 });
+
+
 
 
 

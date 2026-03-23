@@ -20,14 +20,14 @@ public class AlterarEnderecoUseCase
 	}
 
 
-	public async Task ExecuteAsync(Guid id, EnderecoRequest request)
+	public async Task ExecuteAsync(Guid id, CriarEnderecoRequest request)
 	{
 		var barbearia = await _repo.BuscarBarbeariaPorAsync(id);
 		if (barbearia == null)
 			throw new Exception("Barbearia não Encontrado");
 
-		barbearia.AlterarEndereco(new Endereco(request.Lougradouro, request.Nome, request.Numero, request.Cidade
-		, request.Estado));
+		barbearia.AlterarEndereco(new Endereco(request.Logradouro, request.Bairro, request.Numero,
+		request.Cidade, request.Estado, request.CEP));
 
 		await _repo.AtualizarBarbeariaAsync();
 	}

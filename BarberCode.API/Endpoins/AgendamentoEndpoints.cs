@@ -40,7 +40,7 @@ public static class AgendamentoEndpoints
 		.WithName("ConcluirAgendamento")
 		.WithOpenApi();
 
-		group.MapPost("/", async (AgendamentoRequest request, CriarAgendamentoUseCase useCase) =>
+		group.MapPost("/", async (CriarAgendamentoRequest request, CriarAgendamentoUseCase useCase) =>
 		{
 			var id = await useCase.ExecuteAsync(request);
 			return Results.Created($"/api/Agendamento/{id}", new { id });

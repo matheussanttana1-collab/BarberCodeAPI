@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BarberCode.Service.Requests;
 
-public class ServicoRequest
+public class CriarServicoRequest
 {
     [Required(ErrorMessage = "Nome é obrigatório")]
     public string Name { get; set; }

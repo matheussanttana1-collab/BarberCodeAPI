@@ -41,7 +41,7 @@ public class GerarSlotsUseCase
 		if (expedienteDia is null)
 			return new GerarSlotsResponse(barbeiroId, dia, []);
 
-		var slots = barbeiro.HorariosDisponiveis(expedienteDia.Incio, expedienteDia.Fim, dia, servico.Duracao);
+		var slots = barbeiro.HorariosDisponiveis(expedienteDia.Inicio, expedienteDia.Fim, dia, servico.Duracao);
 
 		return new GerarSlotsResponse(barbeiroId, dia, slots);
 	}

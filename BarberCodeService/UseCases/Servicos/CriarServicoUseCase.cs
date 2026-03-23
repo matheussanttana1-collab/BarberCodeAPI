@@ -16,7 +16,7 @@ public class CriarServicoUseCase
 		_repo = repo;
 	}
 
-	public async Task<Guid> ExecuteAsync(Guid barbeariaId,ServicoRequest request)
+	public async Task<Guid> ExecuteAsync(Guid barbeariaId,CriarServicoRequest request)
 	{
 		var servico = new Servico(request.Name, request.Duracao, request.Descricao,request.Preco, barbeariaId);
 		

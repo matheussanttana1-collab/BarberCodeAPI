@@ -40,7 +40,7 @@ public static class ServicoEndpoints
 		.WithName("UpdateServico")
 		.WithOpenApi();
 
-		group.MapPost("/", async (Guid barbeariaId, ServicoRequest request, CriarServicoUseCase useCase) =>
+		group.MapPost("/", async (Guid barbeariaId, CriarServicoRequest request, CriarServicoUseCase useCase) =>
 		{
 			var id = await useCase.ExecuteAsync(barbeariaId, request);
 			return Results.Created($"/api/Servicos/{id}", new { id });

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BarberCode.Service.Requests;
 
-public class ClienteInfoRequest
+public class CriarClienteInfoRequest
 {
 
 	public string Nome { get; set; }

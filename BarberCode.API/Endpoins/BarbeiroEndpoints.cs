@@ -52,7 +52,7 @@ public static class BarbeiroEndpoints
 		.WithName("UpdateBarbeiro")
 		.WithOpenApi();
 
-		group.MapPost("/barbearia/{barbeariaId}", async (Guid barbeariaId, BarbeiroRequest request,
+		group.MapPost("/barbearia/{barbeariaId}", async (Guid barbeariaId, CriarBarbeiroRequest request,
 		CriarBarbeiroUseCase useCase) =>
 		{
 			var id = await useCase.ExecuteAsync(request, barbeariaId);

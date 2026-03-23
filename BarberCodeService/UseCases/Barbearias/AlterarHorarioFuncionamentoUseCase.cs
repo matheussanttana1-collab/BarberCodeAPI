@@ -19,13 +19,13 @@ public class AlterarHorarioFuncionamentoUseCase
 		_repo = repo;
 	}
 
-	public async Task ExecuteAsync (Guid id, List<HorarioFuncionamentoRequest> request)
+	public async Task ExecuteAsync (Guid id, List<CriarHorarioFuncionamentoRequest> request)
 	{
 		var barbearia = await _repo.BuscarBarbeariaPorAsync(id);
 		if (barbearia == null)
 			throw new Exception("Barbearia não Encontrado");
 		var horarios = request
-		.Select(h => new HorarioFuncionamento(h.Dia, h.Incio, h.Fim))
+		.Select(h => new HorarioFuncionamento(h.Dia, h.Inicio, h.Fim))
 		.ToList();
 
 		barbearia.AlterarFuncionamento(horarios);
