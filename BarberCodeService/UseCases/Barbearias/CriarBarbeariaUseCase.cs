@@ -2,6 +2,7 @@ namespace BarberCode.Application.UseCases.Barbearias;
 using AutoMapper;
 using BarberCode.Application.Interfaces;
 using BarberCode.Domain.Entities.Barbearias;
+using BarberCode.Domain.Shared;
 using BarberCode.Service.Requests;
 
 public class CriarBarbeariaUseCase
@@ -15,12 +16,12 @@ public class CriarBarbeariaUseCase
 		_mapper = mapper;
 	}
 
-	public async Task<Guid> ExecuteAsync(CriarBarbeariaRequest request)
+	public async Task<ResultData<Guid>> ExecuteAsync(CriarBarbeariaRequest request)
 	{  
 		Barbearia barbearia = _mapper.Map<Barbearia>(request);
 
 		await _repository.SalvarBarbeariaAsync(barbearia);
 
-		return barbearia.Id;
+		return ResultData<Guid>.Success(barbearia.Id);
 	}
 }

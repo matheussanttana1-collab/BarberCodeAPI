@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
 using BarberCode.Application.Interfaces;
 using BarberCode.Application.Requests;
-using BarberCode.Application.Responses;
-using BarberCode.Application.UseCases.Barbearias;
 using BarberCode.Application.UseCases.Barbeiros;
 using BarberCode.Domain.Entities.Barbeiros;
 using BarberCode.Service.Requests;
 using BarberCode.Service.Responses;
-using Microsoft.AspNetCore.Http.HttpResults;
+
 namespace BarberCode.API.Endpoins;
 
 public static class BarbeiroEndpoints

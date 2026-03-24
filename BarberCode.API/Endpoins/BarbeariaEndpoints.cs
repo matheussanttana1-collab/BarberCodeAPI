@@ -6,6 +6,8 @@ using AutoMapper;
 using BarberCode.Application.UseCases.Barbearias;
 using FluentValidation;
 using BarberCode.Application.Validators;
+using BarberCode.Domain.Shared;
+using BarberCode.API.Models;
 
 namespace BarberCode.API.Endpoins;
 
@@ -34,17 +36,15 @@ public static class BarbeariaEndpoints
 		.WithName("GetBarbeariaById")
 		.WithOpenApi();
 
-		group.MapPost("/", async (CriarBarbeariaRequest request, CriarBarbeariaUseCase useCase,
-		IValidator<CriarBarbeariaRequest> validator) =>
+		group.MapPost("/", async (CriarBarbeariaRequest request, CriarBarbeariaUseCase useCase) =>
 		{
-			var resultado = await validator.ValidateAsync(request);
-			if (!resultado.IsValid)
-				return Results.ValidationProblem(resultado.ToDictionary());
-			var id = await useCase.ExecuteAsync(request);
-			return Results.Created($"/api/Barbearias/{id}", new { id });
+
+			var result = await useCase.ExecuteAsync(request);
+			return ResultsExtends.ToCreateResult(result, $"/api/Barbearias/{result}");
 		})
 		.WithName("CreateBarbearia")
-		.WithOpenApi();
+		.WithOpenApi()
+		.AddEndpointFilter<ValidationFilter<CriarBarbeariaRequest>>();
 
 		group.MapPatch("/{id}/endereco", async (Guid id, CriarEnderecoRequest request, AlterarEnderecoUseCase useCase) =>
 		{

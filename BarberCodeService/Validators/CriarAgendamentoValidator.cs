@@ -1,10 +1,6 @@
 ﻿using BarberCode.Service.Requests;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace BarberCode.Application.Validators;
 public class CriarAgendamentoValidator : AbstractValidator<CriarAgendamentoRequest>
@@ -24,7 +20,6 @@ public class CriarAgendamentoValidator : AbstractValidator<CriarAgendamentoReque
 			.NotEmpty().WithMessage("A data do agendamento é obrigatória.")
 			.Must(BeAFutureDate).WithMessage("A data do agendamento não pode ser no passado.");
 
-		
 		RuleFor(a => a.Horario)
 			.NotEmpty().WithMessage("O horário do agendamento é obrigatório.");
 
