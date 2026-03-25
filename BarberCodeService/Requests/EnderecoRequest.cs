@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BarberCode.Service.Requests;
 
-public class CriarEnderecoRequest
+public class EnderecoRequest
 {
 	public string Logradouro { get; set; }
 	public int Numero { get; set; }

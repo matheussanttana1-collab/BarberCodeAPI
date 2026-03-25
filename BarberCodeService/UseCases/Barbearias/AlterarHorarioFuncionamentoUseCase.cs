@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BarberCode.Application.Interfaces;
 using BarberCode.Domain.Entities.Barbearias;
+using BarberCode.Domain.Shared;
 using BarberCode.Service.Requests;
 using System;
 using System.Collections.Generic;
@@ -19,11 +20,11 @@ public class AlterarHorarioFuncionamentoUseCase
 		_repo = repo;
 	}
 
-	public async Task ExecuteAsync (Guid id, List<CriarHorarioFuncionamentoRequest> request)
+	public async Task<ResultData> ExecuteAsync (Guid id, List<HorarioFuncionamentoRequest> request)
 	{
 		var barbearia = await _repo.BuscarBarbeariaPorAsync(id);
 		if (barbearia == null)
-			throw new Exception("Barbearia não Encontrado");
+			return ResultData.Failure(ResultType.NotFound, "Barbearia não Encontrada");
 		var horarios = request
 		.Select(h => new HorarioFuncionamento(h.Dia, h.Inicio, h.Fim))
 		.ToList();
@@ -31,5 +32,7 @@ public class AlterarHorarioFuncionamentoUseCase
 		barbearia.AlterarFuncionamento(horarios);
 
 		await _repo.AtualizarBarbeariaAsync();
+
+		return ResultData.Success();
 	}	
 }

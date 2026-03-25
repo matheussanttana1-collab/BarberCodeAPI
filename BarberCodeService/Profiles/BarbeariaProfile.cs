@@ -10,8 +10,8 @@ public class BarbeariaProfile : Profile
 	public BarbeariaProfile()
 	{
 		CreateMap<CriarBarbeariaRequest, Barbearia>();
-		CreateMap<CriarEnderecoRequest, Endereco>();
-		CreateMap<CriarHorarioFuncionamentoRequest, HorarioFuncionamento>();
+		CreateMap<EnderecoRequest, Endereco>();
+		CreateMap<HorarioFuncionamentoRequest, HorarioFuncionamento>();
 		CreateMap<Barbearia, BarbeariaResponse>();
 		CreateMap<Endereco, EnderecoResponse>();
 		CreateMap<HorarioFuncionamento, HorarioFuncionamentoResponse>();

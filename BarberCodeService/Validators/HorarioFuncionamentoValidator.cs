@@ -8,11 +8,12 @@ using System.Threading.Tasks;
 
 namespace BarberCode.Application.Validators;
 
-public class CriarHorarioFuncionamentoValidator : AbstractValidator<CriarHorarioFuncionamentoRequest>
+public class HorarioFuncionamentoValidator : AbstractValidator<HorarioFuncionamentoRequest>
 {
-	public CriarHorarioFuncionamentoValidator()
+	public HorarioFuncionamentoValidator()
 	{
 		RuleFor(x => x.Dia)
+			.NotEmpty().WithMessage("Dia da semana é Obrigatorio")
 			.IsInEnum().WithMessage("Dia da semana inválido.");
 
 		RuleFor(x => x.Inicio)

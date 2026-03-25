@@ -15,15 +15,11 @@ public class CriarBarbeariaValidator : AbstractValidator<CriarBarbeariaRequest>
 
 		RuleFor(x => x.Endereco)
 			.NotNull().WithMessage("Endereço é obrigatório.")
-			.SetValidator(new CriarEnderecoValidator());
+			.SetValidator(new EnderecoValidator());
 
 		RuleFor(x => x.Funcionamento)
 			.NotEmpty().WithMessage("Horários de funcionamento são obrigatórios.")
-			.Must(f => f.Select(x => x.Dia).Distinct().Count() == f.Count)
-			.WithMessage("Não pode haver dias duplicados no funcionamento.");
-
-		RuleForEach(x => x.Funcionamento)
-			.SetValidator(new CriarHorarioFuncionamentoValidator());
+			.SetValidator(new ListaHorarioFuncionamentoValidator());
 
 		RuleFor(c => c.Celular)
 		.NotEmpty().WithMessage("O telefone é obrigatório.")

@@ -44,27 +44,29 @@ public static class BarbeariaEndpoints
 		.WithOpenApi()
 		.AddEndpointFilter<ValidationFilter<CriarBarbeariaRequest>>();
 
-		group.MapPatch("/{id}/endereco", async (Guid id, CriarEnderecoRequest request, AlterarEnderecoUseCase useCase) =>
+		group.MapPatch("/{id}/endereco", async (Guid id, EnderecoRequest request, AlterarEnderecoUseCase useCase) =>
 		{
-			await useCase.ExecuteAsync(id, request);
-			return Results.NoContent();
+			var result = await useCase.ExecuteAsync(id, request);
+			return result.ToNoContentResult();
 		})
 		.WithName("AlterarEndereco")
-		.WithOpenApi();
+		.WithOpenApi()
+		.AddEndpointFilter<ValidationFilter<EnderecoRequest>>();
 
-		group.MapPatch("/{id}/funcionamento", async (Guid id, List<CriarHorarioFuncionamentoRequest> request,
+		group.MapPatch("/{id}/funcionamento", async (Guid id, List<HorarioFuncionamentoRequest> request,
 			AlterarHorarioFuncionamentoUseCase useCase) =>
 		{
-			await useCase.ExecuteAsync(id, request);
-			return Results.NoContent();
+			var result = await useCase.ExecuteAsync(id, request);
+			return result.ToNoContentResult();
 		})
 		.WithName("AlterarFuncionamento")
-		.WithOpenApi();
+		.WithOpenApi()
+		.AddEndpointFilter<ValidationFilter<List<HorarioFuncionamentoRequest>>>();
 
 		group.MapDelete("/{id}", async (Guid id, DeletarBarbeariaUseCase useCase) =>
 		{
-			await useCase.ExecuteAsync(id);
-			return Results.NoContent();
+			var result = await useCase.ExecuteAsync(id);
+			return result.ToNoContentResult();
 		})
 		.WithName("DeleteBarbearia")
 		.WithOpenApi();

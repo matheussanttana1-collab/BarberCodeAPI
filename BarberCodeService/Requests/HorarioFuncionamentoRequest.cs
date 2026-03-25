@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BarberCode.Service.Requests;
 
-public class CriarHorarioFuncionamentoRequest
+public class HorarioFuncionamentoRequest
 {
     [Required(ErrorMessage = "Dia da semana é obrigatório")]
     public DayOfWeek Dia { get; set; }

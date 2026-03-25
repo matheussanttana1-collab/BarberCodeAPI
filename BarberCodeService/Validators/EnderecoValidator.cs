@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace BarberCode.Application.Validators;
 
-public class CriarEnderecoValidator : AbstractValidator<CriarEnderecoRequest>
+public class EnderecoValidator : AbstractValidator<EnderecoRequest>
 {
-	public CriarEnderecoValidator()
+	public EnderecoValidator()
 	{
 		RuleFor(x => x.Logradouro)
 			.NotEmpty().WithMessage("Logradouro é obrigatório.")
