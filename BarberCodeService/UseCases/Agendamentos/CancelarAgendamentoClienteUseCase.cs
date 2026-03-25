@@ -1,4 +1,5 @@
 ﻿using BarberCode.Application.Interfaces;
+using BarberCode.Domain.Shared;
 
 namespace BarberCode.Application.UseCases.Agendamentos;
 
@@ -11,16 +12,20 @@ public class CancelarAgendamentoClienteUseCase
 		_repo = repo;
 	}
 
-	public async Task ExecuteAsync(Guid clienteId, Guid agendamentoId)
+	public async Task<ResultData> ExecuteAsync(Guid clienteId, Guid agendamentoId)
 	{
 		var agendamento = await _repo.BuscarAgendadamentoPorIdAsync(agendamentoId);
 
 		if (agendamento is null)
-			throw new Exception("Agendamento não Encontrado");
+			return ResultData.Failure(ResultType.NotFound, "Agendamento não encontrado");
 
-		agendamento.ValidarCancelamento(clienteId);
+		var status = agendamento.ValidarCancelamento(clienteId);
+		if(status.Type == ResultType.Validation)
+			return ResultData.Failure(status.Type, status.Message);
 
 		await _repo.DeletarAgendadamentoAsync(agendamento);
+
+		return ResultData.Success();
 	}
 
 }

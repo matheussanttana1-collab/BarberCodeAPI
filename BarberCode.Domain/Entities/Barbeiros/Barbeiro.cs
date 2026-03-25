@@ -1,5 +1,6 @@
 ﻿using BarberCode.Domain.Entities.Agendamentos;
 using BarberCode.Domain.Entities.Barbearias;
+using BarberCode.Domain.Shared;
 
 
 namespace BarberCode.Domain.Entities.Barbeiros;
@@ -74,17 +75,17 @@ public class Barbeiro
 	}
 
 	//---------------------------------- Metodos de Agendamento ----------------------------------------
-	public Agendamento NovoAgendamento(Guid clienteId, DateOnly dia, TimeOnly horario, int duracao, Guid servicoId)
+	public ResultData<Agendamento> NovoAgendamento(Guid clienteId, DateOnly dia, TimeOnly horario, int duracao, Guid servicoId)
 	{
 		if (!EstaDisponivel(dia,horario,duracao))
 		{
-			throw new Exception("Horario Indisponivel");
+			return ResultData<Agendamento>.Failure(ResultType.Conflict, "Horario Indisponivel");
 		}
 
 		var agendamento = new Agendamento(this.Id, this.BarbeariaId, clienteId, dia, horario, duracao, servicoId);
 		Agendamentos.Add(agendamento);
 
-		return agendamento;
+		return ResultData<Agendamento>.Success(agendamento);
 	}
 
 

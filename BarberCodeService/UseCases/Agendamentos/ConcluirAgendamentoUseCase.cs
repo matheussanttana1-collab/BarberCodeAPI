@@ -1,4 +1,5 @@
 ﻿using BarberCode.Application.Interfaces;
+using BarberCode.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,15 +17,19 @@ public class ConcluirAgendamentoUseCase
 		_repo = repo;
 	}
 
-	public async Task ExecuteAsync(Guid Id)
+	public async Task<ResultData> ExecuteAsync(Guid Id)
 	{
 		var agendamento = await _repo.BuscarAgendadamentoPorIdAsync(Id);
 
 		if (agendamento is null)
-			throw new Exception("Agendamento não Encontrado");
+			return ResultData.Failure(ResultType.NotFound, "Agendamento Não Encotrado");
 
-		agendamento.ConcluirAgendamento();
+		var concluirResult = agendamento.ConcluirAgendamento();
+		if (concluirResult.Type == ResultType.Conflict)
+			return ResultData.Failure(concluirResult.Type, concluirResult.Message);
 		await _repo.AtualizarAgendadamentoAsync();
+
+		return ResultData.Success();
 	}
 
 }

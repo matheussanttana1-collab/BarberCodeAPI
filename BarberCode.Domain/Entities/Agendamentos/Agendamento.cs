@@ -3,6 +3,7 @@ namespace BarberCode.Domain.Entities.Agendamentos;
 
 using Barbeiros;
 using Barbearias;
+using BarberCode.Domain.Shared;
 
 public class Agendamento
 {
@@ -38,18 +39,22 @@ public class Agendamento
 		Status = StatusAgendamento.Pendente;
 	}
 
-	public void ConcluirAgendamento()
+	public ResultData ConcluirAgendamento()
 	{
 		if (Status == StatusAgendamento.Concluido)
-			throw new Exception("Agendamento Ja foi Concluido");
+			return ResultData.Failure(ResultType.Conflict, "Agendamento ja foi Concluido");
 
 		Status = StatusAgendamento.Concluido;
 
+		return ResultData.Success();
+
 	}
 
-	public void ValidarCancelamento(Guid clienteId)
+	public ResultData ValidarCancelamento(Guid clienteId)
 	{
 		if (clienteId != ClienteId || Status == StatusAgendamento.Concluido)
-			throw new Exception("Cliente não tem permissão para cancelar esse Agendamento");
+			return ResultData.Failure(ResultType.Validation,
+			"Cliente não tem permissão para cancelar esse Agendamento");
+		return ResultData.Success();
 	}
 }

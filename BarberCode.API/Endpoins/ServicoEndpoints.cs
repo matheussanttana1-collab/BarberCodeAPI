@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BarberCode.API.Models;
 using BarberCode.Application.Interfaces;
 using BarberCode.Application.Requests;
 using BarberCode.Application.UseCases.Servicos;
@@ -46,7 +47,8 @@ public static class ServicoEndpoints
 			return Results.Created($"/api/Servicos/{id}", new { id });
 		})
 		.WithName("CreateServico")
-		.WithOpenApi();
+		.WithOpenApi()
+		.AddEndpointFilter<ValidationFilter<CriarServicoRequest>>(); ;
 
 		group.MapDelete("/{id}", async (Guid id, DeletarServicoUseCase useCase) =>
 		{

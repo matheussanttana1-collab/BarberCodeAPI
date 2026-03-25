@@ -12,9 +12,9 @@ public class CriarClienteInfoValidator : AbstractValidator<CriarClienteInfoReque
 {
 	public CriarClienteInfoValidator()
 	{
-		RuleFor(c => c.Nome).NotEmpty()
-		.WithMessage("Nome do {PropertyName} e Obriatorio")
-		.MaximumLength(100).WithMessage("{PropertyName} deve ter no máximo 100 caracteres.");
+		RuleFor(c => c.Nome)
+		.MaximumLength(100).WithMessage("{PropertyName} deve ter no máximo 100 caracteres.")
+		.When(c => c.Nome is not null);
 
 		RuleFor(c => c.Celular)
 		.NotEmpty().WithMessage("O telefone é obrigatório.")

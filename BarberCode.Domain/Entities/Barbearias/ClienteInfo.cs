@@ -1,4 +1,6 @@
-﻿namespace BarberCode.Domain.Entities.Barbearias;
+﻿using BarberCode.Domain.Shared;
+
+namespace BarberCode.Domain.Entities.Barbearias;
 
 public class ClienteInfo
 {
@@ -10,15 +12,21 @@ public class ClienteInfo
 	
 	protected ClienteInfo() { }
 
-	public ClienteInfo(string name, string celular, Guid barbeariaId)
+	private ClienteInfo(string name, string celular, Guid barbeariaId)
 	{
 		Id = Guid.NewGuid();
 		Name = name;
-		if (Name is null)
-			throw new Exception("Nome do Cliente Nao Pode Ser Nulo");
 		Celular = celular;
 		BarbeariaId = barbeariaId;
 	}
 
+	public static ResultData<ClienteInfo> CriarCliente(string name, string celular, Guid barbeariaId)
+	{
+		if (string.IsNullOrWhiteSpace(name))
+			return ResultData<ClienteInfo>.Failure(ResultType.Validation, "Nome do cliente não pode " +
+			"ser nulo");
+
+		return ResultData<ClienteInfo>.Success(new ClienteInfo(name, celular, barbeariaId));
+	}
 
 }

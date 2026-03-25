@@ -1,6 +1,7 @@
 ﻿using BarberCode.Application.Interfaces;
 using BarberCode.Domain.Entities.Agendamentos;
 using BarberCode.Domain.Entities.Barbearias;
+using BarberCode.Domain.Shared;
 using BarberCode.Service.Requests;
 using System;
 using System.Collections.Generic;
@@ -27,34 +28,44 @@ public class CriarAgendamentoUseCase
 		_agendamentoRepo = agendamentoRepo;
 		_clienteRepo = clienteRepo;
 	}
-	public async Task<Guid> ExecuteAsync(CriarAgendamentoRequest request)
+	public async Task<ResultData<Guid>> ExecuteAsync(CriarAgendamentoRequest request)
 	{
 		var barbearia = await _barbeariaRepo.BuscarBarbeariaPorAsync(request.BarbeariaId);
 		if (barbearia is null)
-			throw new  Exception("Barbearia não cadastrada.");
+			return ResultData<Guid>.Failure(ResultType.NotFound, "Barbearia Não Encontrada");
 
-		var barbeiro = await _barbeiroRepo.BuscarBarbeiroPorAsync(request.BarbeiroId);
+		var barbeiro = barbearia.Barbeiros.FirstOrDefault(b => b.Id == request.BarbeiroId);
 		if (barbeiro is null)
-			throw new Exception("Barbeiro não cadastrado");
+			return ResultData<Guid>.Failure(ResultType.NotFound, "Barbeairo não cadastrado ou Não" +
+			"pertence a esta Barbearia");
 
 		var servico = barbearia.Servicos.FirstOrDefault(s => s.Id == request.ServicoId);
 		if (servico is null)
-			throw new Exception("Barbearia escolhida não oferece este serviço.");
+			return ResultData<Guid>.Failure(ResultType.NotFound, "Barbearia Não Oferece este Serviço");
 
 		var cliente = await _clienteRepo.BuscarClientePeloTelefoneAsync(request.Cliente.Celular);
 		if (cliente is null)
 		{
-			cliente = new ClienteInfo(request.Cliente.Nome, request.Cliente.Celular, barbearia.Id);
+			var clienteResult = ClienteInfo.CriarCliente(request.Cliente.Nome, request.Cliente.Celular, 
+			barbearia.Id);
+			if (clienteResult.Type == ResultType.Validation)
+				return ResultData<Guid>.Failure(clienteResult.Type, clienteResult.Message);
+			cliente = clienteResult.Data;
 			await _clienteRepo.SalvarClienteAsync(cliente);
 		}
 
-		barbearia.EstaFuncionando(request.Dia, request.Horario);
+		var status = barbearia.EstaFuncionando(request.Dia, request.Horario);
+		if (status.Type == ResultType.Validation)
+			return ResultData<Guid>.Failure(status.Type, status.Message);
 
-		var agendamento = barbeiro.NovoAgendamento(cliente.Id, request.Dia, request.Horario, servico.Duracao, request.ServicoId);
+		var agendamentoResult = barbeiro.NovoAgendamento(cliente.Id, request.Dia, request.Horario, 
+		servico.Duracao, request.ServicoId);
+		if (agendamentoResult.Type == ResultType.Conflict)
+			return ResultData<Guid>.Failure(ResultType.Conflict, agendamentoResult.Message);
 
-		await _agendamentoRepo.SalvarAgendadamentoAsync(agendamento);
+		await _agendamentoRepo.SalvarAgendadamentoAsync(agendamentoResult.Data);
 
-		return agendamento.Id;
+		return ResultData<Guid>.Success(agendamentoResult.Data.Id);
 	}
 }
 

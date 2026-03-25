@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BarberCode.API.Models;
 using BarberCode.Application.Interfaces;
 using BarberCode.Application.UseCases.Agendamentos;
 using BarberCode.Domain.Entities.Agendamentos;
@@ -13,13 +14,13 @@ public static class AgendamentoEndpoints
 		var group = routes.MapGroup("/api/Agendamento").WithTags(nameof(Agendamento));
 
 		group.MapGet("/Barbeiro/{barbeiroId}", async (Guid barbeiroId, IAgendamentoRepository repo,
-	  IMapper mapper, StatusAgendamento? status) =>
+		 IMapper mapper, StatusAgendamento? status) =>
 		{
 			var agendamentos = await repo.BuscarAgendamentosAsync(barbeiroId, status);
 			return Results.Ok(mapper.Map<List<AgendamentoResponse>>(agendamentos));
 		})
-  .WithName("GetAllAgendamentos")
-  .WithOpenApi();
+		.WithName("GetAllAgendamentos")
+		.WithOpenApi();
 
 		group.MapGet("/{id}", async (Guid id, IAgendamentoRepository repo, IMapper mapper) =>
 		{
@@ -34,24 +35,25 @@ public static class AgendamentoEndpoints
 
 		group.MapPatch("/{id}/concluir", async (Guid id, ConcluirAgendamentoUseCase useCase) =>
 		{
-			await useCase.ExecuteAsync(id);
-			return Results.NoContent();
+			var result = await useCase.ExecuteAsync(id);
+			return result.ToNoContentResult();
 		})
 		.WithName("ConcluirAgendamento")
 		.WithOpenApi();
 
 		group.MapPost("/", async (CriarAgendamentoRequest request, CriarAgendamentoUseCase useCase) =>
 		{
-			var id = await useCase.ExecuteAsync(request);
-			return Results.Created($"/api/Agendamento/{id}", new { id });
+			var resultId = await useCase.ExecuteAsync(request);
+			return resultId.ToCreateResult($"/api/Agendamento/{resultId}");
 		})
 		.WithName("CreateAgendamento")
-		.WithOpenApi();
+		.WithOpenApi()
+		.AddEndpointFilter<ValidationFilter<CriarAgendamentoRequest>>(); 
 
 		group.MapDelete("/{id}", async (Guid id, CancelarAgendamentoUseCase useCase) =>
 		{
-			await useCase.ExecuteAsync(id);
-			return Results.NoContent();
+			var result = await useCase.ExecuteAsync(id);
+			return result.ToNoContentResult();
 		})
 		.WithName("DeleteAgendamento")
 		.WithOpenApi();

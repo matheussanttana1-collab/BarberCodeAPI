@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BarberCode.API.Models;
 using BarberCode.Application.Interfaces;
 using BarberCode.Application.UseCases.Agendamentos;
 using BarberCode.Domain.Entities.Agendamentos;
@@ -40,11 +41,11 @@ public static class ClienteEndpoints
 		.WithName("AgendamentosDoCliente")
 		.WithOpenApi();
 
-		group.MapDelete("/agendamentos/{agendamentoId}", async (Guid agendamentoId, Guid clienteId,
+		group.MapDelete("/{id}/agendamentos/{agendamentoId}", async (Guid id, Guid agendamentoId,
 		CancelarAgendamentoClienteUseCase useCase) =>
 		{
-			await useCase.ExecuteAsync(agendamentoId, clienteId);
-			return Results.NoContent();
+			var result = await useCase.ExecuteAsync(agendamentoId, id);
+			return result.ToNoContentResult();
 		})
 		.WithName("CancelarAgendamentoCliente")
 		.WithOpenApi();

@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using BarberCode.API.Models;
 using BarberCode.Application.Interfaces;
 using BarberCode.Application.Requests;
 using BarberCode.Application.UseCases.Barbeiros;
+using BarberCode.Application.Validators;
 using BarberCode.Domain.Entities.Barbeiros;
 using BarberCode.Service.Requests;
 using BarberCode.Service.Responses;
@@ -19,8 +21,8 @@ public static class BarbeiroEndpoints
 			var barbeiros = await repo.BuscarBarbeirosAsync(barbeariaId);
 			return Results.Ok(mapper.Map<List<BarbeiroResponse>>(barbeiros));
 		})
- .WithName("GetAllBarbeiros")
- .WithOpenApi();
+		.WithName("GetAllBarbeiros")
+		.WithOpenApi();
 
 		group.MapGet("/{id}", async (Guid id, IBarbeiroRepository repo, IMapper mapper) =>
 		{
@@ -57,7 +59,8 @@ public static class BarbeiroEndpoints
 			return Results.Created($"/api/Barbeiros/{id}", new { id });
 		})
 		.WithName("CreateBarbeiro")
-		.WithOpenApi();
+		.WithOpenApi()
+		.AddEndpointFilter<ValidationFilter<CriarBarbeiroRequest>>();
 
 		group.MapDelete("/{id}", async (Guid id, DeletarBarbeiroUseCase useCase) =>
 		{

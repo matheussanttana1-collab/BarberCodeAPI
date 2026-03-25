@@ -1,6 +1,8 @@
 ﻿namespace BarberCode.Domain.Entities.Barbearias;
 
 using Barbeiros;
+using BarberCode.Domain.Shared;
+using System.Reflection.Metadata.Ecma335;
 
 public class Barbearia
 {
@@ -25,16 +27,13 @@ public class Barbearia
 	public virtual ICollection<Servico> Servicos { get; private set; } = new List<Servico>();
 	public virtual ICollection<ClienteInfo> Clientes { get; private set; } = new List<ClienteInfo>();
 
-	public bool EstaFuncionando(DateOnly dia, TimeOnly hora) 
+	public ResultData EstaFuncionando(DateOnly dia, TimeOnly hora) 
 	{
 		var diaSemana = Funcionamento.FirstOrDefault(d => d.dia == dia.DayOfWeek);
-		if (diaSemana is null) 
-			return false;
+		if (diaSemana is null || hora < diaSemana.Inicio && hora > diaSemana.Fim)
+			return ResultData.Failure(ResultType.Validation, "Barbearia Fechada");
 
-		if(hora < diaSemana.Inicio && hora > diaSemana.Fim)
-			return false;
-
-		return true;
+		return ResultData.Success();
 	}
 
 	public HorarioFuncionamento? ExpedienteDia(DateOnly diaEscolhido) 

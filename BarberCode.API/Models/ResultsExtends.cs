@@ -1,4 +1,5 @@
 ﻿using BarberCode.Domain.Shared;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BarberCode.API.Models;
 
@@ -24,17 +25,52 @@ public static class ResultsExtends
 			ResultType.Success => Results.Created(path, result),
 
 			// Falha de validação → 400 Bad Request
-			// Ocorre quando o FluentValidation barrou a requisição
 			// Body contém os erros de validação agrupados por campo
-			ResultType.Validation => Results.BadRequest(result),
+			ResultType.Validation => Results.BadRequest(new 
+			{
+				result.Type,
+				result.Message,
+			}),
 
 			// Conflito de dados → 409 Conflict
 			// Ocorre quando o recurso já existe
 			// Ex: tentar criar uma barbearia com nome já cadastrado
-			ResultType.Conflict => Results.Conflict(result),
+			ResultType.Conflict => Results.Conflict(new
+			{
+				result.Type,
+				result.Message,
+			}),
+
+			ResultType.NotFound => Results.NotFound(new 
+			{
+				result.Type,
+				result.Message,
+			}),
 
 			// Qualquer outro tipo não mapeado → 500 Internal Server Error
 			_ => Results.StatusCode(500)
 		};
 	}
+
+	public static IResult ToOkSingleResult<T>(this T? data)
+	{
+		return data is not null ?
+			Results.Ok(ResultData<T>.Success(data)) :
+			Results.NotFound(ResultData<T>.Failure(ResultType.NotFound, $"{data.GetType} Not Found"));
+	}
+	public static IResult ToOkResult<T>(this T data)
+	{
+		return Results.Ok(ResultData<T>.Success(data)); 
+	}
+
+	public static IResult ToNoContentResult(this ResultData result)
+	{
+		return result.Type switch
+		{
+			ResultType.Success => Results.NoContent(),
+			ResultType.Conflict => Results.Conflict(result),
+			ResultType.NotFound => Results.NotFound(result)
+		};
+	}
+
 }

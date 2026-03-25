@@ -5,8 +5,6 @@ using BarberCode.Application.Interfaces;
 using AutoMapper;
 using BarberCode.Application.UseCases.Barbearias;
 using FluentValidation;
-using BarberCode.Application.Validators;
-using BarberCode.Domain.Shared;
 using BarberCode.API.Models;
 
 namespace BarberCode.API.Endpoins;
@@ -20,7 +18,8 @@ public static class BarbeariaEndpoints
 		group.MapGet("/", async (IBarbeariaRepository repo, IMapper mapper) =>
 		{
 			var barbearias = await repo.BuscarBarbeariasAsync();
-			return Results.Ok(mapper.Map<List<BarbeariaResponse>>(barbearias));
+			var barbeariasDto = mapper.Map<List<BarbeariaResponse>>(barbearias);
+			return barbeariasDto.ToOkResult();
 		})
 		.WithName("GetAllBarbearia")
 		.WithOpenApi();
@@ -28,10 +27,9 @@ public static class BarbeariaEndpoints
 		group.MapGet("/{id}", async (Guid id, IBarbeariaRepository repo, IMapper mapper) =>
 		{
 			var barbearia = await repo.BuscarBarbeariaPorAsync(id);
-			if (barbearia is null)
-				return Results.NotFound("Barbearia não encontrada.");
+			var dto = mapper.Map<BarbeariaResponse>(barbearia);
 
-			return Results.Ok(mapper.Map<BarbeariaResponse>(barbearia));
+			return barbearia.ToOkSingleResult();
 		})
 		.WithName("GetBarbeariaById")
 		.WithOpenApi();
