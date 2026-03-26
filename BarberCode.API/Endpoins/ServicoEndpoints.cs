@@ -4,6 +4,7 @@ using BarberCode.Application.Interfaces;
 using BarberCode.Application.Requests;
 using BarberCode.Application.UseCases.Servicos;
 using BarberCode.Domain.Entities.Barbearias;
+using BarberCode.Domain.Shared;
 using BarberCode.Service.Requests;
 using BarberCode.Service.Responses;
 namespace BarberCode.API.Endpoins;
@@ -17,7 +18,8 @@ public static class ServicoEndpoints
 		group.MapGet("/", async (Guid barbeariaId, IServicoRepository repo, IMapper mapper) =>
 		{
 			var servicos = await repo.BuscarServicosAsync(barbeariaId);
-			return Results.Ok(mapper.Map<List<ServicoResponse>>(servicos));
+			return ResultData<List<ServicoResponse>>.Success(mapper.Map<List<ServicoResponse>>(servicos))
+			.ToOkSingleResult();
 		})
 		.WithName("GetAllServicos")
 		.WithOpenApi();
@@ -25,26 +27,28 @@ public static class ServicoEndpoints
 		group.MapGet("/{id}", async (Guid id, IServicoRepository repo, IMapper mapper) =>
 		{
 			var servico = await repo.BuscarServicoPorAsync(id);
-			if (servico is null)
-				return Results.NotFound("Serviço não encontrado.");
 
-			return Results.Ok(mapper.Map<ServicoResponse>(servico));
+			return (servico is null
+				? ResultData<ServicoResponse>.Failure(ResultType.NotFound, "Serviço não encontrado")
+				: ResultData<ServicoResponse>.Success(mapper.Map<ServicoResponse>(servico)))
+			.ToOkSingleResult();
 		})
 		.WithName("GetServicoById")
 		.WithOpenApi();
 
 		group.MapPatch("/{id}", async (Guid id, AtualizarServicoRequest request, AlterarServicoUseCase useCase) =>
 		{
-			await useCase.ExecuteAsync(id, request);
-			return Results.NoContent();
+			var result = await useCase.ExecuteAsync(id, request);
+			return result.ToNoContentResult();
 		})
 		.WithName("UpdateServico")
-		.WithOpenApi();
+		.WithOpenApi()
+		.AddEndpointFilter<ValidationFilter<AtualizarServicoRequest>>();
 
 		group.MapPost("/", async (Guid barbeariaId, CriarServicoRequest request, CriarServicoUseCase useCase) =>
 		{
-			var id = await useCase.ExecuteAsync(barbeariaId, request);
-			return Results.Created($"/api/Servicos/{id}", new { id });
+			var result = await useCase.ExecuteAsync(barbeariaId, request);
+			return result.ToCreateResult($"/api/Servicos/{result}");
 		})
 		.WithName("CreateServico")
 		.WithOpenApi()
@@ -52,8 +56,8 @@ public static class ServicoEndpoints
 
 		group.MapDelete("/{id}", async (Guid id, DeletarServicoUseCase useCase) =>
 		{
-			await useCase.ExecuteAsync(id);
-			return Results.NoContent();
+			var result = await useCase.ExecuteAsync(id);
+			return result.ToNoContentResult();
 		})
 		.WithName("DeleteServico")
 		.WithOpenApi();

@@ -5,6 +5,7 @@ using BarberCode.Application.Requests;
 using BarberCode.Application.UseCases.Barbeiros;
 using BarberCode.Application.Validators;
 using BarberCode.Domain.Entities.Barbeiros;
+using BarberCode.Domain.Shared;
 using BarberCode.Service.Requests;
 using BarberCode.Service.Responses;
 
@@ -19,7 +20,8 @@ public static class BarbeiroEndpoints
 		group.MapGet("/Barbearia/{barbeariaId}", async (Guid barbeariaId, IBarbeiroRepository repo, IMapper mapper) =>
 		{
 			var barbeiros = await repo.BuscarBarbeirosAsync(barbeariaId);
-			return Results.Ok(mapper.Map<List<BarbeiroResponse>>(barbeiros));
+			return ResultData<List<BarbeiroResponse>>.Success(mapper.Map<List<BarbeiroResponse>>(barbeiros))
+			.ToOkSingleResult();
 		})
 		.WithName("GetAllBarbeiros")
 		.WithOpenApi();
@@ -27,36 +29,38 @@ public static class BarbeiroEndpoints
 		group.MapGet("/{id}", async (Guid id, IBarbeiroRepository repo, IMapper mapper) =>
 		{
 			var barbeiro = await repo.BuscarBarbeiroPorAsync(id);
-			if (barbeiro is null)
-				return Results.NotFound("Barbeiro não encontrado.");
 
-			return Results.Ok(mapper.Map<BarbeiroResponse>(barbeiro));
+			return (barbeiro is null
+			? ResultData<BarbeiroResponse>.Failure(ResultType.NotFound, "Barbeiro Não Encontrado")
+			: ResultData<BarbeiroResponse>.Success(mapper.Map<BarbeiroResponse>(barbeiro)))
+			.ToOkSingleResult();
 		})
 		.WithName("GetBarbeiroById")
 		.WithOpenApi();
 
-		group.MapGet("/{id}/slots", async (Guid id, Guid barbeariaId, DateOnly diaEscolhido,
+		group.MapGet("/{id}/slots", async (Guid id,DateOnly diaEscolhido,
 			Guid servicoId, GerarSlotsUseCase useCase) =>
 		{
-			var slots = await useCase.ExecuteAsync(id, barbeariaId, servicoId, diaEscolhido);
-			return Results.Ok(slots);
+			var slots = await useCase.ExecuteAsync(id,servicoId, diaEscolhido);
+			return slots.ToOkSingleResult();
 		})
 		.WithName("GerarSlotsBarbeiro")
 		.WithOpenApi();
 
 		group.MapPatch("/{id}", async (Guid id, AtualizarBarbeiroRequest request, AlterarBarbeiroUseCase useCase) =>
 		{
-			await useCase.ExecuteAsync(id, request);
-			return Results.NoContent();
+			var result = await useCase.ExecuteAsync(id, request);
+			return result.ToNoContentResult();
 		})
 		.WithName("UpdateBarbeiro")
-		.WithOpenApi();
+		.WithOpenApi()
+		.AddEndpointFilter<ValidationFilter<AtualizarBarbeiroRequest>>();
 
 		group.MapPost("/barbearia/{barbeariaId}", async (Guid barbeariaId, CriarBarbeiroRequest request,
 		CriarBarbeiroUseCase useCase) =>
 		{
-			var id = await useCase.ExecuteAsync(request, barbeariaId);
-			return Results.Created($"/api/Barbeiros/{id}", new { id });
+			var result = await useCase.ExecuteAsync(request, barbeariaId);
+			return result.ToCreateResult($"/api/Barbeiros/{result}");
 		})
 		.WithName("CreateBarbeiro")
 		.WithOpenApi()
@@ -64,8 +68,8 @@ public static class BarbeiroEndpoints
 
 		group.MapDelete("/{id}", async (Guid id, DeletarBarbeiroUseCase useCase) =>
 		{
-			await useCase.ExecuteAsync(id);
-			return Results.NoContent();
+			var result = await useCase.ExecuteAsync(id);
+			return result.ToNoContentResult();
 		})
 		.WithName("DeleteBarbeiro")
 		.WithOpenApi();

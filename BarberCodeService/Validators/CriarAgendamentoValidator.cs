@@ -21,12 +21,11 @@ public class CriarAgendamentoValidator : AbstractValidator<CriarAgendamentoReque
 			.Must(DiaNoFuturo).WithMessage("A data do agendamento não pode ser no passado.");
 
 		RuleFor(a => a.Horario)
-			.NotEmpty().WithMessage("O horário do agendamento é obrigatório.")
-			.Must(HoraNoFuturo).WithMessage("A hora do agendamento não pode ser no passado."); ;
+			.NotEmpty().WithMessage("O horário do agendamento é obrigatório.");
 	
 		RuleFor(a => a.Cliente)
 			.NotNull().WithMessage("As informações do cliente são obrigatórias.")
-			.SetValidator(new CriarClienteInfoValidator()!);	
+			.SetValidator(new ClienteInfoValidator()!);	
 	}
 
 	private bool DiaNoFuturo(DateOnly dia)

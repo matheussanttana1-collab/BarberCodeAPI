@@ -32,10 +32,13 @@ public class Barbeiro
 	//--------------------------------- Metodos De Verificação de Horarios ------------------------------
 	private bool EstaDisponivel(DateOnly dia, TimeOnly horario, int duracaoMinutos)
 	{
+		//Junta Dia e Horario para não gerar
+		var DiaHorarioEscolhido = dia.ToDateTime(horario);
+		if (DiaHorarioEscolhido <= DateTime.Now)
+			return false;
 		var fim = horario.AddMinutes(duracaoMinutos);
 		if (fim > HorarioAlmoco && horario < HorarioAlmoco.AddMinutes(60))
 			return false;
-
 		if (Agendamentos.Any(a => a.Dia == dia &&
 			horario < a.Horario.AddMinutes(a.Duracao) && fim > a.Horario))
 			return false;
@@ -77,6 +80,11 @@ public class Barbeiro
 	//---------------------------------- Metodos de Agendamento ----------------------------------------
 	public ResultData<Agendamento> NovoAgendamento(Guid clienteId, DateOnly dia, TimeOnly horario, int duracao, Guid servicoId)
 	{
+		//Junta Dia e Horario para não gerar
+		var DiaHorarioEscolhido = dia.ToDateTime(horario);
+		if (DiaHorarioEscolhido <  DateTime.Now)
+			return ResultData<Agendamento>.Failure(ResultType.Validation, "Agendamento Não pode ser feito" +
+			" no passado");
 		if (!EstaDisponivel(dia,horario,duracao))
 		{
 			return ResultData<Agendamento>.Failure(ResultType.Conflict, "Horario Indisponivel");

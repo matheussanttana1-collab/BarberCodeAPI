@@ -52,11 +52,16 @@ public static class ResultsExtends
 		};
 	}
 
-	public static IResult ToOkSingleResult<T>(this T? data)
+	public static IResult ToOkSingleResult<T>(this ResultData<T> result)
 	{
-		return data is not null ?
-			Results.Ok(ResultData<T>.Success(data)) :
-			Results.NotFound(ResultData<T>.Failure(ResultType.NotFound, $"{data.GetType} Not Found"));
+		return result.Type switch
+		{
+			ResultType.Success => Results.Ok(result),
+			ResultType.Conflict => Results.Conflict(result),
+			ResultType.Validation => Results.BadRequest(result),
+			ResultType.NotFound => Results.NotFound(result),
+			_ => Results.StatusCode(500)
+		};
 	}
 	public static IResult ToOkResult<T>(this T data)
 	{
@@ -69,7 +74,8 @@ public static class ResultsExtends
 		{
 			ResultType.Success => Results.NoContent(),
 			ResultType.Conflict => Results.Conflict(result),
-			ResultType.NotFound => Results.NotFound(result)
+			ResultType.NotFound => Results.NotFound(result),
+			_ => Results.StatusCode(500)
 		};
 	}
 

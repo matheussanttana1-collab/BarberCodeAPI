@@ -2,6 +2,7 @@
 using BarberCode.Application.Interfaces;
 using BarberCode.Application.Responses;
 using BarberCode.Domain.Entities.Barbearias;
+using BarberCode.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,38 +13,35 @@ namespace BarberCode.Application.UseCases.Barbeiros;
 
 public class GerarSlotsUseCase
 {
-	private readonly IBarbeariaRepository _barbeariaRepo;
-	private readonly IBarbeiroRepository _barbeiroRep;
+	private readonly IBarbeiroRepository _repo;
 
 
-	public GerarSlotsUseCase(IBarbeariaRepository barbeariaRepo, IBarbeiroRepository barbeiroRep)
+	public GerarSlotsUseCase(IBarbeiroRepository repo)
 	{
-		_barbeariaRepo = barbeariaRepo;
-		_barbeiroRep = barbeiroRep;
+		_repo = repo;
 	
 	}
 
-	public async Task<GerarSlotsResponse> ExecuteAsync(Guid barbeiroId, Guid barbeariaId, Guid servicoId, DateOnly dia)
+	public async Task<ResultData<GerarSlotsResponse>> ExecuteAsync(Guid barbeiroId, Guid servicoId, DateOnly dia)
 	{
-		var barbearia = await _barbeariaRepo.BuscarBarbeariaPorAsync(barbeariaId);
-		if (barbearia is null)
-			throw new Exception("Barbearia não encontrada.");
 
+		var barbeiro = await _repo.BuscarBarbeiroPorAsync(barbeiroId);
+		if (barbeiro is null)
+			return ResultData<GerarSlotsResponse>.Failure(ResultType.NotFound, "Barbeiro não encontrado");
+		var barbearia = barbeiro.BarbeariaQueTrabalha;
 		var servico = barbearia.Servicos.FirstOrDefault(s => s.Id == servicoId);
 		if (servico is null)
-			throw new Exception("Barbearia não oferece este serviço.");
-
-		var barbeiro = barbearia.Barbeiros.FirstOrDefault(b => b.Id == barbeiroId);
-		if (barbeiro is null)
-			throw new Exception("Barbeiro não cadastrado ou não pertence a esta barbearia.");
+			return ResultData<GerarSlotsResponse>.Failure(ResultType.NotFound, "Barbearia não oferece esse Serviço");
+		;
 
 		var expedienteDia = barbearia.ExpedienteDia(dia);
 		if (expedienteDia is null)
-			return new GerarSlotsResponse(barbeiroId, dia, []);
+			return ResultData<GerarSlotsResponse>.Success(new GerarSlotsResponse(barbeiroId, dia, []));
 
-		var slots = barbeiro.HorariosDisponiveis(expedienteDia.Inicio, expedienteDia.Fim, dia, servico.Duracao);
+		var slots = barbeiro.HorariosDisponiveis(expedienteDia.Inicio, expedienteDia.Fim, dia, 
+		servico.Duracao);
 
-		return new GerarSlotsResponse(barbeiroId, dia, slots);
+		return ResultData<GerarSlotsResponse>.Success(new GerarSlotsResponse(barbeiroId, dia, slots));
 	}
 }
 

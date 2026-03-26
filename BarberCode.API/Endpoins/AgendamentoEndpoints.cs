@@ -5,6 +5,7 @@ using BarberCode.Application.UseCases.Agendamentos;
 using BarberCode.Domain.Entities.Agendamentos;
 using BarberCode.Service.Requests;
 using BarberCode.Service.Responses;
+using BarberCode.Domain.Shared;
 namespace BarberCode.API.Endpoins;
 
 public static class AgendamentoEndpoints
@@ -17,7 +18,8 @@ public static class AgendamentoEndpoints
 		 IMapper mapper, StatusAgendamento? status) =>
 		{
 			var agendamentos = await repo.BuscarAgendamentosAsync(barbeiroId, status);
-			return Results.Ok(mapper.Map<List<AgendamentoResponse>>(agendamentos));
+			return ResultData<List<AgendamentoResponse>>.Success(mapper.Map<List<AgendamentoResponse>>
+			(agendamentos)).ToOkSingleResult();
 		})
 		.WithName("GetAllAgendamentos")
 		.WithOpenApi();
@@ -25,10 +27,11 @@ public static class AgendamentoEndpoints
 		group.MapGet("/{id}", async (Guid id, IAgendamentoRepository repo, IMapper mapper) =>
 		{
 			var agendamento = await repo.BuscarAgendadamentoPorIdAsync(id);
-			if (agendamento is null)
-				return Results.NotFound("Agendamento não encontrado.");
 
-			return Results.Ok(mapper.Map<AgendamentoResponse>(agendamento));
+			return (agendamento is null
+				? ResultData<AgendamentoResponse>.Failure(ResultType.NotFound, "Agendamento não encontrado")
+				: ResultData<AgendamentoResponse>.Success(mapper.Map<AgendamentoResponse>(agendamento)))
+			.ToOkSingleResult();
 		})
 		.WithName("GetAgendamentoById")
 		.WithOpenApi();

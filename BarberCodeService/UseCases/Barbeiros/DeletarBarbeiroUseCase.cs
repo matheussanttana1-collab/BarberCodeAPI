@@ -1,4 +1,5 @@
 ﻿using BarberCode.Application.Interfaces;
+using BarberCode.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,13 +17,14 @@ public class DeletarBarbeiroUseCase
 		_repo = repo;
 	}
 
-	public async Task ExecuteAsync(Guid id) 
+	public async Task<ResultData> ExecuteAsync(Guid id) 
 	{
 		var barbeiro = await _repo.BuscarBarbeiroPorAsync(id);
-
 		if (barbeiro == null)
-			throw new Exception("Barbeiro não Encontrado");
+			return ResultData.Failure(ResultType.NotFound, "Barbeiro não Encontrado");
 
 		await _repo.DeletarBarbeiroAsync(barbeiro);
+
+		return ResultData.Success();
 	}
 }

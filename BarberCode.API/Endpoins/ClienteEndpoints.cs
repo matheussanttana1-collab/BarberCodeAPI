@@ -6,6 +6,7 @@ using BarberCode.Domain.Entities.Agendamentos;
 using BarberCode.Service.Responses;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.OpenApi;
+using BarberCode.Domain.Shared;
 namespace BarberCode.API.Endpoins;
 
 public static class ClienteEndpoints
@@ -17,7 +18,8 @@ public static class ClienteEndpoints
 		group.MapGet("/Barbearia/{barbeariaId}", async (Guid barbeariaId, IClienteRepository repo, IMapper mapper) =>
 		{
 			var clientes = await repo.BuscarClientesAsync(barbeariaId);
-			return Results.Ok(mapper.Map<List<ClienteInfoResponse>>(clientes));
+			return ResultData<List<ClienteInfoResponse>>.Success(mapper.Map<List<ClienteInfoResponse>>(clientes))
+			.ToOkSingleResult();
 		})
 		.WithName("GetAllClienteInfos")
 		.WithOpenApi();
@@ -25,10 +27,11 @@ public static class ClienteEndpoints
 		group.MapGet("/", async (string celular, IClienteRepository repo, IMapper mapper) =>
 		{
 			var cliente = await repo.BuscarClientePeloTelefoneAsync(celular);
-			if (cliente is null)
-				return Results.NotFound("Cliente não encontrado.");
 
-			return Results.Ok(mapper.Map<ClienteInfoResponse>(cliente));
+			return (cliente is null
+				? ResultData<ClienteInfoResponse>.Failure(ResultType.NotFound, "Cliente não encontrado")
+				: ResultData<ClienteInfoResponse>.Success(mapper.Map<ClienteInfoResponse>(cliente)))
+			.ToOkSingleResult();
 		})
 		.WithName("GetClienteInfoByCel")
 		.WithOpenApi();
@@ -36,7 +39,9 @@ public static class ClienteEndpoints
 		group.MapGet("/{id}/agendamentos", async (Guid id, IAgendamentoRepository repo, IMapper mapper) =>
 		{
 			var agendamentos = await repo.BuscarAgendamentosDoClienteAsync(id);
-			return Results.Ok(mapper.Map<List<AgendamentoResponse>>(agendamentos));
+
+			return ResultData<List<AgendamentoResponse>>.Success(mapper.Map<List<AgendamentoResponse>>
+			(agendamentos)).ToOkSingleResult();
 		})
 		.WithName("AgendamentosDoCliente")
 		.WithOpenApi();

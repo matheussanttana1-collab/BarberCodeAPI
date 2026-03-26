@@ -60,8 +60,8 @@ public class CriarAgendamentoUseCase
 
 		var agendamentoResult = barbeiro.NovoAgendamento(cliente.Id, request.Dia, request.Horario, 
 		servico.Duracao, request.ServicoId);
-		if (agendamentoResult.Type == ResultType.Conflict)
-			return ResultData<Guid>.Failure(ResultType.Conflict, agendamentoResult.Message);
+		if (agendamentoResult.Type != ResultType.Success)
+			return ResultData<Guid>.Failure(agendamentoResult.Type, agendamentoResult.Message);
 
 		await _agendamentoRepo.SalvarAgendadamentoAsync(agendamentoResult.Data);
 

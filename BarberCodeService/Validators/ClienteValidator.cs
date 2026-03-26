@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace BarberCode.Application.Validators;
 
-public class CriarClienteInfoValidator : AbstractValidator<CriarClienteInfoRequest>
+public class ClienteInfoValidator : AbstractValidator<CriarClienteInfoRequest>
 {
-	public CriarClienteInfoValidator()
+	public ClienteInfoValidator()
 	{
 		RuleFor(c => c.Nome)
 		.MaximumLength(100).WithMessage("{PropertyName} deve ter no máximo 100 caracteres.")
