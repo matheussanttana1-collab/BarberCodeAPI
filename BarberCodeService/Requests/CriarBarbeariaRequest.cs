@@ -8,4 +8,6 @@ public class CriarBarbeariaRequest
     public string Celular { get; set; }
     public EnderecoRequest Endereco { get; set; }
     public List<HorarioFuncionamentoRequest> Funcionamento { get; set; } = new List<HorarioFuncionamentoRequest>();
+    public string Email { get; set; }
+    public string Senha { get; set; }
 }

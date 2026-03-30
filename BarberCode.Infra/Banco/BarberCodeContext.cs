@@ -2,10 +2,12 @@
 using BarberCode.Domain.Entities.Barbearias;
 using BarberCode.Domain.Entities.Barbeiros;
 using Microsoft.EntityFrameworkCore;
+using BarberCode.Infra.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace BarberCode.Infra.Banco;
 
-public class BarberCodeContext : DbContext
+public class BarberCodeContext : IdentityDbContext
 {
 
 	public BarberCodeContext(DbContextOptions<BarberCodeContext> opts) : base(opts)
@@ -30,5 +32,6 @@ public class BarberCodeContext : DbContext
 	public DbSet<Barbeiro> barbeiros{ get; set; }
 	public DbSet<Servico> servicos { get; set; }
 	public DbSet<ClienteInfo> clientes { get; set; }
+	public DbSet<AppUser> users { get; set; }
 
 }
