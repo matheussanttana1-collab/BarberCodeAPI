@@ -2,10 +2,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BarberCode.Service.Requests;
 
-public class CriarClienteInfoRequest
+public record CriarClienteInfoRequest(string Nome, string Celular)
 {
-
-	public string Nome { get; set; }
-
-	public string Celular { get; set; }
 }
