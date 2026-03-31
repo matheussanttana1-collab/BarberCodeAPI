@@ -1,4 +1,5 @@
-﻿using BarberCode.Application.Interfaces;
+using BarberCode.Application.Interfaces;
+using BarberCode.Application.Models;
 using BarberCode.Domain.Shared;
 using BarberCode.Infra.Banco;
 using BarberCode.Infra.Models;
@@ -6,61 +7,96 @@ using Microsoft.AspNetCore.Identity;
 
 namespace BarberCode.Infra.Service;
 
-public class AppUserService : IAppUserRepository
+public class AppUserService : IAppUserService
 {
 	private readonly UserManager<AppUser> _userManager;
 	private readonly SignInManager<AppUser> _signInManager;
-	private readonly TokenService _tokenService;
 
-	public AppUserService(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, 
-	RoleManager<AppUser> roleManager, TokenService tokenService)
+	public AppUserService(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager)
 	{
 		_signInManager = signInManager;
 		_userManager = userManager;
-		_tokenService = tokenService;
 	}
-
 
 	/// <summary>
 	/// Cadastra um novo usuário no banco de dados
 	/// </summary>
-	/// <param name="userId">ID do usuário (Guid em string)</param>
-	/// <param name="email">Email do usuário</param>
-	/// <param name="userName">Nome de usuário</param>
-	public async Task<ResultData> CadastrarUsuarioAsync(string userId, string email, string userName, 
-	string senha)
+	public async Task<ResultData> CadastrarUsuarioAsync(string email,
+	string senha, TipoUsuario tipo)
 	{
+			
 		var appUser = new AppUser
 		{
-			Id = userId,
+			Id = Guid.NewGuid().ToString(),
 			Email = email,
-			UserName = userName,
-			PasswordHash = senha
 		};
 
-		var result = await _userManager.CreateAsync(appUser);
+		var role = Roles.FromTipoUsuario(tipo);
+		var result = await _userManager.CreateAsync(appUser, senha);
 
-		if(!result.Succeeded) 
-			return ResultData.Failure(ResultType.Validation, result.Errors.First().ToString()!);
+		if (!result.Succeeded) 
+			return ResultData.Failure(ResultType.Validation, result.Errors.First().Description);
+
+
+		var roleResult = await _userManager.AddToRoleAsync(appUser, role);
+
+		if (!roleResult.Succeeded)
+			return ResultData.Failure(ResultType.Failure, "Erro ao adicionar role");
 
 		return ResultData.Success();
 	}
 
-	
-	public async Task<ResultData<string>> Login(string email, string senha)
+	/// <summary>
+	/// Valida se o email existe e retorna o usuário autenticado
+	/// Converte AppUser → AuthUser
+	/// </summary>
+	public async Task<AuthUser?> ValidarEmailAsync(string email)
 	{
-		var user = await _signInManager.UserManager.FindByEmailAsync(email);
-		if (user is null)
-			return ResultData<string>.Failure(ResultType.Validation, "Email invalido ou não cadastrado");
-		var result = await _signInManager.CheckPasswordSignInAsync(user,senha,false);
-		if (!result.Succeeded)
-			return ResultData<string>.Failure(ResultType.Validation, "Senha Invalida");
+		var appUser = await _userManager.FindByEmailAsync(email);
 
-		var roles = await _userManager.GetRolesAsync(user!);
+		if (appUser is null)
+			return null;
 
-		var token = _tokenService.GerarToken(user, roles);
-
-		return ResultData<string>.Success(token);
+		return MapToAuthUser(appUser);
 	}
-	
+
+	/// <summary>
+	/// Valida a senha do usuário
+	/// Retorna o usuário se a senha for válida, null caso contrário
+	/// </summary>
+	public async Task<AuthUser?> ValidarSenhaAsync(AuthUser user, string senha)
+	{
+		// Busca o AppUser completo pelo ID
+		var appUser = await _userManager.FindByIdAsync(user.Id);
+		if (appUser is null)
+			return null;
+
+		var result = await _signInManager.CheckPasswordSignInAsync(appUser, senha, false);
+		return result.Succeeded ? MapToAuthUser(appUser) : null;
+	}
+
+	/// <summary>
+	/// Obtém todas as roles (papéis) do usuário
+	/// </summary>
+	public async Task<IList<string>> ObterRolesAsync(AuthUser user)
+	{
+		var appUser = await _userManager.FindByIdAsync(user.Id);
+		if (appUser is null)
+			return new List<string>();
+
+		return await _userManager.GetRolesAsync(appUser);
+	}
+
+	/// <summary>
+	/// Converte AppUser (Infrastructure) para AuthUser (Application)
+	/// </summary>
+	private static AuthUser MapToAuthUser(AppUser appUser)
+	{
+		return new AuthUser(
+			appUser.Id,
+			appUser.Email ?? string.Empty,
+			appUser.UserName ?? string.Empty,
+			appUser.TipoUsuario
+		);
+	}
 }

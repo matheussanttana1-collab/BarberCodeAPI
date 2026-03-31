@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using BarberCode.Application.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,5 @@ namespace BarberCode.Infra.Models;
 
 public class AppUser : IdentityUser
 {
-	public Guid? BarbeariaId { get; set; }
-	public Guid? ClienteId { get; set; }
-	public Guid? BarbeiroId { get; set; }
+	public TipoUsuario TipoUsuario { get; set; }
 }

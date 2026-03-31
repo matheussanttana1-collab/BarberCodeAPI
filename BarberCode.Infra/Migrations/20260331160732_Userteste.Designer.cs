@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BarberCode.Infra.Migrations
 {
     [DbContext(typeof(BarberCodeContext))]
-    [Migration("20260330135815_UserTeste")]
-    partial class UserTeste
+    [Migration("20260331160732_Userteste")]
+    partial class Userteste
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -378,14 +378,8 @@ namespace BarberCode.Infra.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.Property<Guid?>("BarbeariaId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid?>("BarbeiroId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid?>("ClienteId")
-                        .HasColumnType("char(36)");
+                    b.Property<int>("TipoUsuario")
+                        .HasColumnType("int");
 
                     b.HasDiscriminator().HasValue("AppUser");
                 });

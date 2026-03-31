@@ -25,7 +25,7 @@ public class ConcluirAgendamentoUseCase
 			return ResultData.Failure(ResultType.NotFound, "Agendamento Não Encotrado");
 
 		var concluirResult = agendamento.ConcluirAgendamento();
-		if (concluirResult.Type == ResultType.Conflict)
+		if (!concluirResult.IsSuccess)
 			return ResultData.Failure(concluirResult.Type, concluirResult.Message);
 		await _repo.AtualizarAgendadamentoAsync();
 

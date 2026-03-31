@@ -48,24 +48,24 @@ public class CriarAgendamentoUseCase
 		{
 			var clienteResult = ClienteInfo.CriarCliente(request.Cliente.Nome, request.Cliente.Celular, 
 			barbearia.Id);
-			if (clienteResult.Type == ResultType.Validation)
+			if (!clienteResult.IsSuccess)
 				return ResultData<Guid>.Failure(clienteResult.Type, clienteResult.Message);
 			cliente = clienteResult.Data;
-			await _clienteRepo.SalvarClienteAsync(cliente);
+			await _clienteRepo.SalvarClienteAsync(cliente!);
 		}
 
 		var status = barbearia.EstaFuncionando(request.Dia, request.Horario);
-		if (status.Type == ResultType.Validation)
+		if (!status.IsSuccess)
 			return ResultData<Guid>.Failure(status.Type, status.Message);
 
-		var agendamentoResult = barbeiro.NovoAgendamento(cliente.Id, request.Dia, request.Horario, 
+		var agendamentoResult = barbeiro.NovoAgendamento(cliente!.Id, request.Dia, request.Horario, 
 		servico.Duracao, request.ServicoId);
-		if (agendamentoResult.Type != ResultType.Success)
+		if (!agendamentoResult.IsSuccess)
 			return ResultData<Guid>.Failure(agendamentoResult.Type, agendamentoResult.Message);
 
-		await _agendamentoRepo.SalvarAgendadamentoAsync(agendamentoResult.Data);
+		await _agendamentoRepo.SalvarAgendadamentoAsync(agendamentoResult.Data!);
 
-		return ResultData<Guid>.Success(agendamentoResult.Data.Id);
+		return ResultData<Guid>.Success(agendamentoResult.Data!.Id);
 	}
 }
 

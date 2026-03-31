@@ -1,4 +1,5 @@
 ﻿using BarberCode.Application.UseCases.Agendamentos;
+using BarberCode.Application.UseCases.AuthAppUser;
 using BarberCode.Application.UseCases.Barbearias;
 using BarberCode.Application.UseCases.Barbeiros;
 using BarberCode.Application.UseCases.Servicos;
@@ -26,6 +27,7 @@ public static class DependencyInjection
 		services.AddScoped<AlterarHorarioFuncionamentoUseCase>();
 		services.AddScoped<AlterarBarbeiroUseCase>();
 		services.AddScoped<ConcluirAgendamentoUseCase>();
+		services.AddScoped<LoginBarbeariaUseCase>();
 		return services;
 	}
 

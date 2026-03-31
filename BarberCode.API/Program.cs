@@ -11,7 +11,10 @@ using BarberCode.Infra;
 using BarberCode.Infra.Banco;
 using BarberCode.Infra.Repositories;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +27,24 @@ builder.Services.AddApplication();
 builder.Services.addInfra();
 builder.Services.AddValidatorsFromAssemblyContaining<CriarBarbeariaValidator>();
 
+builder.Services.AddAuthentication(
+opitions => opitions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme)
+.AddJwtBearer
+(opts => opts.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+{
+	ValidateIssuerSigningKey = true,
+	IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("nisjdajsdçajdsdsadsadsasdsadadsaffasfsda")),
+	ValidateAudience = false,
+	ValidateIssuer = false,
+	ClockSkew = TimeSpan.Zero
+});
+
+//builder.Services.AddAuthorization(opts =>
+//{
+//	opts.AddPolicy("admin", policy => policy.RequireRole("barbeariaUser"));
+//	opts.AddPolicy("employee", policy => policy.RequireRole("barbeiroUser"));
+//	opts.AddPolicy("user", policy => policy.RequireRole("clienteUser"));
+//});
 
 builder.Services.AddControllers();
 
@@ -61,6 +82,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
@@ -74,5 +96,7 @@ app.MapServicoEndpoints();
 app.MapAgendamentoEndpoints();
 
 app.MapClienteInfoEndpoints();
+
+app.MapAuthEndpoints();
 
 app.Run();

@@ -375,14 +375,8 @@ namespace BarberCode.Infra.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.Property<Guid?>("BarbeariaId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid?>("BarbeiroId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid?>("ClienteId")
-                        .HasColumnType("char(36)");
+                    b.Property<int>("TipoUsuario")
+                        .HasColumnType("int");
 
                     b.HasDiscriminator().HasValue("AppUser");
                 });
