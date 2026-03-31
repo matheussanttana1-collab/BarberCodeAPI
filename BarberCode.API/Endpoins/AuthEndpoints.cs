@@ -21,8 +21,21 @@ public static class AuthEndpoints
 		})
 		.WithName("LoginBarbearia")
 		.WithOpenApi()
-		.Produces<LoginResponse>(StatusCodes.Status200OK)
+		.Produces<string>(StatusCodes.Status200OK)
 		.Produces(StatusCodes.Status400BadRequest)
 		.AddEndpointFilter<ValidationFilter<LoginRequest>>();
+
+		group.MapPost("/login-cliente", async (LoginClienteRequest request, LoginClienteUseCase useCase) =>
+		{
+			var result = await useCase.ExecuteAsync(request);
+
+			return result.ToOkSingleResult();
+		})
+		.WithName("LoginCliente")
+		.WithOpenApi()
+		.Produces<string>(StatusCodes.Status200OK)
+		.Produces(StatusCodes.Status400BadRequest)
+		.Produces(StatusCodes.Status404NotFound)
+		.AddEndpointFilter<ValidationFilter<LoginClienteRequest>>();
 	}
 }

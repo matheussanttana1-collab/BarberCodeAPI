@@ -24,7 +24,6 @@ public class CriarBarbeariaUseCase
 		var endereco = _mapper.Map<Endereco>(request.Endereco);
 		var funcionamenro = _mapper.Map<List<HorarioFuncionamento>>(request.Funcionamento);
 		Barbearia barbearia = new Barbearia(request.Name, endereco, funcionamenro, request.Celular);
-		await _repository.SalvarBarbeariaAsync(barbearia);
 
 		var result = await _userService.CadastrarUsuarioAsync
 		(barbearia.Id,request.Email,request.Senha, TipoUsuario.Barbearia)
@@ -32,6 +31,7 @@ public class CriarBarbeariaUseCase
 		if (!result.IsSuccess)
 			return ResultData<Guid>.Failure(result.Type, result.Message);
 
+		await _repository.SalvarBarbeariaAsync(barbearia);
 
 		return ResultData<Guid>.Success(barbearia.Id);
 	}

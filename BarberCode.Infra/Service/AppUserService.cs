@@ -89,6 +89,41 @@ public class AppUserService : IAppUserService
 	}
 
 	/// <summary>
+	/// Cadastra um novo cliente usando apenas celular
+	/// Gera email fake: "{celular}@cliente.barbercode.local"
+	/// Username = celular (para login do cliente)
+	/// </summary>
+	public async Task<ResultData> CadastrarClienteAsync(Guid clienteId, string celular, string nome, string? senha = null)
+	{
+		// Gera email fake baseado no celular
+		var emailFake = $"{celular}@cliente.barbercode.local";
+
+		// Se não houver senha, usa uma padrão por enquanto
+		var senhaFinal = senha ?? "Cliente@123";
+
+		var appUser = new AppUser
+		{
+			Id = clienteId.ToString(),
+			Email = emailFake,
+			UserName = celular, // Username é o celular para o cliente fazer login
+			TipoUsuario = TipoUsuario.Cliente,
+		};
+
+		var role = Roles.FromTipoUsuario(TipoUsuario.Cliente);
+		var result = await _userManager.CreateAsync(appUser, senhaFinal);
+
+		if (!result.Succeeded)
+			return ResultData.Failure(ResultType.Validation, result.Errors.First().Description);
+
+		var roleResult = await _userManager.AddToRoleAsync(appUser, role);
+
+		if (!roleResult.Succeeded)
+			return ResultData.Failure(ResultType.Failure, "Erro ao adicionar role de cliente");
+
+		return ResultData.Success();
+	}
+
+	/// <summary>
 	/// Converte AppUser (Infrastructure) para AuthUser (Application)
 	/// </summary>
 	private static AuthUser MapToAuthUser(AppUser appUser)

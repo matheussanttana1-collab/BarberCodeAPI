@@ -1,32 +1,27 @@
 ﻿using BarberCode.Application.Interfaces;
-using BarberCode.Domain.Entities.Agendamentos;
 using BarberCode.Domain.Entities.Barbearias;
 using BarberCode.Domain.Shared;
 using BarberCode.Service.Requests;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace BarberCode.Application.UseCases.Agendamentos;
 
 public class CriarAgendamentoUseCase
 {
-	private readonly IBarbeiroRepository _barbeiroRepo;
+
 	private readonly IBarbeariaRepository _barbeariaRepo;
 	private readonly IAgendamentoRepository _agendamentoRepo;
 	private readonly IClienteRepository _clienteRepo;
+	private readonly IAppUserService _appUserService;
 
-	public CriarAgendamentoUseCase(IBarbeiroRepository barbeiroRepo, IBarbeariaRepository barbeariaRepo
-	, IAgendamentoRepository agendamentoRepo,IClienteRepository clienteRepo)
+	public CriarAgendamentoUseCase(IBarbeariaRepository barbeariaRepo
+	, IAgendamentoRepository agendamentoRepo, IClienteRepository clienteRepo, IAppUserService appUserService)
 	{
 		_barbeariaRepo = barbeariaRepo;
-		_barbeiroRepo = barbeiroRepo;
+
 		_agendamentoRepo = agendamentoRepo;
 		_clienteRepo = clienteRepo;
+		_appUserService = appUserService;
 	}
 	public async Task<ResultData<Guid>> ExecuteAsync(CriarAgendamentoRequest request)
 	{
@@ -52,6 +47,16 @@ public class CriarAgendamentoUseCase
 				return ResultData<Guid>.Failure(clienteResult.Type, clienteResult.Message);
 			cliente = clienteResult.Data;
 			await _clienteRepo.SalvarClienteAsync(cliente!);
+
+			// 🆕 Cria o AppUser para o cliente quando é o primeiro agendamento
+			var usuarioClienteResult = await _appUserService.CadastrarClienteAsync(
+				cliente!.Id,
+				cliente.Celular,
+				cliente.Name
+			);
+
+			if (!usuarioClienteResult.IsSuccess)
+				return ResultData<Guid>.Failure(usuarioClienteResult.Type, usuarioClienteResult.Message);
 		}
 
 		var status = barbearia.EstaFuncionando(request.Dia, request.Horario);

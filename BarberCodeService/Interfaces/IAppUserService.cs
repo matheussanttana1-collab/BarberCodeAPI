@@ -12,6 +12,12 @@ public interface IAppUserService
 	, TipoUsuario tipo);
 
 	/// <summary>
+	/// Cadastra um novo cliente usando apenas celular
+	/// Gera email fake baseado no celular: "{celular}@cliente.barbercode.local"
+	/// </summary>
+	Task<ResultData> CadastrarClienteAsync(Guid clienteId, string celular, string nome, string? senha = null);
+
+	/// <summary>
 	/// Valida se o email existe e retorna o usuário autenticado
 	/// </summary>
 	Task<AuthUser?> ValidarEmailAsync(string email);
