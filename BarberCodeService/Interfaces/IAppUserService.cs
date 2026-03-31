@@ -8,7 +8,7 @@ public interface IAppUserService
 	/// <summary>
 	/// Cadastra um novo usuário no banco de dados
 	/// </summary>
-	Task<ResultData> CadastrarUsuarioAsync(string email, string senha
+	Task<ResultData> CadastrarUsuarioAsync(Guid userId,string email, string senha
 	, TipoUsuario tipo);
 
 	/// <summary>

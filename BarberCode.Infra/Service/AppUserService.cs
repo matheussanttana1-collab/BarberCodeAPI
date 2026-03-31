@@ -21,14 +21,16 @@ public class AppUserService : IAppUserService
 	/// <summary>
 	/// Cadastra um novo usuário no banco de dados
 	/// </summary>
-	public async Task<ResultData> CadastrarUsuarioAsync(string email,
+	public async Task<ResultData> CadastrarUsuarioAsync(Guid userId,string email,
 	string senha, TipoUsuario tipo)
 	{
 			
 		var appUser = new AppUser
 		{
-			Id = Guid.NewGuid().ToString(),
+			Id = userId.ToString(),
 			Email = email,
+			UserName = email,
+			TipoUsuario = tipo,
 		};
 
 		var role = Roles.FromTipoUsuario(tipo);
@@ -77,14 +79,13 @@ public class AppUserService : IAppUserService
 
 	/// <summary>
 	/// Obtém todas as roles (papéis) do usuário
+	/// Usa TipoUsuario como fonte de verdade para garantir que sempre retorna a role correta
 	/// </summary>
 	public async Task<IList<string>> ObterRolesAsync(AuthUser user)
 	{
-		var appUser = await _userManager.FindByIdAsync(user.Id);
-		if (appUser is null)
-			return new List<string>();
-
-		return await _userManager.GetRolesAsync(appUser);
+		// TipoUsuario é a fonte de verdade para determinar a role
+		var role = Roles.FromTipoUsuario(user.TipoUsuario);
+		return new List<string> { role };
 	}
 
 	/// <summary>

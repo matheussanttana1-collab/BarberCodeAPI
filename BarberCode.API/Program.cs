@@ -1,15 +1,9 @@
 using BarberCode.API.Endpoins;
 using BarberCode.Application;
-using BarberCode.Application.Interfaces;
 using BarberCode.Application.Profiles;
-using BarberCode.Application.UseCases.Agendamentos;
-using BarberCode.Application.UseCases.Barbearias;
-using BarberCode.Application.UseCases.Barbeiros;
-using BarberCode.Application.UseCases.Servicos;
 using BarberCode.Application.Validators;
 using BarberCode.Infra;
 using BarberCode.Infra.Banco;
-using BarberCode.Infra.Repositories;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -65,6 +59,9 @@ builder.Services.AddSwaggerGen(c =>
 
 
 var app = builder.Build();
+
+// Seed roles padrão do sistema
+await app.Services.SeedRolesAsync();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

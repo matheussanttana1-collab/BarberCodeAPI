@@ -24,4 +24,27 @@ public static class DependencyInjections
 
 		return services;
 	}
+
+	/// <summary>
+	/// Cria as roles padrão do sistema de forma idempotente
+	/// </summary>
+	public static async Task SeedRolesAsync(this IServiceProvider serviceProvider)
+	{
+		using (var scope = serviceProvider.CreateScope())
+		{
+			var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+			// Lista de roles a serem criadas
+			var roles = new[] { Roles.Barbearia, Roles.Barbeiro, Roles.Cliente };
+
+			foreach (var role in roles)
+			{
+				// Verifica se a role já existe
+				if (!await roleManager.RoleExistsAsync(role))
+				{
+					await roleManager.CreateAsync(new IdentityRole { Name = role });
+				}
+			}
+		}
+	}
 }

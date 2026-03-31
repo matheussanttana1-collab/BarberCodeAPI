@@ -1,5 +1,7 @@
 namespace BarberCode.Application.Models;
 
+using BarberCode.Application.Models;
+
 /// <summary>
 /// Modelo DTO para representar um usuário autenticado
 /// Não expõe a entidade AppUser da Infrastructure Layer
@@ -22,9 +24,10 @@ public class AuthUser
 	public string UserName { get; set; }
 
 	/// <summary>
-	/// 
+	/// Tipo de usuário no sistema
 	/// </summary>
-	TipoUsuario TipoUsuario { get; set; }
+	public TipoUsuario TipoUsuario { get; set; }
+
 	public AuthUser() { }
 
 	public AuthUser(string id, string email, string userName, TipoUsuario tipo)

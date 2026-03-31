@@ -13,7 +13,7 @@ public static class AuthEndpoints
 	{
 		var group = routes.MapGroup("/api/Auth").WithTags("Auth");
 
-		group.MapPost("/login", async (LoginRequest request, LoginBarbeariaUseCase useCase) =>
+		group.MapPost("/login", async (LoginRequest request, LoginUseCase useCase) =>
 		{
 			var result = await useCase.ExecuteAsync(request.Email, request.Senha);
 
