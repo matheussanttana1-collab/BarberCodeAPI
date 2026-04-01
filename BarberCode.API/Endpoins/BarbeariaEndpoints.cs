@@ -7,6 +7,7 @@ using BarberCode.Application.UseCases.Barbearias;
 using FluentValidation;
 using BarberCode.API.Models;
 using BarberCode.Domain.Shared;
+using System.Text.RegularExpressions;
 
 namespace BarberCode.API.Endpoins;
 
@@ -15,7 +16,7 @@ public static class BarbeariaEndpoints
 {
 	public static void MapBarbeariaEndpoints(this IEndpointRouteBuilder routes)
 	{
-		var group = routes.MapGroup("/api/Barbearia").WithTags(nameof(Barbearia));
+		var group = routes.MapGroup("/api/Barbearia").WithTags(nameof(Barbearia)).RequireAuthorization("manager");
 		group.MapGet("/", async (IBarbeariaRepository repo, IMapper mapper) =>
 		{
 			var barbearias = await repo.BuscarBarbeariasAsync();
@@ -75,4 +76,6 @@ public static class BarbeariaEndpoints
 		.WithName("DeleteBarbearia")
 		.WithOpenApi();
 	}
+
+
 }

@@ -11,6 +11,7 @@ public abstract class Result
 		IsSuccess = type == ResultType.Success;
 	}
 
+	//[JsonConverter(typeof(JsonStringEnumConverter))]
 	public ResultType Type {  get; private set; }
 	public string Message { get; private set; }
 	public bool IsSuccess { get; private set; }
@@ -22,6 +23,8 @@ public enum ResultType
 	Validation,
 	NotFound,
 	Conflict,
+	Unauthorized,
+	Forbidden,
 	Failure
 
 }

@@ -2,6 +2,7 @@ using BarberCode.API.Endpoins;
 using BarberCode.Application;
 using BarberCode.Application.Profiles;
 using BarberCode.Application.Validators;
+using BarberCode.Domain.Shared;
 using BarberCode.Infra;
 using BarberCode.Infra.Banco;
 using FluentValidation;
@@ -9,6 +10,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,24 +24,76 @@ builder.Services.AddApplication();
 builder.Services.addInfra();
 builder.Services.AddValidatorsFromAssemblyContaining<CriarBarbeariaValidator>();
 
-builder.Services.AddAuthentication(
-opitions => opitions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme)
-.AddJwtBearer
-(opts => opts.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-{
-	ValidateIssuerSigningKey = true,
-	IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("nisjdajsdçajdsdsadsadsasdsadadsaffasfsda")),
-	ValidateAudience = false,
-	ValidateIssuer = false,
-	ClockSkew = TimeSpan.Zero
+builder.Services.AddAuthentication
+(opitions => {
+
+	opitions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+	opitions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+})
+.AddJwtBearer(opts => {
+	opts.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+	{
+		ValidateIssuerSigningKey = true,
+		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("nisjdajsdçajdsdsadsadsasdsadadsaffasfsda")),
+		ValidateAudience = false,
+		ValidateIssuer = false,
+		ClockSkew = TimeSpan.Zero
+	};
+
+	// Configurar resposta customizada para Unauthorized (401)
+	opts.Events = new JwtBearerEvents
+	{
+		OnChallenge = context =>
+		{
+			context.HandleResponse();
+
+			context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+			context.Response.ContentType = "application/json";
+
+			// Monta o seu padrão
+			var result = ResultData.Failure(ResultType.Unauthorized, "Você precisa estar logado para " +
+			"acessar este recurso.");
+
+			// Converte para JSON e escreve na resposta
+			var json = JsonSerializer.Serialize(result, new JsonSerializerOptions
+			{ PropertyNamingPolicy = JsonNamingPolicy.CamelCase ,
+			  Converters = { new JsonStringEnumConverter() }
+			});
+			return context.Response.WriteAsync(json);
+		},
+
+		// 🆕 Configurar resposta customizada para Forbidden (403)
+		OnForbidden = context =>
+		{
+			context.Response.StatusCode = StatusCodes.Status403Forbidden;
+			context.Response.ContentType = "application/json";
+
+			var result = ResultData.Failure(ResultType.Forbidden, "Você não tem permissão para realizar" +
+			" esta ação.");
+
+			var json = JsonSerializer.Serialize(result, new JsonSerializerOptions 
+			{ PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+			 Converters = { new JsonStringEnumConverter() }
+			});
+			return context.Response.WriteAsync(json);
+		}
+	};
 });
 
-//builder.Services.AddAuthorization(opts =>
-//{
-//	opts.AddPolicy("admin", policy => policy.RequireRole("barbeariaUser"));
-//	opts.AddPolicy("employee", policy => policy.RequireRole("barbeiroUser"));
-//	opts.AddPolicy("user", policy => policy.RequireRole("clienteUser"));
-//});
+
+builder.Services.AddAuthorization(opts =>
+{
+	opts.AddPolicy("manager", policy => policy.RequireRole("Barbearia"));
+	opts.AddPolicy("employee", policy => policy.RequireRole("Barbeiro"));
+	opts.AddPolicy("user", policy => policy.RequireRole("Cliente"));
+});
+
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+	// Isso faz com que TODOS os enums da API virem strings no JSON
+	options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 builder.Services.AddControllers();
 
