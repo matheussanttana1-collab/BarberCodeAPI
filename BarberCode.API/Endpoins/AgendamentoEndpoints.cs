@@ -22,7 +22,8 @@ public static class AgendamentoEndpoints
 			(agendamentos)).ToOkSingleResult();
 		})
 		.WithName("GetAllAgendamentos")
-		.WithOpenApi();
+		.WithOpenApi()
+		.RequireAuthorization("manager","employee");
 
 		group.MapGet("/{id}", async (Guid id, IAgendamentoRepository repo, IMapper mapper) =>
 		{
@@ -42,7 +43,8 @@ public static class AgendamentoEndpoints
 			return result.ToNoContentResult();
 		})
 		.WithName("ConcluirAgendamento")
-		.WithOpenApi();
+		.WithOpenApi()
+		.RequireAuthorization("manager", "employee");
 
 		group.MapPost("/", async (CriarAgendamentoRequest request, CriarAgendamentoUseCase useCase) =>
 		{
@@ -59,6 +61,7 @@ public static class AgendamentoEndpoints
 			return result.ToNoContentResult();
 		})
 		.WithName("DeleteAgendamento")
-		.WithOpenApi();
+		.WithOpenApi()
+		.RequireAuthorization("manager", "employee"); ;
 	}
 }

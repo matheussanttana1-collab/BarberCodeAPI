@@ -22,7 +22,8 @@ public static class ClienteEndpoints
 			.ToOkSingleResult();
 		})
 		.WithName("GetAllClienteInfos")
-		.WithOpenApi();
+		.WithOpenApi()
+		.RequireAuthorization("manager");
 
 		group.MapGet("/", async (string celular, IClienteRepository repo, IMapper mapper) =>
 		{
@@ -44,7 +45,8 @@ public static class ClienteEndpoints
 			(agendamentos)).ToOkSingleResult();
 		})
 		.WithName("AgendamentosDoCliente")
-		.WithOpenApi();
+		.WithOpenApi()
+		.RequireAuthorization("cliente");
 
 		group.MapDelete("/{id}/agendamentos/{agendamentoId}", async (Guid id, Guid agendamentoId,
 		CancelarAgendamentoClienteUseCase useCase) =>
@@ -53,7 +55,8 @@ public static class ClienteEndpoints
 			return result.ToNoContentResult();
 		})
 		.WithName("CancelarAgendamentoCliente")
-		.WithOpenApi();
+		.WithOpenApi()
+		.RequireAuthorization("cliente");
 
 		//group.MapDelete("/{id}", (Guid id) =>
 		//      {

@@ -46,6 +46,7 @@ public static class BarbeiroEndpoints
 		})
 		.WithName("GerarSlotsBarbeiro")
 		.WithOpenApi();
+		
 
 		group.MapPatch("/{id}", async (Guid id, AtualizarBarbeiroRequest request, AlterarBarbeiroUseCase useCase) =>
 		{
@@ -54,7 +55,8 @@ public static class BarbeiroEndpoints
 		})
 		.WithName("UpdateBarbeiro")
 		.WithOpenApi()
-		.AddEndpointFilter<ValidationFilter<AtualizarBarbeiroRequest>>();
+		.AddEndpointFilter<ValidationFilter<AtualizarBarbeiroRequest>>()
+		.RequireAuthorization("manager","employee");
 
 		group.MapPost("/barbearia/{barbeariaId}", async (Guid barbeariaId, CriarBarbeiroRequest request,
 		CriarBarbeiroUseCase useCase) =>
@@ -64,7 +66,8 @@ public static class BarbeiroEndpoints
 		})
 		.WithName("CreateBarbeiro")
 		.WithOpenApi()
-		.AddEndpointFilter<ValidationFilter<CriarBarbeiroRequest>>();
+		.AddEndpointFilter<ValidationFilter<CriarBarbeiroRequest>>()
+		.RequireAuthorization("manager");
 
 		group.MapDelete("/{id}", async (Guid id, DeletarBarbeiroUseCase useCase) =>
 		{
@@ -72,6 +75,7 @@ public static class BarbeiroEndpoints
 			return result.ToNoContentResult();
 		})
 		.WithName("DeleteBarbeiro")
-		.WithOpenApi();
+		.WithOpenApi()
+		.RequireAuthorization("manager");
 	}
 }

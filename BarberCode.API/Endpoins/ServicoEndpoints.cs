@@ -7,22 +7,27 @@ using BarberCode.Domain.Entities.Barbearias;
 using BarberCode.Domain.Shared;
 using BarberCode.Service.Requests;
 using BarberCode.Service.Responses;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
 namespace BarberCode.API.Endpoins;
 
 public static class ServicoEndpoints
 {
 	public static void MapServicoEndpoints(this IEndpointRouteBuilder routes)
 	{
-		var group = routes.MapGroup("/api/Barbearia/{barbeariaId}/Servico").WithTags(nameof(Servico));
+		var group = routes.MapGroup("/api/Barbearia/{barbeariaId}/Servico").WithTags(nameof(Servico))
+		.RequireAuthorization("manager");
 
-		group.MapGet("/", async (Guid barbeariaId, IServicoRepository repo, IMapper mapper) =>
+		group.MapGet("/", async (Guid barbeariaId,IServicoRepository repo, IMapper mapper) =>
 		{
+			
 			var servicos = await repo.BuscarServicosAsync(barbeariaId);
 			return ResultData<List<ServicoResponse>>.Success(mapper.Map<List<ServicoResponse>>(servicos))
 			.ToOkSingleResult();
 		})
 		.WithName("GetAllServicos")
-		.WithOpenApi();
+		.WithOpenApi()
+		.AllowAnonymous();
 
 		group.MapGet("/{id}", async (Guid id, IServicoRepository repo, IMapper mapper) =>
 		{
@@ -34,7 +39,8 @@ public static class ServicoEndpoints
 			.ToOkSingleResult();
 		})
 		.WithName("GetServicoById")
-		.WithOpenApi();
+		.WithOpenApi()
+		.AllowAnonymous();
 
 		group.MapPatch("/{id}", async (Guid id, AtualizarServicoRequest request, AlterarServicoUseCase useCase) =>
 		{

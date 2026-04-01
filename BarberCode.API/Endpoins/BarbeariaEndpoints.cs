@@ -37,7 +37,8 @@ public static class BarbeariaEndpoints
 			.ToOkSingleResult();
 		})
 		.WithName("GetBarbeariaById")
-		.WithOpenApi();
+		.WithOpenApi()
+		.AllowAnonymous();
 
 		group.MapPost("/", async (CriarBarbeariaRequest request, CriarBarbeariaUseCase useCase) =>
 		{
@@ -47,7 +48,8 @@ public static class BarbeariaEndpoints
 		})
 		.WithName("CreateBarbearia")
 		.WithOpenApi()
-		.AddEndpointFilter<ValidationFilter<CriarBarbeariaRequest>>();
+		.AddEndpointFilter<ValidationFilter<CriarBarbeariaRequest>>()
+		.AllowAnonymous();
 
 		group.MapPatch("/{id}/endereco", async (Guid id, EnderecoRequest request, AlterarEnderecoUseCase useCase) =>
 		{
