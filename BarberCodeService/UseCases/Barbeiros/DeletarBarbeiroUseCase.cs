@@ -17,12 +17,15 @@ public class DeletarBarbeiroUseCase
 		_repo = repo;
 	}
 
-	public async Task<ResultData> ExecuteAsync(Guid id) 
+	public async Task<ResultData> ExecuteAsync(Guid id, Guid barbeariaId) 
 	{
 		var barbeiro = await _repo.BuscarBarbeiroPorAsync(id);
 		if (barbeiro == null)
 			return ResultData.Failure(ResultType.NotFound, "Barbeiro não Encontrado");
-
+		if (barbeiro.BarbeariaId != barbeariaId)
+			return ResultData.Failure(ResultType.Forbidden, "Você não tem permissão para deletar barbeiros de" +
+			" outra barbearia.");
+		
 		await _repo.DeletarBarbeiroAsync(barbeiro);
 
 		return ResultData.Success();

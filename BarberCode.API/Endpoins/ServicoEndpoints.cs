@@ -7,8 +7,6 @@ using BarberCode.Domain.Entities.Barbearias;
 using BarberCode.Domain.Shared;
 using BarberCode.Service.Requests;
 using BarberCode.Service.Responses;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 namespace BarberCode.API.Endpoins;
 
@@ -43,9 +41,11 @@ public static class ServicoEndpoints
 		.WithOpenApi()
 		.AllowAnonymous();
 
-		group.MapPatch("/{id}", async (Guid id, AtualizarServicoRequest request, AlterarServicoUseCase useCase) =>
+		group.MapPatch("/{id}", async (Guid id, AtualizarServicoRequest request, AlterarServicoUseCase useCase, 
+		ClaimsPrincipal user) =>
 		{
-			var result = await useCase.ExecuteAsync(id, request);
+			var barbeariaId = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+			var result = await useCase.ExecuteAsync(id, request, Guid.Parse(barbeariaId));
 			return result.ToNoContentResult();
 		})
 		.WithName("UpdateServico")
@@ -62,9 +62,10 @@ public static class ServicoEndpoints
 		.WithOpenApi()
 		.AddEndpointFilter<ValidationFilter<CriarServicoRequest>>(); ;
 
-		group.MapDelete("/{id}", async (Guid id, DeletarServicoUseCase useCase) =>
+		group.MapDelete("/{id}", async (Guid id, DeletarServicoUseCase useCase, ClaimsPrincipal user) =>
 		{
-			var result = await useCase.ExecuteAsync(id);
+			var barbeariaId = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+			var result = await useCase.ExecuteAsync(id, Guid.Parse(barbeariaId));
 			return result.ToNoContentResult();
 		})
 		.WithName("DeleteServico")

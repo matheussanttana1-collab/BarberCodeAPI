@@ -72,9 +72,10 @@ public static class BarbeiroEndpoints
 		.AddEndpointFilter<ValidationFilter<CriarBarbeiroRequest>>()
 		.RequireAuthorization("manager");
 
-		group.MapDelete("/{id}", async (Guid id, DeletarBarbeiroUseCase useCase) =>
+		group.MapDelete("/{id}", async (Guid id, DeletarBarbeiroUseCase useCase, ClaimsPrincipal user) =>
 		{
-			var result = await useCase.ExecuteAsync(id);
+			var barbeariaId = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+			var result = await useCase.ExecuteAsync(id, Guid.Parse(barbeariaId));
 			return result.ToNoContentResult();
 		})
 		.WithName("DeleteBarbeiro")

@@ -13,12 +13,17 @@ public class DeletarServicoUseCase
 		_repo = repo;
 	}
 
-	public async Task<ResultData> ExecuteAsync (Guid id)
+	public async Task<ResultData> ExecuteAsync (Guid id, Guid barbeariaId)
 	{
 		var servico = await _repo.BuscarServicoPorAsync(id);
 
 		if (servico is null)
 			return ResultData.Failure(ResultType.NotFound, "Servico encontrado");
+		if (servico.BarbeariaId != barbeariaId)
+		{
+			return ResultData.Failure(ResultType.Forbidden, "Você não tem permissão para deletar serviços de" +
+			" outra barbearia.");
+		}
 		await _repo.DeletarServicoAsync(servico);
 
 		return ResultData.Success();
