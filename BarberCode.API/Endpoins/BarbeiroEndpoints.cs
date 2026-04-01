@@ -8,6 +8,8 @@ using BarberCode.Domain.Entities.Barbeiros;
 using BarberCode.Domain.Shared;
 using BarberCode.Service.Requests;
 using BarberCode.Service.Responses;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace BarberCode.API.Endpoins;
 
@@ -15,7 +17,7 @@ public static class BarbeiroEndpoints
 {
 	public static void MapBarbeiroEndpoints(this IEndpointRouteBuilder routes)
 	{
-		var group = routes.MapGroup("/api/Barbeiro").WithTags(nameof(Barbeiro));
+		var group = routes.MapGroup("/api/Barbeiros").WithTags(nameof(Barbeiro));
 
 		group.MapGet("/Barbearia/{barbeariaId}", async (Guid barbeariaId, IBarbeiroRepository repo, IMapper mapper) =>
 		{
@@ -58,10 +60,11 @@ public static class BarbeiroEndpoints
 		.AddEndpointFilter<ValidationFilter<AtualizarBarbeiroRequest>>()
 		.RequireAuthorization("manager","employee");
 
-		group.MapPost("/barbearia/{barbeariaId}", async (Guid barbeariaId, CriarBarbeiroRequest request,
-		CriarBarbeiroUseCase useCase) =>
+		group.MapPost("/", async (CriarBarbeiroRequest request,
+		CriarBarbeiroUseCase useCase, ClaimsPrincipal user) =>
 		{
-			var result = await useCase.ExecuteAsync(request, barbeariaId);
+			var barbeariaId = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+			var result = await useCase.ExecuteAsync(request, Guid.Parse(barbeariaId));
 			return result.ToCreateResult($"/api/Barbeiros/{result}");
 		})
 		.WithName("CreateBarbeiro")

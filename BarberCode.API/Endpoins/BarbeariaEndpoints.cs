@@ -1,12 +1,14 @@
-﻿using BarberCode.Domain.Entities.Barbearias;
-using BarberCode.Service.Responses;
-using BarberCode.Service.Requests;
-using BarberCode.Application.Interfaces;
-using AutoMapper;
-using BarberCode.Application.UseCases.Barbearias;
-using FluentValidation;
+﻿using AutoMapper;
 using BarberCode.API.Models;
+using BarberCode.Application.Interfaces;
+using BarberCode.Application.UseCases.Barbearias;
+using BarberCode.Domain.Entities.Barbearias;
 using BarberCode.Domain.Shared;
+using BarberCode.Service.Requests;
+using BarberCode.Service.Responses;
+using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 
 namespace BarberCode.API.Endpoins;
@@ -51,28 +53,32 @@ public static class BarbeariaEndpoints
 		.AddEndpointFilter<ValidationFilter<CriarBarbeariaRequest>>()
 		.AllowAnonymous();
 
-		group.MapPatch("/{id}/endereco", async (Guid id, EnderecoRequest request, AlterarEnderecoUseCase useCase) =>
+		group.MapPatch("/endereco", async (EnderecoRequest request, AlterarEnderecoUseCase useCase, 
+		ClaimsPrincipal user) =>
 		{
-			var result = await useCase.ExecuteAsync(id, request);
+			var barbeariaId = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+			var result = await useCase.ExecuteAsync(Guid.Parse(barbeariaId), request);
 			return result.ToNoContentResult();
 		})
 		.WithName("AlterarEndereco")
 		.WithOpenApi()
 		.AddEndpointFilter<ValidationFilter<EnderecoRequest>>();
 
-		group.MapPatch("/{id}/funcionamento", async (Guid id, List<HorarioFuncionamentoRequest> request,
-			AlterarHorarioFuncionamentoUseCase useCase) =>
+		group.MapPatch("/funcionamento", async ( List<HorarioFuncionamentoRequest> request,
+			AlterarHorarioFuncionamentoUseCase useCase, ClaimsPrincipal user) =>
 		{
-			var result = await useCase.ExecuteAsync(id, request);
+			var barbeariaId = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+			var result = await useCase.ExecuteAsync(Guid.Parse(barbeariaId), request);
 			return result.ToNoContentResult();
 		})
 		.WithName("AlterarFuncionamento")
 		.WithOpenApi()
 		.AddEndpointFilter<ValidationFilter<List<HorarioFuncionamentoRequest>>>();
 
-		group.MapDelete("/{id}", async (Guid id, DeletarBarbeariaUseCase useCase) =>
+		group.MapDelete("/", async (DeletarBarbeariaUseCase useCase, ClaimsPrincipal user) =>
 		{
-			var result = await useCase.ExecuteAsync(id);
+			var barbeariaId = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+			var result = await useCase.ExecuteAsync(Guid.Parse(barbeariaId));
 			return result.ToNoContentResult();
 		})
 		.WithName("DeleteBarbearia")

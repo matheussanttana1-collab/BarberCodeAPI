@@ -9,6 +9,7 @@ using BarberCode.Service.Requests;
 using BarberCode.Service.Responses;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 namespace BarberCode.API.Endpoins;
 
 public static class ServicoEndpoints
@@ -51,9 +52,10 @@ public static class ServicoEndpoints
 		.WithOpenApi()
 		.AddEndpointFilter<ValidationFilter<AtualizarServicoRequest>>();
 
-		group.MapPost("/", async (Guid barbeariaId, CriarServicoRequest request, CriarServicoUseCase useCase) =>
+		group.MapPost("/", async (CriarServicoRequest request, CriarServicoUseCase useCase, ClaimsPrincipal user) =>
 		{
-			var result = await useCase.ExecuteAsync(barbeariaId, request);
+			var barbeariaId = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+			var result = await useCase.ExecuteAsync(Guid.Parse(barbeariaId), request);
 			return result.ToCreateResult($"/api/Servicos/{result}");
 		})
 		.WithName("CreateServico")
