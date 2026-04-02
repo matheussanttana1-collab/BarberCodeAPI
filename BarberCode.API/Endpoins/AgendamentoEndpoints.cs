@@ -16,12 +16,17 @@ public static class AgendamentoEndpoints
 	{
 		var group = routes.MapGroup("/api/Agendamento").WithTags(nameof(Agendamento));
 
-		group.MapGet("/", async (Guid barbeiroId, IAgendamentoRepository repo,
-		 IMapper mapper, StatusAgendamento? status) =>
+		group.MapGet("/", async (Guid barbeiroId, IMapper mapper, StatusAgendamento? status, DateOnly? dia,
+		ListarAgendamentosBarbeiroUseCase useCase, ClaimsPrincipal user) =>
 		{
-			var agendamentos = await repo.BuscarAgendamentosAsync(barbeiroId, status);
-			return ResultData<List<AgendamentoResponse>>.Success(mapper.Map<List<AgendamentoResponse>>
-			(agendamentos)).ToOkSingleResult();
+			var userId = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+			var result = await useCase.ExecuteAsync(barbeiroId, Guid.Parse(userId), status, dia);
+
+			if (!result.IsSuccess)
+				return result.ToOkSingleResult();
+
+			return ResultData<List<AgendamentoResponse>>.Success(mapper.Map<List<AgendamentoResponse>>(result.Data))
+			.ToOkSingleResult();
 		})
 		.WithName("GetAllAgendamentos")
 		.WithOpenApi()

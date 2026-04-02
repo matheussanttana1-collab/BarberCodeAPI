@@ -14,15 +14,17 @@ public class AlterarBarbeiroUseCase
 		_repo = repo;
 	}
 
-	public async Task<ResultData> ExecuteAsync(Guid id, AtualizarBarbeiroRequest request)
+	public async Task<ResultData> ExecuteAsync(Guid id, AtualizarBarbeiroRequest request, Guid userId)
 	{
+		
 		var barbeiro = await _repo.BuscarBarbeiroPorAsync(id);
 
 		if (barbeiro == null)
 			return ResultData.Failure(ResultType.NotFound,"Barbeiro não Encontrado");
 
-		barbeiro.AlterarBarbeiro(request.nome, request.horarioAlmoco);
-
+		var result =  barbeiro.AlterarBarbeiro(request.nome, request.horarioAlmoco, userId);
+		if (!result.IsSuccess)
+			return ResultData.Failure(result.Type, result.Message);
 		await _repo.AtualizarBarbeiroAsync();
 		return ResultData.Success();
 	} 

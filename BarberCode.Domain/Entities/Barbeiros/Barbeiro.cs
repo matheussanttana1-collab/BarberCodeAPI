@@ -64,12 +64,15 @@ public class Barbeiro
 		return Slots;
 	}
 	
-	public void AlterarBarbeiro (string? nome, TimeOnly? horarioAlmoco)
+	public ResultData AlterarBarbeiro (string? nome, TimeOnly? horarioAlmoco, Guid userId)
 	{
+		if (userId != Id && userId != BarbeariaId)
+			return ResultData.Failure(ResultType.Forbidden, "Voce não tem permissão para realizar essa ação");
 		if (nome is not null)
 			Name = nome;
 		if(horarioAlmoco is not null)
 			HorarioAlmoco = horarioAlmoco.Value;
+		return ResultData.Success();
 	}
 
 	public void AlterarFoto (string caminho)

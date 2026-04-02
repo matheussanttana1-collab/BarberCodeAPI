@@ -35,11 +35,13 @@ public class AgendamentoRepository : IAgendamentoRepository
 			.ToListAsync();
 	}
 
-	public async Task<IEnumerable<Agendamento>> BuscarAgendamentosAsync(Guid barbeiroId, StatusAgendamento? status)
+	public async Task<IEnumerable<Agendamento>> BuscarAgendamentosAsync(Guid barbeiroId, StatusAgendamento? 
+	status, DateOnly? dia)
 	{
 		return await _context.agendamentos
 			.Where(a => a.BarbeiroId == barbeiroId)
 			.Where(a => status == null || a.Status == status)
+			.Where(a => dia == null || a.Dia == dia)
 			.ToListAsync();
 	}
 

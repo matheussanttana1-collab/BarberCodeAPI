@@ -50,9 +50,11 @@ public static class BarbeiroEndpoints
 		.WithOpenApi();
 		
 
-		group.MapPatch("/{id}", async (Guid id, AtualizarBarbeiroRequest request, AlterarBarbeiroUseCase useCase) =>
+		group.MapPatch("/{id}", async (Guid id, AtualizarBarbeiroRequest request, AlterarBarbeiroUseCase useCase
+		, ClaimsPrincipal user) =>
 		{
-			var result = await useCase.ExecuteAsync(id, request);
+			var userId = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+			var result = await useCase.ExecuteAsync(id, request, Guid.Parse(userId));
 			return result.ToNoContentResult();
 		})
 		.WithName("UpdateBarbeiro")
