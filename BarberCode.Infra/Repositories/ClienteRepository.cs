@@ -14,6 +14,11 @@ public class ClienteRepository : IClienteRepository
 		_context = context;
 	}
 
+	public async Task<ClienteInfo?> BuscarClientePorIdAsync(Guid id)
+	{
+		return await _context.clientes.FirstOrDefaultAsync(c => c.Id == id);
+	}
+
 	public async Task<ClienteInfo?> BuscarClientePeloTelefoneAsync(string telefone)
 	{
 		return await _context.clientes.FirstOrDefaultAsync(c => c.Celular == telefone);

@@ -11,6 +11,7 @@ namespace BarberCode.Application.Interfaces;
 public interface IClienteRepository
 {
 	Task  SalvarClienteAsync(ClienteInfo cliente);
+	Task <ClienteInfo?> BuscarClientePorIdAsync(Guid id);
 	Task <ClienteInfo?> BuscarClientePeloTelefoneAsync(string telefone);
 	Task <IEnumerable<ClienteInfo>> BuscarClientesAsync(Guid BarbeariaId);
 }

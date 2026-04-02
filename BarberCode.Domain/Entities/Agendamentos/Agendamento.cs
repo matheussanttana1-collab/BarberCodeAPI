@@ -50,6 +50,11 @@ public class Agendamento
 
 	}
 
+	public bool TemPermissaoDeAcesso(Guid userId)
+	{
+		return BarbeiroId == userId || BarbeariaId == userId;
+	}
+
 	public ResultData ValidarCancelamento(Guid clienteId)
 	{
 		if (clienteId != ClienteId || Status == StatusAgendamento.Concluido)

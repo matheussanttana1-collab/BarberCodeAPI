@@ -8,6 +8,7 @@ using BarberCode.Infra.Banco;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json;
@@ -87,6 +88,8 @@ builder.Services.AddAuthorization(opts =>
 	opts.AddPolicy("manager", policy => policy.RequireRole("Barbearia"));
 	opts.AddPolicy("employee", policy => policy.RequireRole("Barbeiro"));
 	opts.AddPolicy("user", policy => policy.RequireRole("Cliente"));
+	opts.AddPolicy("managerOrEmployee", policy =>
+		policy.RequireRole("Barbearia", "Barbeiro"));
 });
 
 builder.Services.ConfigureHttpJsonOptions(options =>

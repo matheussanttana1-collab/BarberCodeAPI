@@ -30,7 +30,7 @@ public class LoginClienteUseCase
 		// 2️ Busca o cliente pelo celular
 		var cliente = await _clienteRepository.BuscarClientePeloTelefoneAsync(request.Celular);
 		if (cliente is null)
-			return ResultData<string>.Failure(ResultType.NotFound, "Cliente não encontrado");
+			return ResultData<string>.Failure(ResultType.NotFound, "Cliente não Cadastrado");
 
 		// 3️ Reconstrói o email fake do cliente
 		var emailFake = $"{request.Celular}@cliente.barbercode.local";

@@ -58,7 +58,7 @@ public static class BarbeiroEndpoints
 		.WithName("UpdateBarbeiro")
 		.WithOpenApi()
 		.AddEndpointFilter<ValidationFilter<AtualizarBarbeiroRequest>>()
-		.RequireAuthorization("manager","employee");
+		.RequireAuthorization("managerOrEmployee");
 
 		group.MapPost("/", async (CriarBarbeiroRequest request,
 		CriarBarbeiroUseCase useCase, ClaimsPrincipal user) =>

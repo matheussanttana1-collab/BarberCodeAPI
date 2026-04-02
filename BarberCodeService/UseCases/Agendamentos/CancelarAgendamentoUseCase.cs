@@ -15,12 +15,15 @@ public class CancelarAgendamentoUseCase
 		_repo = repo;
 	}
 
-	public async Task<ResultData> ExecuteAsync (Guid Id) {
+	public async Task<ResultData> ExecuteAsync (Guid id, Guid userId) {
 
-		var agendamento = await _repo.BuscarAgendadamentoPorIdAsync(Id);
+		var agendamento = await _repo.BuscarAgendadamentoPorIdAsync(id);
 
 		if (agendamento is null)
 			return ResultData.Failure(ResultType.NotFound, "Agendamento não encontrado");
+
+		if (!agendamento.TemPermissaoDeAcesso(userId))
+			return ResultData.Failure(ResultType.Forbidden, "Você não tem permissão para essa tarefa");
 
 		await _repo.DeletarAgendadamentoAsync(agendamento);
 

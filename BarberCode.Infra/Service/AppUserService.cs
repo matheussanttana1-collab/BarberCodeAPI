@@ -135,4 +135,11 @@ public class AppUserService : IAppUserService
 			appUser.TipoUsuario
 		);
 	}
+
+	public async Task<bool> ValidarUsuarioAsync(AuthUser user, string senha)
+	{
+		var result = await _signInManager.PasswordSignInAsync(user.UserName, senha, false, false);
+
+		return (result.Succeeded? true: false);
+	}
 }

@@ -6,6 +6,8 @@ using BarberCode.Domain.Entities.Agendamentos;
 using BarberCode.Service.Requests;
 using BarberCode.Service.Responses;
 using BarberCode.Domain.Shared;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 namespace BarberCode.API.Endpoins;
 
 public static class AgendamentoEndpoints
@@ -23,7 +25,7 @@ public static class AgendamentoEndpoints
 		})
 		.WithName("GetAllAgendamentos")
 		.WithOpenApi()
-		.RequireAuthorization("manager","employee");
+		.RequireAuthorization("managerOrEmployee");
 
 		group.MapGet("/{id}", async (Guid id, IAgendamentoRepository repo, IMapper mapper) =>
 		{
@@ -37,14 +39,16 @@ public static class AgendamentoEndpoints
 		.WithName("GetAgendamentoById")
 		.WithOpenApi();
 
-		group.MapPatch("/{id}/concluir", async (Guid id, ConcluirAgendamentoUseCase useCase) =>
+		group.MapPatch("/{id}/concluir", async (Guid id,
+		ConcluirAgendamentoUseCase useCase, ClaimsPrincipal user) =>
 		{
-			var result = await useCase.ExecuteAsync(id);
+			var userId = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+			var result = await useCase.ExecuteAsync(id, Guid.Parse(userId));
 			return result.ToNoContentResult();
 		})
 		.WithName("ConcluirAgendamento")
 		.WithOpenApi()
-		.RequireAuthorization("manager", "employee");
+		.RequireAuthorization("managerOrEmployee");
 
 		group.MapPost("/", async (CriarAgendamentoRequest request, CriarAgendamentoUseCase useCase) =>
 		{
@@ -55,13 +59,14 @@ public static class AgendamentoEndpoints
 		.WithOpenApi()
 		.AddEndpointFilter<ValidationFilter<CriarAgendamentoRequest>>(); 
 
-		group.MapDelete("/{id}", async (Guid id, CancelarAgendamentoUseCase useCase) =>
+		group.MapDelete("/{id}", async (Guid id, CancelarAgendamentoUseCase useCase, ClaimsPrincipal user) =>
 		{
-			var result = await useCase.ExecuteAsync(id);
+			var userId = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+			var result = await useCase.ExecuteAsync(id, Guid.Parse(userId));
 			return result.ToNoContentResult();
 		})
 		.WithName("DeleteAgendamento")
 		.WithOpenApi()
-		.RequireAuthorization("manager", "employee"); ;
+		.RequireAuthorization("managerOrEmployee"); ;
 	}
 }

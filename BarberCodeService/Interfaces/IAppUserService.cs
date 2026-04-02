@@ -33,5 +33,5 @@ public interface IAppUserService
 	/// </summary>
 	Task<IList<string>> ObterRolesAsync(AuthUser user);
 
-	//Task AdicionarRole();
+	Task<bool> ValidarUsuarioAsync(AuthUser user, string senha);
 }
