@@ -14,7 +14,7 @@ public static class AgendamentoEndpoints
 	{
 		var group = routes.MapGroup("/api/Agendamento").WithTags(nameof(Agendamento));
 
-		group.MapGet("/Barbeiro/{barbeiroId}", async (Guid barbeiroId, IAgendamentoRepository repo,
+		group.MapGet("/", async (Guid barbeiroId, IAgendamentoRepository repo,
 		 IMapper mapper, StatusAgendamento? status) =>
 		{
 			var agendamentos = await repo.BuscarAgendamentosAsync(barbeiroId, status);

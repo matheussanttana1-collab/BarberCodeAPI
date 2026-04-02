@@ -14,7 +14,7 @@ public static class ServicoEndpoints
 {
 	public static void MapServicoEndpoints(this IEndpointRouteBuilder routes)
 	{
-		var group = routes.MapGroup("/api/Barbearia/{barbeariaId}/Servico").WithTags(nameof(Servico))
+		var group = routes.MapGroup("/api/Servico").WithTags(nameof(Servico))
 		.RequireAuthorization("manager");
 
 		group.MapGet("/", async (Guid barbeariaId,IServicoRepository repo, IMapper mapper) =>

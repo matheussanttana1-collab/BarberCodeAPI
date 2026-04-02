@@ -7,17 +7,19 @@ using BarberCode.Service.Responses;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.OpenApi;
 using BarberCode.Domain.Shared;
+using System.Security.Claims;
 namespace BarberCode.API.Endpoins;
 
 public static class ClienteEndpoints
 {
     public static void MapClienteInfoEndpoints (this IEndpointRouteBuilder routes)
     {
-		var group = routes.MapGroup("/api/Cliente").WithTags("Cliente");
+		var group = routes.MapGroup("/api").WithTags("Cliente");
 
-		group.MapGet("/Barbearia/{barbeariaId}", async (Guid barbeariaId, IClienteRepository repo, IMapper mapper) =>
+		group.MapGet("/barbearia", async (IClienteRepository repo, IMapper mapper, ClaimsPrincipal user) =>
 		{
-			var clientes = await repo.BuscarClientesAsync(barbeariaId);
+			var barbeariaId = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+			var clientes = await repo.BuscarClientesAsync(Guid.Parse(barbeariaId));
 			return ResultData<List<ClienteInfoResponse>>.Success(mapper.Map<List<ClienteInfoResponse>>(clientes))
 			.ToOkSingleResult();
 		})
@@ -37,26 +39,29 @@ public static class ClienteEndpoints
 		.WithName("GetClienteInfoByCel")
 		.WithOpenApi();
 
-		group.MapGet("/{id}/agendamentos", async (Guid id, IAgendamentoRepository repo, IMapper mapper) =>
+		group.MapGet("/agendamentos", async (IAgendamentoRepository repo, IMapper mapper
+		, ClaimsPrincipal user) =>
 		{
-			var agendamentos = await repo.BuscarAgendamentosDoClienteAsync(id);
+			var clienteId = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+			var agendamentos = await repo.BuscarAgendamentosDoClienteAsync(Guid.Parse(clienteId));
 
 			return ResultData<List<AgendamentoResponse>>.Success(mapper.Map<List<AgendamentoResponse>>
 			(agendamentos)).ToOkSingleResult();
 		})
 		.WithName("AgendamentosDoCliente")
 		.WithOpenApi()
-		.RequireAuthorization("cliente");
+		.RequireAuthorization("user");
 
-		group.MapDelete("/{id}/agendamentos/{agendamentoId}", async (Guid id, Guid agendamentoId,
-		CancelarAgendamentoClienteUseCase useCase) =>
+		group.MapDelete("/agendamentos", async ( Guid agendamentoId,
+		CancelarAgendamentoClienteUseCase useCase, ClaimsPrincipal user) =>
 		{
-			var result = await useCase.ExecuteAsync(agendamentoId, id);
+			var clienteId = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+			var result = await useCase.ExecuteAsync(agendamentoId, Guid.Parse(clienteId));
 			return result.ToNoContentResult();
 		})
 		.WithName("CancelarAgendamentoCliente")
 		.WithOpenApi()
-		.RequireAuthorization("cliente");
+		.RequireAuthorization("user");
 
 		//group.MapDelete("/{id}", (Guid id) =>
 		//      {

@@ -19,7 +19,7 @@ public static class BarbeiroEndpoints
 	{
 		var group = routes.MapGroup("/api/Barbeiros").WithTags(nameof(Barbeiro));
 
-		group.MapGet("/Barbearia/{barbeariaId}", async (Guid barbeariaId, IBarbeiroRepository repo, IMapper mapper) =>
+		group.MapGet("/", async (Guid barbeariaId, IBarbeiroRepository repo, IMapper mapper) =>
 		{
 			var barbeiros = await repo.BuscarBarbeirosAsync(barbeariaId);
 			return ResultData<List<BarbeiroResponse>>.Success(mapper.Map<List<BarbeiroResponse>>(barbeiros))
