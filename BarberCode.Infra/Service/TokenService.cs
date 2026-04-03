@@ -1,6 +1,6 @@
 ﻿using BarberCode.Application.Interfaces;
 using BarberCode.Application.Models;
-using BarberCode.Infra.Models;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -11,7 +11,12 @@ namespace BarberCode.Infra.Service;
 
 public class TokenService : ITokenService
 {
-	private const string ChaveSecreta = "nisjdajsdçajdsdsadsadsasdsadadsaffasfsda";
+	private readonly IConfiguration _configuration;
+
+	public TokenService(IConfiguration configuration)
+	{
+		_configuration = configuration;
+	}
 
 	public string GerarToken(AuthUser user, IList<string> roles)
 	{
@@ -26,7 +31,8 @@ public class TokenService : ITokenService
 			claims.Add(new Claim(ClaimTypes.Role, role));
 		}
 
-		var chave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ChaveSecreta));
+		var chaveSecreta = _configuration["SymmetricSecurityKey"];
+		var chave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(chaveSecreta!));
 
 		var signingCredentials = new SigningCredentials(chave, SecurityAlgorithms.HmacSha256);
 
@@ -48,7 +54,8 @@ public class TokenService : ITokenService
 		try
 		{
 			var tokenHandler = new JwtSecurityTokenHandler();
-			var chave = Encoding.UTF8.GetBytes(ChaveSecreta);
+			var chaveSecreta = _configuration["SymmetricSecurityKey"];
+			var chave = Encoding.UTF8.GetBytes(chaveSecreta!);
 
 			// Valida o token (mesmo se expirado)
 			var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
