@@ -29,6 +29,10 @@ public static class DependencyInjection
 		services.AddScoped<ConcluirAgendamentoUseCase>();
 		services.AddScoped<LoginUseCase>();
 		services.AddScoped<LoginClienteUseCase>();
+		services.AddScoped<ListarAgendamentosBarbeiroUseCase>();
+		services.AddScoped<AlterarSenhaUseCase>();
+		services.AddScoped<EsqueciSenhaUseCase>();
+		services.AddScoped<RefreshTokenUseCase>();
 		return services;
 	}
 

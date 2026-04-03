@@ -77,8 +77,21 @@ public static class ResultsExtends
 			ResultType.Conflict => Results.Conflict(result),
 			ResultType.NotFound => Results.NotFound(result),
 			ResultType.Forbidden => Results.Forbid(),
+			ResultType.Validation => Results.BadRequest(result),
 			_ => Results.StatusCode(500)
 		};
 	}
 
+	public static IResult ToOkSingleResult(this ResultData result)
+	{
+		return result.Type switch
+		{
+			ResultType.Success => Results.Ok(result),
+			ResultType.Conflict => Results.Conflict(result),
+			ResultType.Validation => Results.BadRequest(result),
+			ResultType.NotFound => Results.NotFound(result),
+			ResultType.Forbidden => Results.Forbid(),
+			_ => Results.StatusCode(500)
+		};
+	}
 }

@@ -22,11 +22,8 @@ public static class AgendamentoEndpoints
 			var userId = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
 			var result = await useCase.ExecuteAsync(barbeiroId, Guid.Parse(userId), status, dia);
 
-			if (!result.IsSuccess)
-				return result.ToOkSingleResult();
-
-			return ResultData<List<AgendamentoResponse>>.Success(mapper.Map<List<AgendamentoResponse>>(result.Data))
-			.ToOkSingleResult();
+			return result.ToOkSingleResult();
+			;
 		})
 		.WithName("GetAllAgendamentos")
 		.WithOpenApi()

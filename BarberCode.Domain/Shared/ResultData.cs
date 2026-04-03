@@ -10,14 +10,14 @@ namespace BarberCode.Domain.Shared
 	public class ResultData<T> : Result
 	{
 		public T? Data { get; private set; }
-		public ResultData(T? data, ResultType type = ResultType.Success, string messege = "Criado Com Sucesso"
+		public ResultData(T? data, ResultType type = ResultType.Success, string messege = "Operação realizada com sucesso"
 		)
 		: base(type, messege)
 		{
 			Data = data;
 		}
 		public static ResultData<T> Success(T data)
-			=> new(data);
+			=> new (data);
 
 		public static ResultData<T> Failure(ResultType type, string message)
 			=> new(default, type, message);
@@ -28,7 +28,7 @@ namespace BarberCode.Domain.Shared
 	public class ResultData : Result
 	{
 
-		public ResultData(ResultType type = ResultType.Success, string messege = "Criado Com Sucesso")
+		public ResultData(ResultType type = ResultType.Success, string messege = "Operação realizada com sucesso")
 		: base(type, messege)
 		{
 		}

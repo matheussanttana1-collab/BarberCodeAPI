@@ -28,16 +28,9 @@ public class LoginUseCase
 	/// </summary>
 	public async Task<ResultData<string>> ExecuteAsync(string email, string senha)
 	{
-		// Valida Email - Busca o usuário pelo email
-		var user = await _userService.ValidarEmailAsync(email);
-		if (user is null)
-			return ResultData<string>.Failure(ResultType.NotFound, "Email não encontrado ou não cadastrado");
-
-		// Valida Senha - Verifica se a senha está correta
-		var userValidado = await _userService.ValidarSenhaAsync(user, senha);
+		var userValidado = await _userService.ValidarUsuarioAsync(email, senha);
 		if (userValidado is null)
-			return ResultData<string>.Failure(ResultType.Validation, "Senha inválida");
-
+			return ResultData<string>.Failure(ResultType.Validation, "Email ou senha invalidos");
 		// Obtém Roles - Busca as roles do usuário autenticado
 		var roles = await _userService.ObterRolesAsync(userValidado);
 

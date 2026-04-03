@@ -52,24 +52,21 @@ public class AppUserService : IAppUserService
 	/// Valida se o email existe e retorna o usuário autenticado
 	/// Converte AppUser → AuthUser
 	/// </summary>
-	public async Task<AuthUser?> ValidarEmailAsync(string email)
+	public async Task<AuthUser?> BuscarPeloEmailAsync(string email)
 	{
 		var appUser = await _userManager.FindByEmailAsync(email);
 
-		if (appUser is null)
-			return null;
-
-		return MapToAuthUser(appUser);
+		return (appUser is null ?null : MapToAuthUser(appUser)) ;
 	}
 
 	/// <summary>
 	/// Valida a senha do usuário
 	/// Retorna o usuário se a senha for válida, null caso contrário
 	/// </summary>
-	public async Task<AuthUser?> ValidarSenhaAsync(AuthUser user, string senha)
+	public async Task<AuthUser?> ValidarUsuarioAsync(string email, string senha)
 	{
 		// Busca o AppUser completo pelo ID
-		var appUser = await _userManager.FindByIdAsync(user.Id);
+		var appUser = await _userManager.FindByEmailAsync(email);
 		if (appUser is null)
 			return null;
 
@@ -136,10 +133,36 @@ public class AppUserService : IAppUserService
 		);
 	}
 
-	public async Task<bool> ValidarUsuarioAsync(AuthUser user, string senha)
-	{
-		var result = await _signInManager.PasswordSignInAsync(user.UserName, senha, false, false);
 
-		return (result.Succeeded? true: false);
+	/// <summary>
+	/// Altera a senha do usuário
+	/// Assume que as validações já foram feitas no UseCase
+	/// </summary>
+	public async Task<ResultData> AlterarSenhaAsync(AuthUser user, string token, string novaSenha)
+	{
+		var appUser = await _userManager.FindByIdAsync(user.Id);
+
+		var result = await _userManager.ResetPasswordAsync(appUser!, token, novaSenha);
+
+		if (!result.Succeeded)
+			return ResultData.Failure(ResultType.Validation, result.Errors.First().Description);
+
+		return ResultData.Success();
 	}
+
+	/// <summary>
+	/// Reseta a senha para uma padrão temporária
+	/// Assume que as validações já foram feitas no UseCase
+	/// </summary>
+	public async Task<string> GerarTokenDeResetSenhaAsync(AuthUser user)
+	{
+		var Appuser = await _userManager.FindByEmailAsync(user.Email);
+
+		var token = await _userManager.GeneratePasswordResetTokenAsync(Appuser!);
+
+		return token;
+	}
+
+
+
 }

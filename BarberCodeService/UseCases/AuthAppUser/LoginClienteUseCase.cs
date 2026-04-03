@@ -34,15 +34,8 @@ public class LoginClienteUseCase
 
 		// 3️ Reconstrói o email fake do cliente
 		var emailFake = $"{request.Celular}@cliente.barbercode.local";
-
-		// 4️ Valida o email (busca o AppUser)
-		var authUser = await _appUserService.ValidarEmailAsync(emailFake);
-		if (authUser is null)
-			return ResultData<string>.Failure(ResultType.NotFound, "Usuário não encontrado");
-
-		// 5 Valida a senha
 		var senhaFinal = request.Senha ?? "Cliente@123";
-		var usuarioValidado = await _appUserService.ValidarSenhaAsync(authUser, senhaFinal);
+		var usuarioValidado = await _appUserService.ValidarUsuarioAsync(emailFake, senhaFinal);
 		if (usuarioValidado is null)
 			return ResultData<string>.Failure(ResultType.Validation, "Credenciais inválidas");
 
