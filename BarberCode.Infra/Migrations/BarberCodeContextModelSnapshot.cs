@@ -78,7 +78,7 @@ namespace BarberCode.Infra.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -126,7 +126,7 @@ namespace BarberCode.Infra.Migrations
                     b.Property<int>("Duracao")
                         .HasColumnType("int");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -155,7 +155,7 @@ namespace BarberCode.Infra.Migrations
                     b.Property<TimeOnly>("HorarioAlmoco")
                         .HasColumnType("time(6)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("longtext");
 

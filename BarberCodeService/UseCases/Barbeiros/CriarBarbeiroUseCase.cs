@@ -13,14 +13,18 @@ public class CriarBarbeiroUseCase
 	private readonly IBarbeiroRepository _barbeiroRepo;
 	private readonly IBarbeariaRepository _barbeariaRepo;
 	private readonly IAppUserService _userService;
+	private readonly IEmailService _emailService;
+	private readonly IEmailTemplateService _emailTemplateService;
 	
 
 	public CriarBarbeiroUseCase(IBarbeiroRepository barbeiroRepo, IAppUserService userService, 
-	IBarbeariaRepository barbeariaRepo)
+ IBarbeariaRepository barbeariaRepo, IEmailService emailService, IEmailTemplateService emailTemplateService)
 	{
 		_barbeiroRepo = barbeiroRepo;
 		_userService = userService;
 		_barbeariaRepo = barbeariaRepo;
+       _emailService = emailService;
+		_emailTemplateService = emailTemplateService;
 	}
 
 	
@@ -38,6 +42,9 @@ public class CriarBarbeiroUseCase
 
 		if (!result.IsSuccess)
 			return ResultData<Guid>.Failure(result.Type, result.Message);
+
+        var body = _emailTemplateService.gerarTemplateBoasVindasBarbeiro(barbeiro.Nome, barbearia.Nome);
+		await _emailService.sendEmailAsync(request.Email, "Bem-vindo à BarberCode", body);
 
 		return ResultData<Guid>.Success(barbeariaId);
 	}

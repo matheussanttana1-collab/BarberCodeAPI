@@ -11,12 +11,17 @@ public class CriarBarbeariaUseCase
 	private readonly IBarbeariaRepository _repository;
 	private readonly IMapper _mapper;
 	private readonly IAppUserService _userService;
+	private readonly IEmailService _emailService;
+	private readonly IEmailTemplateService _emailTemplateService;
 
-	public CriarBarbeariaUseCase(IBarbeariaRepository repository, IMapper mapper, IAppUserService userService)
+  public CriarBarbeariaUseCase(IBarbeariaRepository repository, IMapper mapper, IAppUserService userService,
+	IEmailService emailService, IEmailTemplateService emailTemplateService)
 	{
 		_repository = repository;
 		_mapper = mapper;
 		_userService = userService;
+       _emailService = emailService;
+		_emailTemplateService = emailTemplateService;
 	}
 
 	public async Task<ResultData<Guid>> ExecuteAsync(CriarBarbeariaRequest request)
@@ -32,6 +37,9 @@ public class CriarBarbeariaUseCase
 			return ResultData<Guid>.Failure(result.Type, result.Message);
 
 		await _repository.SalvarBarbeariaAsync(barbearia);
+
+		var body = _emailTemplateService.gerarTemplateBoasVindasBarbearia(barbearia.Nome);
+		await _emailService.sendEmailAsync(request.Email, "Bem-vindo à BarberCode", body);
 
 		return ResultData<Guid>.Success(barbearia.Id);
 	}

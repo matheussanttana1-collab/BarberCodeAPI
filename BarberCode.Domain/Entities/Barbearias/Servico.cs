@@ -13,14 +13,14 @@ public class Servico
 	public Servico(string name, int duracao, string? descricao,double preco, Guid barbeariaId)
 	{
 		Id = Guid.NewGuid();
-		Name = name;
+		Nome = name;
 		Duracao = duracao;
 		Descricao = descricao;
 		Preco = preco;
 		BarbeariaId = barbeariaId;
 	}
 	public Guid Id { get; private set; }
-	public string Name { get; private set; }
+	public string Nome { get; private set; }
 	public int Duracao { get; private set; }
 	public string? Descricao { get; private set; }
 	public double Preco { get; private set; }
@@ -29,7 +29,7 @@ public class Servico
 
 	public void AlterarServico (string? nome, string? descricao, int? duracao) {
 		if (nome is not null) 
-			Name = nome;
+			Nome = nome;
 		if (descricao is not null) 
 			Descricao = descricao;
 		if (duracao is not null)

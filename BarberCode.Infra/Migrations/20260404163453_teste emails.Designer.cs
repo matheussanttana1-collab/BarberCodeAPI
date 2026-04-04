@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BarberCode.Infra.Migrations
 {
     [DbContext(typeof(BarberCodeContext))]
-    [Migration("20260331160732_Userteste")]
-    partial class Userteste
+    [Migration("20260404163453_teste emails")]
+    partial class testeemails
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -81,7 +81,7 @@ namespace BarberCode.Infra.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -129,7 +129,7 @@ namespace BarberCode.Infra.Migrations
                     b.Property<int>("Duracao")
                         .HasColumnType("int");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -158,7 +158,7 @@ namespace BarberCode.Infra.Migrations
                     b.Property<TimeOnly>("HorarioAlmoco")
                         .HasColumnType("time(6)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("longtext");
 

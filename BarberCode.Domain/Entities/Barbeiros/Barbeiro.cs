@@ -10,7 +10,7 @@ public class Barbeiro
 	public Barbeiro(string name, string? fotoPerfil, Guid barbeariaId,TimeOnly horarioAlmoco)
 	{
 		Id = Guid.NewGuid();
-		Name = name;
+		Nome = name;
 		FotoPerfil = fotoPerfil;
 		BarbeariaId = barbeariaId;
 		HorarioAlmoco = horarioAlmoco;
@@ -22,7 +22,7 @@ public class Barbeiro
 	}
 
 	public Guid Id { get; private set; }
-	public string Name { get; private set; }
+	public string Nome { get; private set; }
 	public string? FotoPerfil { get; private set; }
 	public Guid BarbeariaId { get; private set; }
 	public virtual Barbearia BarbeariaQueTrabalha { get; private set; }
@@ -69,7 +69,7 @@ public class Barbeiro
 		if (userId != Id && userId != BarbeariaId)
 			return ResultData.Failure(ResultType.Forbidden, "Voce não tem permissão para realizar essa ação");
 		if (nome is not null)
-			Name = nome;
+			Nome = nome;
 		if(horarioAlmoco is not null)
 			HorarioAlmoco = horarioAlmoco.Value;
 		return ResultData.Success();
