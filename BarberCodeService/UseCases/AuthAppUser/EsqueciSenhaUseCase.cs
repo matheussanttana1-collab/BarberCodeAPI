@@ -11,11 +11,14 @@ public class EsqueciSenhaUseCase
 {
 	private readonly IAppUserService _userService;
 	private readonly IEmailService _emailService;
+	private readonly IEmailTemplateService _emailTemplateService;
 
-	public EsqueciSenhaUseCase(IAppUserService userService, IEmailService emailService)
+ public EsqueciSenhaUseCase(IAppUserService userService, IEmailService emailService,
+	IEmailTemplateService emailTemplateService)
 	{
 		_userService = userService;
 		_emailService = emailService;
+       _emailTemplateService = emailTemplateService;
 	}
 
 	public async Task<ResultData<string>> ExecuteAsync(string email)
@@ -30,21 +33,10 @@ public class EsqueciSenhaUseCase
 			return ResultData<string>.Failure(ResultType.NotFound, "Email não encontrado");
 
 		var token = await _userService.GerarTokenDeResetSenhaAsync(user);
-
-
-		var tokenCodificado = Uri.EscapeDataString(token);
-		var emailCodificado = Uri.EscapeDataString(email);
-
-		var linkReset = $"https://localhost:7050/api/auth/alterar-senha/{tokenCodificado}?email={emailCodificado}";
+		var body = _emailTemplateService.gerarTemplateResetSenha(email, token);
 
 		// 5️ Monta e envia o e-mail
-		await _emailService.sendEmailAsync(
-			email,
-			"Recuperação de Senha",
-			$"<h1>Olá!</h1>" +
-			$"<p>Você solicitou a alteração da sua senha. Para criar uma nova, clique no link abaixo:</p>" +
-			$"<a href='{linkReset}'>Redefinir minha senha</a>"
-		);
+		await _emailService.sendEmailAsync( email,"Recuperação de Senha", body);
 		return ResultData<string>.Success("Email de recuperação enviado com sucesso");
 	}
 }
