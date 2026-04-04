@@ -19,7 +19,9 @@ public static class DependencyInjections
 		services.AddScoped<IClienteRepository, ClienteRepository>();
 		services.AddScoped<IAppUserService, AppUserService>();
 		services.AddScoped<ITokenService, TokenService>();
+		services.AddScoped<IEmailService, EmailService>();
 		services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<BarberCodeContext>()
+		
 		.AddDefaultTokenProviders();
 
 		return services;

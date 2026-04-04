@@ -39,7 +39,7 @@ public static class AuthEndpoints
 		.Produces(StatusCodes.Status404NotFound)
 		.AddEndpointFilter<ValidationFilter<LoginClienteRequest>>();
 
-		group.MapPost("/alterar-senha", async (string email, string token, AlterarSenhaRequest request, AlterarSenhaUseCase useCase) =>
+		group.MapPost("/alterar-senha/{token}", async (string email, string token, AlterarSenhaRequest request, AlterarSenhaUseCase useCase) =>
 		{
 			var result = await useCase.ExecuteAsync(email, token, request.SenhaNova);
 

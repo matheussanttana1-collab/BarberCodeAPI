@@ -5,6 +5,7 @@ using BarberCode.Application.Validators;
 using BarberCode.Domain.Shared;
 using BarberCode.Infra;
 using BarberCode.Infra.Banco;
+using BarberCode.Infra.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -15,15 +16,20 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// --------------------------------- DI Banco De Dados ------------------------------------------------------------
 var connectionString = builder.Configuration.GetConnectionString("BarberCodeConnection");
 builder.Services.AddDbContext<BarberCodeContext>(opts => opts.UseLazyLoadingProxies().UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 builder.Services.AddAutoMapper(cfg => { }, typeof(BarbeariaProfile));
 
+// ---------------------------- DI Camadas de Infra / Applicattion ----------------------------------
 builder.Services.AddApplication();
 builder.Services.addInfra();
 builder.Services.AddValidatorsFromAssemblyContaining<CriarBarbeariaValidator>();
 
+// 
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+
+//---------------------------------- Authorization e Jwt Config --------------------------------------------------
 builder.Services.AddAuthentication
 (opitions => {
 
@@ -81,7 +87,7 @@ builder.Services.AddAuthentication
 	};
 });
 
-
+// ------------------------------------ Authorization e Roles ----------------------------------------------------
 builder.Services.AddAuthorization(opts =>
 {
 	opts.AddPolicy("manager", policy => policy.RequireRole("Barbearia"));
@@ -91,6 +97,7 @@ builder.Services.AddAuthorization(opts =>
 		policy.RequireRole("Barbearia", "Barbeiro"));
 });
 
+// ------------------------------- Config (Tranformar enum's em Strings) --------------------------------------------
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
 	// Isso faz com que TODOS os enums da API virem strings no JSON
@@ -99,7 +106,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 
 builder.Services.AddControllers();
 
-// Configurar OpenAPI e Swagger
+// -------------------------------  Configurar OpenAPI e Swagger -------------------------------------------------------
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -113,7 +120,7 @@ builder.Services.AddSwaggerGen(c =>
 
 
 
-
+/// --------------------------- App builder's / Swagger / Endponts / etc ---------------------------------------
 
 var app = builder.Build();
 

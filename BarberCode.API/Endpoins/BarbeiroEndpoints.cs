@@ -3,12 +3,10 @@ using BarberCode.API.Models;
 using BarberCode.Application.Interfaces;
 using BarberCode.Application.Requests;
 using BarberCode.Application.UseCases.Barbeiros;
-using BarberCode.Application.Validators;
 using BarberCode.Domain.Entities.Barbeiros;
 using BarberCode.Domain.Shared;
 using BarberCode.Service.Requests;
 using BarberCode.Service.Responses;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace BarberCode.API.Endpoins;
