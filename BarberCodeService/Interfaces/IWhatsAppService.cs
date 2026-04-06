@@ -1,4 +1,5 @@
-﻿using BarberCode.Domain.Shared;
+﻿using BarberCode.Domain.Entities.Barbearias;
+using BarberCode.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,4 +11,7 @@ namespace BarberCode.Application.Interfaces;
 public interface IWhatsAppService
 {
 	public Task<ResultData> EnviarMensagem(string numero,string texto, string instance);
+
+	public string GerarTemplateConfirmacaoAgendamento(string nomeBarbearia, string nomeCliente, DateOnly dataAgendamento,
+		string nomeProfissional, Endereco endereco);
 }

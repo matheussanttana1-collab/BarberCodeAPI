@@ -16,6 +16,8 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHttpClient();
+
 // --------------------------------- DI Banco De Dados ------------------------------------------------------------
 var connectionString = builder.Configuration.GetConnectionString("BarberCodeConnection");
 builder.Services.AddDbContext<BarberCodeContext>(opts => opts.UseLazyLoadingProxies().UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));

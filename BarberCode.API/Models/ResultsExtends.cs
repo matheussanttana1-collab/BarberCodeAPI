@@ -47,6 +47,12 @@ public static class ResultsExtends
 				result.Message,
 			}),
 
+			ResultType.Failure => Results.InternalServerError(new 
+			{
+				result.Type,
+				result.Message,
+			}),
+
 			// Qualquer outro tipo não mapeado → 500 Internal Server Error
 			_ => Results.StatusCode(500)
 		};

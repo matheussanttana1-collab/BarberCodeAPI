@@ -1,4 +1,5 @@
 ﻿using BarberCode.Application.Interfaces;
+using BarberCode.Domain.Entities.Barbearias;
 using BarberCode.Domain.Shared;
 using Microsoft.Extensions.Configuration;
 using System.Text;
@@ -31,17 +32,29 @@ public class WhatsAppService : IWhatsAppService
 		var baseUrl = _configuration["WhatsApp:BaseUrl"];
 		var apiKey = _configuration["WhatsApp:ApiKey"];
 
+		if (string.IsNullOrWhiteSpace(baseUrl) || string.IsNullOrWhiteSpace(apiKey))
+			return ResultData.Failure(ResultType.Failure, "Configurações do WhatsApp não encontradas (BaseUrl/ApiKey).");
+
+		if (string.IsNullOrWhiteSpace(instance))
+			return ResultData.Failure(ResultType.Failure, "Instância do WhatsApp não informada.");
+
 		// Monta a URL dinâmica injetando o nome da instância da barbearia específica
 		// Correção: Adicionada a '/' antes de {instance} para o endpoint correto
 		var url = $"{baseUrl}/message/sendText/{instance}";
 
 		// Cria o objeto anônimo que a Evolution API espera receber
-		var payload = new
+       var payload = new
 		{
-			number = numero,
-			text = texto,
-			delay = 1200,      // Delay em milissegundos para simular digitação humana e evitar ban
-			linkPreview = true // Habilita a visualização de links caso existam no texto
+			number = $"55{numero}",
+			textMessage = new
+			{
+				text = texto
+			},
+			options = new
+			{
+				delay = 1200,
+				linkPreview = true
+			}
 		};
 
 		// Prepara a requisição HTTP do tipo POST
@@ -72,5 +85,12 @@ public class WhatsAppService : IWhatsAppService
 
 		// Retorna sucesso caso a mensagem tenha sido aceita pela fila da Evolution API
 		return ResultData.Success();
+	}
+
+	public string GerarTemplateConfirmacaoAgendamento(string nomeBarbearia,string nomeCliente,DateOnly dataAgendamento,
+	string nomeProfissional,Endereco endereco)
+	{
+		return WhatsAppTemplates.GerarTemplateConfirmacaoAgendamento(nomeBarbearia,nomeCliente,dataAgendamento,
+			nomeProfissional,endereco);
 	}
 }
