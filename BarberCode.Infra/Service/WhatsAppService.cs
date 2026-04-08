@@ -111,8 +111,11 @@ public class WhatsAppService : IWhatsAppService
 		}
 		
 		var error = await response.Content.ReadAsStringAsync();
-		return ResultData<string>.Failure(ResultType.Failure, $"Erro ao Cadastrar: {error}");
+		var errorData = JsonSerializer.Deserialize<EvolutionErrorReponse>(error);
+		return ResultData<string>.Failure(ResultType.Failure, $"Erro ao Gerar qrCode: " +
+		$"{errorData!.Response.Message}");
 	}
+	
 
 	public string GerarTemplateConfirmacaoAgendamento(string nomeBarbearia,string nomeCliente,DateOnly dataAgendamento,
 	string nomeProfissional,Endereco endereco)
