@@ -52,29 +52,6 @@ public static class BarbeariaEndpoints
 		.AddEndpointFilter<ValidationFilter<CriarBarbeariaRequest>>()
 		.AllowAnonymous();
 
-		group.MapPost("/CadastrarWhatsApp", async (CadastrarWhatsApp useCase,
-		ClaimsPrincipal user) =>
-		{
-			var id = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
-			var result = await useCase.ExecuteAsync(Guid.Parse(id));
-
-			return result.ToCreateResult($"/api/Barbearia/CadastrarWhatsApp/{result}");
-		})
-		.WithName("CadastrarWhatsApp")
-		.WithOpenApi();
-
-		group.MapGet("/QrCodeWhatsApp", async (GerarNovoQrCodeUseCase useCase,
-		ClaimsPrincipal user) =>
-		{
-			var id = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
-			var result = await useCase.ExecuteAsync(Guid.Parse(id));
-
-			return result.ToOkSingleResult();
-		})
-		.WithName("QrCodeWhatsApp")
-		.WithOpenApi();
-
-
 		group.MapPatch("/endereco", async (EnderecoRequest request, AlterarEnderecoUseCase useCase, 
 		ClaimsPrincipal user) =>
 		{

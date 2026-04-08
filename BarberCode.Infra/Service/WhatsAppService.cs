@@ -103,17 +103,18 @@ public class WhatsAppService : IWhatsAppService
 		Encoding.UTF8, "application/json");
 
 		var response = await _httpClient.SendAsync(request);
-		if (response.IsSuccessStatusCode)
+		if (!response.IsSuccessStatusCode)
 		{
-			var jsonString = await response.Content.ReadAsStringAsync();
-			var data = JsonSerializer.Deserialize<EvolutionCreateResponse>(jsonString);
-			return ResultData<string>.Success(data.QrCodeData.Base64);
-		}
 		
-		var error = await response.Content.ReadAsStringAsync();
-		var errorData = JsonSerializer.Deserialize<EvolutionErrorReponse>(error);
-		return ResultData<string>.Failure(ResultType.Failure, $"Erro ao Gerar qrCode: " +
-		$"{errorData!.Response.Message}");
+			var error = await response.Content.ReadAsStringAsync();
+			var errorData = JsonSerializer.Deserialize<EvolutionErrorReponse>(error);
+			return ResultData<string>.Failure(ResultType.Failure, $"Erro ao Gerar qrCode: " +
+			$"{errorData!.Response.Message}");	
+		}
+
+		var jsonString = await response.Content.ReadAsStringAsync();
+		var data = JsonSerializer.Deserialize<EvolutionCreateResponse>(jsonString);
+		return ResultData<string>.Success(data!.QrCodeData.Base64);
 	}
 	public async Task<ResultData<string>> GerarNovoQrCodeWhatsApp(string instanceName)
 	{
@@ -127,19 +128,46 @@ public class WhatsAppService : IWhatsAppService
 		request.Headers.Add("apikey", apiKey);
 
 		var response = await _httpClient.SendAsync(request);
-		if (response.IsSuccessStatusCode)
+		if (!response.IsSuccessStatusCode)
 		{
-			var jsonString = await response.Content.ReadAsStringAsync();
-			var data = JsonSerializer.Deserialize<EvolutionCreateResponse>(jsonString);
-			return ResultData<string>.Success(data!.QrCodeData.Base64);
+			var error = await response.Content.ReadAsStringAsync();
+			var errorData = JsonSerializer.Deserialize<EvolutionErrorReponse>(error);
+			return ResultData<string>.Failure(ResultType.Failure, $"Erro ao Gerar qrCode: " +
+			$"{errorData!.Response.Message}");	
 		}
+
+		var jsonString = await response.Content.ReadAsStringAsync();
+		var data = JsonSerializer.Deserialize<EvolutionCreateResponse>(jsonString);
+		return ResultData<string>.Success(data!.QrCodeData.Base64);
+
+	}
+	public async Task<ResultData> DeletarWhatsAppBarbearia(string instanceName)
+	{
+		var baseUrl = _configuration["WhatsApp:BaseUrl"];
+		var apiKey = _configuration["WhatsApp:ApiKey"];
+
+		var url = $"{baseUrl}/instance/delete/{instanceName}";
+
+		var request = new HttpRequestMessage(HttpMethod.Delete, url);
+
+		request.Headers.Add("apikey", apiKey);
+
+		var response = await _httpClient.SendAsync(request);
+		if (!response.IsSuccessStatusCode)
+		{
+			var error = await response.Content.ReadAsStringAsync();
+			var errorData = JsonSerializer.Deserialize<EvolutionErrorReponse>(error);
+			return ResultData.Failure(ResultType.Failure, $"Erro ao Gerar qrCode: " +
+			$"{errorData!.Response.Message}");
+		}
+
+		return ResultData.Success();
+
 		
-		var error = await response.Content.ReadAsStringAsync();
-		var errorData = JsonSerializer.Deserialize<EvolutionErrorReponse>(error);
-		return ResultData<string>.Failure(ResultType.Failure, $"Erro ao Gerar qrCode: " +
-		$"{errorData!.Response.Message}");
+		
 	}
 
+	
 	public string GerarTemplateConfirmacaoAgendamento(string nomeBarbearia,string nomeCliente,DateOnly dataAgendamento,
 	string nomeProfissional,Endereco endereco)
 	{

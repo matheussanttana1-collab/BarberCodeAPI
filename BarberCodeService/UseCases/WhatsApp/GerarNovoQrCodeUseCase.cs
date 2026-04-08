@@ -1,12 +1,7 @@
-﻿using BarberCode.Application.Interfaces;
+using BarberCode.Application.Interfaces;
 using BarberCode.Domain.Shared;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BarberCode.Application.UseCases.Barbearias;
+namespace BarberCode.Application.UseCases.WhatsApp;
 
 public class GerarNovoQrCodeUseCase
 {
@@ -26,7 +21,7 @@ public class GerarNovoQrCodeUseCase
 		if (barbearia is null)
 			return ResultData<string>.Failure(ResultType.NotFound, "Barbearia Não Cadastrada");
 
-		var qrCodeResult = await _whatsAppService.GerarQrCodeDeCadastroWhatsApp(barbearia.Slug);
+		var qrCodeResult = await _whatsAppService.GerarNovoQrCodeWhatsApp(barbearia.Slug);
 		if (!qrCodeResult.IsSuccess)
 			return ResultData<string>.Failure(qrCodeResult.Type, qrCodeResult.Message);
 		return ResultData<string>.Success(qrCodeResult.Data!);

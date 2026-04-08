@@ -3,6 +3,7 @@ using BarberCode.Application.UseCases.AuthAppUser;
 using BarberCode.Application.UseCases.Barbearias;
 using BarberCode.Application.UseCases.Barbeiros;
 using BarberCode.Application.UseCases.Servicos;
+using BarberCode.Application.UseCases.WhatsApp;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BarberCode.Application;
@@ -42,7 +43,9 @@ public static class DependencyInjection
 		services.AddScoped<AlterarSenhaUseCase>();
 		services.AddScoped<EsqueciSenhaUseCase>();
 		services.AddScoped<RefreshTokenUseCase>();
-		services.AddScoped<CadastrarWhatsApp>();
+        services.AddScoped<CadastrarWhatsAppUseCase>();
+		services.AddScoped<GerarNovoQrCodeUseCase>();
+		services.AddScoped<DeletarWhatsAppUseCase>();
 		return services;
 	}
 

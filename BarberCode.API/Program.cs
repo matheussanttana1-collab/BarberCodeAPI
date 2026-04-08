@@ -152,6 +152,8 @@ app.MapControllers();
 
 app.MapBarbeariaEndpoints();
 
+app.MapWhatsAppEndpoints();
+
 app.MapBarbeiroEndpoints();
 
 app.MapServicoEndpoints();
