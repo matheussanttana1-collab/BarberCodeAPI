@@ -7,10 +7,8 @@ using BarberCode.Domain.Shared;
 using BarberCode.Service.Requests;
 using BarberCode.Service.Responses;
 using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using System.Text.RegularExpressions;
+
 
 namespace BarberCode.API.Endpoins;
 
@@ -63,6 +61,17 @@ public static class BarbeariaEndpoints
 			return result.ToCreateResult($"/api/Barbearia/CadastrarWhatsApp/{result}");
 		})
 		.WithName("CadastrarWhatsApp")
+		.WithOpenApi();
+
+		group.MapGet("/QrCodeWhatsApp", async (GerarNovoQrCodeUseCase useCase,
+		ClaimsPrincipal user) =>
+		{
+			var id = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+			var result = await useCase.ExecuteAsync(Guid.Parse(id));
+
+			return result.ToOkSingleResult();
+		})
+		.WithName("QrCodeWhatsApp")
 		.WithOpenApi();
 
 

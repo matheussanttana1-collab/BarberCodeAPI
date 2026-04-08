@@ -13,6 +13,7 @@ public interface IWhatsAppService
 	public Task<ResultData> EnviarMensagem(string numero,string texto, string instance);
 
 	public Task<ResultData<string>> GerarQrCodeDeCadastroWhatsApp(string instanceName);
+	public Task<ResultData<string>> GerarNovoQrCodeWhatsApp(string instanceName);
 
 	public string GerarTemplateConfirmacaoAgendamento(string nomeBarbearia, string nomeCliente, DateOnly dataAgendamento,
 		string nomeProfissional, Endereco endereco);

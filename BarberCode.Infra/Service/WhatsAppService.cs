@@ -115,7 +115,30 @@ public class WhatsAppService : IWhatsAppService
 		return ResultData<string>.Failure(ResultType.Failure, $"Erro ao Gerar qrCode: " +
 		$"{errorData!.Response.Message}");
 	}
-	
+	public async Task<ResultData<string>> GerarNovoQrCodeWhatsApp(string instanceName)
+	{
+		var baseUrl = _configuration["WhatsApp:BaseUrl"];
+		var apiKey = _configuration["WhatsApp:ApiKey"];
+
+		var url = $"{baseUrl}/instance/connect/{instanceName}";
+
+		var request = new HttpRequestMessage(HttpMethod.Get, url);
+
+		request.Headers.Add("apikey", apiKey);
+
+		var response = await _httpClient.SendAsync(request);
+		if (response.IsSuccessStatusCode)
+		{
+			var jsonString = await response.Content.ReadAsStringAsync();
+			var data = JsonSerializer.Deserialize<EvolutionCreateResponse>(jsonString);
+			return ResultData<string>.Success(data!.QrCodeData.Base64);
+		}
+		
+		var error = await response.Content.ReadAsStringAsync();
+		var errorData = JsonSerializer.Deserialize<EvolutionErrorReponse>(error);
+		return ResultData<string>.Failure(ResultType.Failure, $"Erro ao Gerar qrCode: " +
+		$"{errorData!.Response.Message}");
+	}
 
 	public string GerarTemplateConfirmacaoAgendamento(string nomeBarbearia,string nomeCliente,DateOnly dataAgendamento,
 	string nomeProfissional,Endereco endereco)
