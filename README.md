@@ -176,7 +176,11 @@ A API pode ser explorada via Swagger após iniciar o projeto:
 
 ## 👨‍💻 Autor
 
-Desenvolvido por você 🙂
-(adicione aqui seu LinkedIn e GitHub)
+**Matheus Santana**  
+
+Desenvolvedor .NET focado em construção de APIs escaláveis, boas práticas e arquitetura limpa.
+
+- 💼 [LinkedIn](https://www.linkedin.com/in/matheus-santana-871348148)  
+- 💻 [GitHub](https://github.com/matheussanttana1-collab)
 
 ---
