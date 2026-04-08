@@ -20,7 +20,7 @@ public class CriarBarbeariaUseCase
 		_repository = repository;
 		_mapper = mapper;
 		_userService = userService;
-       _emailService = emailService;
+		_emailService = emailService;
 		_emailTemplateService = emailTemplateService;
 	}
 

@@ -15,12 +15,12 @@ public class CadastrarWhatsApp
 
 	public async Task<ResultData<string>> ExecuteAsync(Guid id)
 	{
-		var barbearia = _repo.BuscarBarbeariaPorAsync(id);
+		var barbearia = await _repo.BuscarBarbeariaPorAsync(id);
 
 		if (barbearia is null)
 			return ResultData<string>.Failure(ResultType.NotFound, "Barbearia Não Cadastrada");
-
-		var qrCodeResult = await _whatsAppService.GerarQrCodeDeCadastroWhatsApp("Barbearia-Madeira");
+	
+		var qrCodeResult = await _whatsAppService.GerarQrCodeDeCadastroWhatsApp(barbearia.Slug);
 		if (!qrCodeResult.IsSuccess)
 			return ResultData<string>.Failure(qrCodeResult.Type, qrCodeResult.Message);
 		return ResultData<string>.Success(qrCodeResult.Data!);
