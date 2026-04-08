@@ -1,6 +1,7 @@
 ﻿using BarberCode.Application.Interfaces;
 using BarberCode.Domain.Entities.Barbearias;
 using BarberCode.Domain.Shared;
+using BarberCode.Infra.Models;
 using Microsoft.Extensions.Configuration;
 using System.Text;
 using System.Text.Json;
@@ -32,11 +33,6 @@ public class WhatsAppService : IWhatsAppService
 		var baseUrl = _configuration["WhatsApp:BaseUrl"];
 		var apiKey = _configuration["WhatsApp:ApiKey"];
 
-		if (string.IsNullOrWhiteSpace(baseUrl) || string.IsNullOrWhiteSpace(apiKey))
-			return ResultData.Failure(ResultType.Failure, "Configurações do WhatsApp não encontradas (BaseUrl/ApiKey).");
-
-		if (string.IsNullOrWhiteSpace(instance))
-			return ResultData.Failure(ResultType.Failure, "Instância do WhatsApp não informada.");
 
 		// Monta a URL dinâmica injetando o nome da instância da barbearia específica
 		// Correção: Adicionada a '/' antes de {instance} para o endpoint correto
@@ -85,6 +81,37 @@ public class WhatsAppService : IWhatsAppService
 
 		// Retorna sucesso caso a mensagem tenha sido aceita pela fila da Evolution API
 		return ResultData.Success();
+	}
+
+	public async Task<ResultData<string>> GerarQrCodeDeCadastroWhatsApp(string instanceName)
+	{
+		var baseUrl = _configuration["WhatsApp:BaseUrl"];
+		var apiKey = _configuration["WhatsApp:ApiKey"];
+
+		var url = $"{baseUrl}/instance/create";
+		var payload = new
+		{
+			instanceName = instanceName,
+			qrcode = true
+		};
+
+		var request = new HttpRequestMessage(HttpMethod.Post, url);
+
+		request.Headers.Add("apikey", apiKey);
+
+		request.Content = new StringContent(JsonSerializer.Serialize(payload),
+		Encoding.UTF8, "application/json");
+
+		var response = await _httpClient.SendAsync(request);
+		if (response.IsSuccessStatusCode)
+		{
+			var jsonString = await response.Content.ReadAsStringAsync();
+			var data = JsonSerializer.Deserialize<EvolutionCreateResponse>(jsonString);
+			return ResultData<string>.Success(data.QrCodeData.Base64);
+		}
+		
+		var error = await response.Content.ReadAsStringAsync();
+		return ResultData<string>.Failure(ResultType.Failure, $"Erro ao Cadastrar: {error}");
 	}
 
 	public string GerarTemplateConfirmacaoAgendamento(string nomeBarbearia,string nomeCliente,DateOnly dataAgendamento,

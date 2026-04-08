@@ -12,6 +12,15 @@ public static class DependencyInjection
 	public static IServiceCollection AddApplication(
 	this IServiceCollection services)
 	{
+	 // Barbearias
+
+	 // Barbeiros
+
+	 // Agendamentos
+
+	 // Servicos
+
+	 // AppUser
 		services.AddScoped<CriarBarbeariaUseCase>();
 		services.AddScoped<CriarBarbeiroUseCase>();
 		services.AddScoped<CriarServicoUseCase>();
@@ -33,6 +42,7 @@ public static class DependencyInjection
 		services.AddScoped<AlterarSenhaUseCase>();
 		services.AddScoped<EsqueciSenhaUseCase>();
 		services.AddScoped<RefreshTokenUseCase>();
+		services.AddScoped<CadastrarWhatsApp>();
 		return services;
 	}
 

@@ -7,6 +7,7 @@ using BarberCode.Domain.Shared;
 using BarberCode.Service.Requests;
 using BarberCode.Service.Responses;
 using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
@@ -46,12 +47,24 @@ public static class BarbeariaEndpoints
 		{
 
 			var result = await useCase.ExecuteAsync(request);
-			return ResultsExtends.ToCreateResult(result, $"/api/Barbearias/{result}");
+			return result.ToCreateResult($"/api/Barbearia/{result}");
 		})
 		.WithName("CreateBarbearia")
 		.WithOpenApi()
 		.AddEndpointFilter<ValidationFilter<CriarBarbeariaRequest>>()
 		.AllowAnonymous();
+
+		group.MapPost("/CadastrarWhatsApp", async (CadastrarWhatsApp useCase,
+		ClaimsPrincipal user) =>
+		{
+			var id = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+			var result = await useCase.ExecuteAsync(Guid.Parse(id));
+
+			return result.ToCreateResult($"/api/Barbearia/CadastrarWhatsApp/{result}");
+		})
+		.WithName("CadastrarWhatsApp")
+		.WithOpenApi();
+
 
 		group.MapPatch("/endereco", async (EnderecoRequest request, AlterarEnderecoUseCase useCase, 
 		ClaimsPrincipal user) =>
