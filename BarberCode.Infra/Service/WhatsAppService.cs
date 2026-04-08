@@ -75,8 +75,11 @@ public class WhatsAppService : IWhatsAppService
 			// Caso falhe, captura o erro retornado pela API externa para diagnóstico
 			var error = await response.Content.ReadAsStringAsync();
 
+			// Tranforma o Erro em Objeto
+			var errorData = JsonSerializer.Deserialize<EvolutionErrorReponse>(error);
 			// Retorna o objeto de falha seguindo o Result Pattern do projeto
-			return ResultData.Failure(ResultType.Failure, $"Erro ao enviar WhatsApp: {error}");
+			return ResultData.Failure(ResultType.Failure, $"Erro ao enviar WhatsApp: " +
+			$"{errorData.Error.First()}");
 		}
 
 		// Retorna sucesso caso a mensagem tenha sido aceita pela fila da Evolution API
@@ -109,7 +112,7 @@ public class WhatsAppService : IWhatsAppService
 			var error = await response.Content.ReadAsStringAsync();
 			var errorData = JsonSerializer.Deserialize<EvolutionErrorReponse>(error);
 			return ResultData<string>.Failure(ResultType.Failure, $"Erro ao Gerar qrCode: " +
-			$"{errorData!.Response.Message}");	
+			$"{errorData!.Response.Message.First()}.");	
 		}
 
 		var jsonString = await response.Content.ReadAsStringAsync();
@@ -133,14 +136,64 @@ public class WhatsAppService : IWhatsAppService
 			var error = await response.Content.ReadAsStringAsync();
 			var errorData = JsonSerializer.Deserialize<EvolutionErrorReponse>(error);
 			return ResultData<string>.Failure(ResultType.Failure, $"Erro ao Gerar qrCode: " +
-			$"{errorData!.Response.Message}");	
+			$"{errorData.Response.Message.First()}");	
 		}
 
 		var jsonString = await response.Content.ReadAsStringAsync();
-		var data = JsonSerializer.Deserialize<EvolutionCreateResponse>(jsonString);
-		return ResultData<string>.Success(data!.QrCodeData.Base64);
-
+		var data = JsonSerializer.Deserialize<QrCodeData>(jsonString);
+		return ResultData<string>.Success(data.Base64);
 	}
+
+	public async Task<ResultData> LogoutWhatsAppBarbearia(string instanceName)
+	{
+		var baseUrl = _configuration["WhatsApp:BaseUrl"];
+		var apiKey = _configuration["WhatsApp:ApiKey"];
+
+		var url = $"{baseUrl}/instance/logout/{instanceName}";
+
+		var request = new HttpRequestMessage(HttpMethod.Delete, url);
+
+		request.Headers.Add("apikey", apiKey);
+
+		var response = await _httpClient.SendAsync(request);
+		if (!response.IsSuccessStatusCode)
+		{
+			var error = await response.Content.ReadAsStringAsync();
+			var errorData = JsonSerializer.Deserialize<EvolutionErrorReponse>(error);
+			return ResultData.Failure(ResultType.Failure, $"Erro ao realizar logout do WhatsApp: " +
+			$"{errorData!.Response.Message.First()}");
+		}
+
+		return ResultData.Success();
+	}
+
+	public async Task<ResultData<string>> BuscarStatusConexaoWhatsApp(string instanceName)
+	{
+		var baseUrl = _configuration["WhatsApp:BaseUrl"];
+		var apiKey = _configuration["WhatsApp:ApiKey"];
+
+		var url = $"{baseUrl}/instance/connectionState/{instanceName}";
+
+		var request = new HttpRequestMessage(HttpMethod.Get, url);
+
+		request.Headers.Add("apikey", apiKey);
+
+		var response = await _httpClient.SendAsync(request);
+		if (!response.IsSuccessStatusCode)
+		{
+			var error = await response.Content.ReadAsStringAsync();
+			var errorData = JsonSerializer.Deserialize<EvolutionErrorReponse>(error);
+			return ResultData<string>.Failure(ResultType.Failure, $"Erro ao buscar status da conexão: " +
+			$"{errorData!.Response.Message.First()}");
+		}
+
+		var jsonString = await response.Content.ReadAsStringAsync();
+		var data = JsonSerializer.Deserialize<EvolutionConnectionStateResponse>(jsonString);
+
+
+		return ResultData<string>.Success(data!.State);
+	}
+
 	public async Task<ResultData> DeletarWhatsAppBarbearia(string instanceName)
 	{
 		var baseUrl = _configuration["WhatsApp:BaseUrl"];
@@ -157,14 +210,11 @@ public class WhatsAppService : IWhatsAppService
 		{
 			var error = await response.Content.ReadAsStringAsync();
 			var errorData = JsonSerializer.Deserialize<EvolutionErrorReponse>(error);
-			return ResultData.Failure(ResultType.Failure, $"Erro ao Gerar qrCode: " +
-			$"{errorData!.Response.Message}");
+			return ResultData.Failure(ResultType.NotFound, $"Erro ao Gerar qrCode: " +
+			$"{errorData!.Response.Message.First()}");
 		}
 
 		return ResultData.Success();
-
-		
-		
 	}
 
 	

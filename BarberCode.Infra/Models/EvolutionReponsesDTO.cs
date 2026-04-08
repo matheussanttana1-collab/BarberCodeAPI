@@ -32,5 +32,15 @@ public class EvolutionErrorReponse
 public class ErrorData
 {
 	[JsonPropertyName("message")]
-	public string Message { get; set; }
+	public IEnumerable<string> Message { get; set; }
 }
+
+public class EvolutionConnectionStateResponse
+{
+	[JsonPropertyName("state")]
+	public string State { get; set; }
+
+	[JsonPropertyName("instance")]
+	public string Instance { get; set; }
+}
+

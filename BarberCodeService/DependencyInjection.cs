@@ -45,6 +45,8 @@ public static class DependencyInjection
 		services.AddScoped<RefreshTokenUseCase>();
         services.AddScoped<CadastrarWhatsAppUseCase>();
 		services.AddScoped<GerarNovoQrCodeUseCase>();
+       services.AddScoped<LogoutWhatsAppUseCase>();
+		services.AddScoped<BuscarStatusConexaoWhatsAppUseCase>();
 		services.AddScoped<DeletarWhatsAppUseCase>();
 		return services;
 	}

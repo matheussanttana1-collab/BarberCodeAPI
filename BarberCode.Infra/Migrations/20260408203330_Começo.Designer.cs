@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BarberCode.Infra.Migrations
 {
     [DbContext(typeof(BarberCodeContext))]
-    [Migration("20260404163453_teste emails")]
-    partial class testeemails
+    [Migration("20260408203330_Começo")]
+    partial class Começo
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -84,6 +84,13 @@ namespace BarberCode.Infra.Migrations
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("WhatsAppConctado")
+                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
 

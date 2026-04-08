@@ -14,6 +14,8 @@ public interface IWhatsAppService
 
 	public Task<ResultData<string>> GerarQrCodeDeCadastroWhatsApp(string instanceName);
 	public Task<ResultData<string>> GerarNovoQrCodeWhatsApp(string instanceName);
+  public Task<ResultData> LogoutWhatsAppBarbearia(string instanceName);
+	public Task<ResultData<string>> BuscarStatusConexaoWhatsApp(string instanceName);
 	public Task<ResultData> DeletarWhatsAppBarbearia(string instanceName);
 
 
