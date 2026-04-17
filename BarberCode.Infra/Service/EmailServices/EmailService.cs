@@ -1,11 +1,10 @@
 ﻿using BarberCode.Application.Interfaces;
-using BarberCode.Infra.Models;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
 
-namespace BarberCode.Infra.Service;
+namespace BarberCode.Infra.Service.EmailServices;
 
 public class EmailService : IEmailService
 {

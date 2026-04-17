@@ -28,6 +28,15 @@ public static class WhatsAppEndpoints
 		.WithName("QrCodeWhatsApp")
 		.WithOpenApi();
 
+		group.MapGet("/ConnectionState", async (BuscarStatusConexaoWhatsAppUseCase useCase, ClaimsPrincipal user) =>
+		{
+			var id = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+			var result = await useCase.ExecuteAsync(Guid.Parse(id));
+			return result.ToOkSingleResult();
+		})
+		.WithName("ConnectionStateWhatsApp")
+		.WithOpenApi();
+
 		group.MapDelete("/Logout", async (LogoutWhatsAppUseCase useCase, ClaimsPrincipal user) =>
 		{
 			var id = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
@@ -37,14 +46,6 @@ public static class WhatsAppEndpoints
 		.WithName("LogoutWhatsApp")
 		.WithOpenApi();
 
-		group.MapGet("/ConnectionState", async (BuscarStatusConexaoWhatsAppUseCase useCase, ClaimsPrincipal user) =>
-		{
-			var id = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
-			var result = await useCase.ExecuteAsync(Guid.Parse(id));
-			return result.ToOkSingleResult();
-		})
-		.WithName("ConnectionStateWhatsApp")
-		.WithOpenApi();
 
 		group.MapDelete("/", async (DeletarWhatsAppUseCase useCase, ClaimsPrincipal user) =>
 		{

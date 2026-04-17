@@ -1,4 +1,5 @@
-﻿using BarberCode.Application.UseCases.Agendamentos;
+﻿using BarberCode.Application.Profiles;
+using BarberCode.Application.UseCases.Agendamentos;
 using BarberCode.Application.UseCases.AuthAppUser;
 using BarberCode.Application.UseCases.Barbearias;
 using BarberCode.Application.UseCases.Barbeiros;
@@ -10,45 +11,67 @@ namespace BarberCode.Application;
 
 public static class DependencyInjection
 {
-	public static IServiceCollection AddApplication(
-	this IServiceCollection services)
+	public static IServiceCollection AddApplication(this IServiceCollection services)
 	{
-	 // Barbearias
+		services.AddAutoMapperConfiguration();
+		services.AddUseCases();
 
-	 // Barbeiros
-
-	 // Agendamentos
-
-	 // Servicos
-
-	 // AppUser
-		services.AddScoped<CriarBarbeariaUseCase>();
-		services.AddScoped<CriarBarbeiroUseCase>();
-		services.AddScoped<CriarServicoUseCase>();
-		services.AddScoped<CriarAgendamentoUseCase>();
-		services.AddScoped<GerarSlotsUseCase>();
-		services.AddScoped<DeletarBarbeariaUseCase>();
-		services.AddScoped<DeletarBarbeiroUseCase>();
-		services.AddScoped<DeletarServicoUseCase>();
-		services.AddScoped<CancelarAgendamentoUseCase>();
-		services.AddScoped<CancelarAgendamentoClienteUseCase>();
-		services.AddScoped<AlterarEnderecoUseCase>();
-		services.AddScoped<AlterarServicoUseCase>();
-		services.AddScoped<AlterarHorarioFuncionamentoUseCase>();
-		services.AddScoped<AlterarBarbeiroUseCase>();
-		services.AddScoped<ConcluirAgendamentoUseCase>();
-		services.AddScoped<LoginUseCase>();
-		services.AddScoped<LoginClienteUseCase>();
-		services.AddScoped<ListarAgendamentosBarbeiroUseCase>();
-		services.AddScoped<AlterarSenhaUseCase>();
-		services.AddScoped<EsqueciSenhaUseCase>();
-		services.AddScoped<RefreshTokenUseCase>();
-        services.AddScoped<CadastrarWhatsAppUseCase>();
-		services.AddScoped<GerarNovoQrCodeUseCase>();
-       services.AddScoped<LogoutWhatsAppUseCase>();
-		services.AddScoped<BuscarStatusConexaoWhatsAppUseCase>();
-		services.AddScoped<DeletarWhatsAppUseCase>();
 		return services;
 	}
 
+	/// <summary>
+	/// Configura o AutoMapper com todos os profiles
+	/// </summary>
+	private static IServiceCollection AddAutoMapperConfiguration(this IServiceCollection services)
+	{
+		services.AddAutoMapper(cfg => { }, typeof(BarbeariaProfile));
+
+		return services;
+	}
+
+	/// <summary>
+	/// Registra todos os UseCases da aplicação
+	/// </summary>
+	private static IServiceCollection AddUseCases(this IServiceCollection services)
+	{
+		// Barbearias
+		services.AddScoped<CriarBarbeariaUseCase>();
+		services.AddScoped<DeletarBarbeariaUseCase>();
+		services.AddScoped<AlterarEnderecoUseCase>();
+		services.AddScoped<AlterarHorarioFuncionamentoUseCase>();
+
+		// Barbeiros
+		services.AddScoped<CriarBarbeiroUseCase>();
+		services.AddScoped<DeletarBarbeiroUseCase>();
+		services.AddScoped<AlterarBarbeiroUseCase>();
+
+		// Serviços
+		services.AddScoped<CriarServicoUseCase>();
+		services.AddScoped<DeletarServicoUseCase>();
+		services.AddScoped<AlterarServicoUseCase>();
+
+		// Agendamentos
+		services.AddScoped<CriarAgendamentoUseCase>();
+		services.AddScoped<CancelarAgendamentoUseCase>();
+		services.AddScoped<CancelarAgendamentoClienteUseCase>();
+		services.AddScoped<ConcluirAgendamentoUseCase>();
+		services.AddScoped<GerarSlotsUseCase>();
+		services.AddScoped<ListarAgendamentosBarbeiroUseCase>();
+
+		// Autenticação
+		services.AddScoped<LoginUseCase>();
+		services.AddScoped<LoginClienteUseCase>();
+		services.AddScoped<AlterarSenhaUseCase>();
+		services.AddScoped<EsqueciSenhaUseCase>();
+		services.AddScoped<RefreshTokenUseCase>();
+
+		// WhatsApp
+		services.AddScoped<CadastrarWhatsAppUseCase>();
+		services.AddScoped<GerarNovoQrCodeUseCase>();
+		services.AddScoped<LogoutWhatsAppUseCase>();
+		services.AddScoped<BuscarStatusConexaoWhatsAppUseCase>();
+		services.AddScoped<DeletarWhatsAppUseCase>();
+
+		return services;
+	}
 }

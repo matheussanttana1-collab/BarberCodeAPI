@@ -1,8 +1,7 @@
 using BarberCode.Application.Interfaces;
-using BarberCode.Infra.Models;
 using Microsoft.Extensions.Options;
 
-namespace BarberCode.Infra.Service;
+namespace BarberCode.Infra.Service.EmailServices;
 
 public class EmailTemplateService : IEmailTemplateService
 {

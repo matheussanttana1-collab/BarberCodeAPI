@@ -1,14 +1,10 @@
 using BarberCode.API.Endpoins;
 using BarberCode.Application;
-using BarberCode.Application.Profiles;
 using BarberCode.Application.Validators;
 using BarberCode.Domain.Shared;
 using BarberCode.Infra;
-using BarberCode.Infra.Banco;
-using BarberCode.Infra.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json;
@@ -18,18 +14,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient();
 
-// --------------------------------- DI Banco De Dados ------------------------------------------------------------
-var connectionString = builder.Configuration.GetConnectionString("BarberCodeConnection");
-builder.Services.AddDbContext<BarberCodeContext>(opts => opts.UseLazyLoadingProxies().UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
-builder.Services.AddAutoMapper(cfg => { }, typeof(BarbeariaProfile));
-
-// ---------------------------- DI Camadas de Infra / Applicattion ----------------------------------
+// ---------------------------- DI Camadas de Infra / Application ----------------------------------
 builder.Services.AddApplication();
-builder.Services.addInfra();
+builder.Services.addInfra(builder.Configuration);
 builder.Services.AddValidatorsFromAssemblyContaining<CriarBarbeariaValidator>();
-
-// 
-builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
 //---------------------------------- Authorization e Jwt Config --------------------------------------------------
 builder.Services.AddAuthentication

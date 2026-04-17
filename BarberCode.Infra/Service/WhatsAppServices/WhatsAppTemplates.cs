@@ -1,6 +1,6 @@
 using BarberCode.Domain.Entities.Barbearias;
 
-namespace BarberCode.Infra.Service;
+namespace BarberCode.Infra.Service.WhatsAppServices;
 
 public static class WhatsAppTemplates
 {

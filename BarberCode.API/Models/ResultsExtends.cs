@@ -67,6 +67,7 @@ public static class ResultsExtends
 			ResultType.Validation => Results.BadRequest(result),
 			ResultType.NotFound => Results.NotFound(result),
 			ResultType.Forbidden => Results.Forbid(),
+			ResultType.Failure => Results.BadRequest(result),
 			_ => Results.StatusCode(500)
 		};
 	}
@@ -84,6 +85,7 @@ public static class ResultsExtends
 			ResultType.NotFound => Results.NotFound(result),
 			ResultType.Forbidden => Results.Forbid(),
 			ResultType.Validation => Results.BadRequest(result),
+			ResultType.Failure => Results.BadRequest(result),
 			_ => Results.StatusCode(500)
 		};
 	}

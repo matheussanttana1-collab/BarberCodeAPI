@@ -35,13 +35,14 @@ public class CriarBarbeiroUseCase
 			return ResultData<Guid>.Failure(ResultType.NotFound, "Barbearia não Encontrada");
 
 		var barbeiro = new Barbeiro(request.Nome,request.FotoPerfil,barbeariaId, request.HorarioAlmoco);
-		await _barbeiroRepo.SalvarBarbeiroAsync(barbeiro);
 
 		var result = await _userService.CadastrarUsuarioAsync(barbeiro.Id,request.Email, request.Senha,
 		TipoUsuario.Barbeiro);
 
 		if (!result.IsSuccess)
 			return ResultData<Guid>.Failure(result.Type, result.Message);
+
+		await _barbeiroRepo.SalvarBarbeiroAsync(barbeiro);
 
         var body = _emailTemplateService.gerarTemplateBoasVindasBarbeiro(barbeiro.Nome, barbearia.Nome);
 		await _emailService.sendEmailAsync(request.Email, "Bem-vindo à BarberCode", body);

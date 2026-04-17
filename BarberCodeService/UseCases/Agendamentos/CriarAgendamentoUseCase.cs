@@ -48,7 +48,6 @@ public class CriarAgendamentoUseCase
 			if (!clienteResult.IsSuccess)
 				return ResultData<Guid>.Failure(clienteResult.Type, clienteResult.Message);
 			cliente = clienteResult.Data;
-			await _clienteRepo.SalvarClienteAsync(cliente!);
 
 			// 🆕 Cria o AppUser para o cliente quando é o primeiro agendamento
 			var usuarioClienteResult = await _appUserService.CadastrarClienteAsync(
@@ -59,6 +58,7 @@ public class CriarAgendamentoUseCase
 
 			if (!usuarioClienteResult.IsSuccess)
 				return ResultData<Guid>.Failure(usuarioClienteResult.Type, usuarioClienteResult.Message);
+			await _clienteRepo.SalvarClienteAsync(cliente!);
 		}
 
 		var status = barbearia.EstaFuncionando(request.Dia, request.Horario);
@@ -76,9 +76,8 @@ public class CriarAgendamentoUseCase
 		_whatsAppService.GerarTemplateConfirmacaoAgendamento(barbearia.Nome,cliente.Name,request.Dia,
 			barbeiro.Nome,barbearia.Endereco);
 
-       var whatsResponse = await _whatsAppService.EnviarMensagem(cliente.Celular, mensagemConfirmacao, "Barbearia_Nova");
-		if (!whatsResponse.IsSuccess)
-			return ResultData<Guid>.Failure(whatsResponse.Type, whatsResponse.Message);
+       var whatsResponse = await _whatsAppService.EnviarMensagem(
+	   cliente.Celular, mensagemConfirmacao, barbearia.Slug);
 
 
 		return ResultData<Guid>.Success(agendamentoResult.Data!.Id);

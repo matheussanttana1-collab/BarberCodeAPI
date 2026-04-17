@@ -1,13 +1,12 @@
 ﻿using BarberCode.Application.Interfaces;
 using BarberCode.Domain.Entities.Barbearias;
 using BarberCode.Domain.Shared;
-using BarberCode.Infra.Models;
 using Microsoft.Extensions.Configuration;
 using System.Text;
 using System.Text.Json;
 
 
-namespace BarberCode.Infra.Service;
+namespace BarberCode.Infra.Service.WhatsAppServices;
 
 public class WhatsAppService : IWhatsAppService
 {
@@ -191,7 +190,7 @@ public class WhatsAppService : IWhatsAppService
 		var data = JsonSerializer.Deserialize<EvolutionConnectionStateResponse>(jsonString);
 
 
-		return ResultData<string>.Success(data!.State);
+		return ResultData<string>.Success(data!.Instance.State);
 	}
 
 	public async Task<ResultData> DeletarWhatsAppBarbearia(string instanceName)

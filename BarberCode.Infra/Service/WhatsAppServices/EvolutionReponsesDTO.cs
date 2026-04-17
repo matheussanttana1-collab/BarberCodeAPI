@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace BarberCode.Infra.Models;
+namespace BarberCode.Infra.Service.WhatsAppServices;
 
 public class EvolutionCreateResponse
 {
@@ -37,10 +37,16 @@ public class ErrorData
 
 public class EvolutionConnectionStateResponse
 {
-	[JsonPropertyName("state")]
-	public string State { get; set; }
-
 	[JsonPropertyName("instance")]
-	public string Instance { get; set; }
+	public IntanceData Instance { get; set; }
 }
 
+public class IntanceData
+{
+	[JsonPropertyName("instaceName")]
+	public string InstanceName { get; set; }
+	[JsonPropertyName("state")]
+	public string State { get; set; }
+	
+
+}
