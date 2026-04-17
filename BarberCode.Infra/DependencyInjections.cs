@@ -3,8 +3,8 @@ using BarberCode.Infra.Banco;
 using BarberCode.Infra.Models;
 using BarberCode.Infra.Repositories;
 using BarberCode.Infra.Service;
-using BarberCode.Infra.Service.EmailService;
-using BarberCode.Infra.Service.WhatsAppService;
+using BarberCode.Infra.Service.EmailServices;
+using BarberCode.Infra.Service.WhatsAppServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +23,7 @@ public static class DependencyInjections
 		services.AddRepositories();
 		services.AddServices();
 		services.AddEmailSettings(configuration);
+		services.AddWhatsAppSettings(configuration);
 
 		return services;
 	}
@@ -68,7 +69,6 @@ public static class DependencyInjections
 		services.AddScoped<ITokenService, TokenService>();
 		services.AddScoped<IEmailService, EmailService>();
 		services.AddScoped<IEmailTemplateService, EmailTemplateService>();
-		services.AddHttpClient<IWhatsAppService, WhatsAppService>();
 
 		return services;
 	}
@@ -79,6 +79,25 @@ public static class DependencyInjections
 	private static IServiceCollection AddEmailSettings(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
+
+		return services;
+	}
+
+	/// <summary>
+	/// Configura as opções de WhatsApp (WhatsAppSettings)
+	/// </summary>
+	private static IServiceCollection AddWhatsAppSettings(this IServiceCollection services, IConfiguration configuration)
+	{
+		var baseUrl = configuration["WhatsApp:BaseUrl"];
+		var apiKey = configuration["WhatsApp:ApiKey"];
+
+	
+
+		services.AddHttpClient<IWhatsAppService, WhatsAppService>(client =>
+		{
+			client.BaseAddress = new Uri(baseUrl!);
+			client.DefaultRequestHeaders.Add("apikey", apiKey);
+		});
 
 		return services;
 	}
