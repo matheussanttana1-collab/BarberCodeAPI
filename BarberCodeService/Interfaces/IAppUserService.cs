@@ -15,6 +15,7 @@ public interface IAppUserService
 	/// </summary>
 	Task<ResultData> CadastrarUsuarioAsync(Guid userId, string email, string senha, TipoUsuario tipo);
 
+
 	/// <summary>
 	/// Cadastra um novo cliente usando apenas celular
 	/// Gera email fake baseado no celular: "{celular}@cliente.barbercode.local"
@@ -25,6 +26,8 @@ public interface IAppUserService
 	/// Valida se o email existe e retorna o usuário autenticado
 	/// </summary>
 	Task<AuthUser?> BuscarPeloEmailAsync(string email);
+
+	Task<AuthUser?> BuscarPeloIdAsync(Guid id);
 
 	/// <summary>
 	/// Valida a senha do usuário
@@ -48,4 +51,8 @@ public interface IAppUserService
 	/// As validações devem ser feitas no UseCase
 	/// </summary>
 	Task<string> GerarTokenDeResetSenhaAsync(AuthUser user);
+	Task DeletarUsuarioAsync(Guid id);
+
+
 }
+

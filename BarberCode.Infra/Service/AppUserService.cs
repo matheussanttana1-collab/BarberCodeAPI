@@ -58,6 +58,14 @@ public class AppUserService : IAppUserService
 
 		return (appUser is null ?null : MapToAuthUser(appUser)) ;
 	}
+	public async Task<AuthUser?> BuscarPeloIdAsync(Guid id)
+	{
+		var appUser = await _userManager.FindByIdAsync(id.ToString());
+
+		return (appUser is null ? null : MapToAuthUser(appUser));
+	}
+
+	
 
 	/// <summary>
 	/// Valida a senha do usuário
@@ -163,6 +171,11 @@ public class AppUserService : IAppUserService
 		return token;
 	}
 
+	public async Task DeletarUsuarioAsync(Guid id)
+	{
+		var Appuser = await _userManager.FindByIdAsync(id.ToString());
 
+		await _userManager.DeleteAsync(Appuser!);
 
+	}
 }
