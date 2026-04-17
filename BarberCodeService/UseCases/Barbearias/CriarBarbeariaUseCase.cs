@@ -39,7 +39,7 @@ public class CriarBarbeariaUseCase
 		await _repository.SalvarBarbeariaAsync(barbearia);
 
 		var body = _emailTemplateService.gerarTemplateBoasVindasBarbearia(barbearia.Nome);
-		await _emailService.sendEmailAsync(request.Email, "Bem-vindo à BarberCode", body);
+		await _emailService.SendEmailAsync(request.Email, "Bem-vindo à BarberCode", body);
 
 		return ResultData<Guid>.Success(barbearia.Id);
 	}

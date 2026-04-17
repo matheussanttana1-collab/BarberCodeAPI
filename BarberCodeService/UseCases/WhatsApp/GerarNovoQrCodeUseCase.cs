@@ -21,7 +21,7 @@ public class GerarNovoQrCodeUseCase
 		if (barbearia is null)
 			return ResultData<string>.Failure(ResultType.NotFound, "Barbearia Não Cadastrada");
 
-		var qrCodeResult = await _whatsAppService.GerarNovoQrCodeWhatsApp(barbearia.Slug);
+		var qrCodeResult = await _whatsAppService.GerarNovoQrCodeWhatsAppAsync(barbearia.Slug);
 		if (!qrCodeResult.IsSuccess)
 			return ResultData<string>.Failure(qrCodeResult.Type, qrCodeResult.Message);
 		return ResultData<string>.Success(qrCodeResult.Data!);

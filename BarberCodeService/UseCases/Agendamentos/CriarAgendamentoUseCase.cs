@@ -76,7 +76,7 @@ public class CriarAgendamentoUseCase
 		_whatsAppService.GerarTemplateConfirmacaoAgendamento(barbearia.Nome,cliente.Name,request.Dia,
 			barbeiro.Nome,barbearia.Endereco);
 
-       var whatsResponse = await _whatsAppService.EnviarMensagem(
+       var whatsResponse = await _whatsAppService.EnviarMensagemAsync(
 	   cliente.Celular, mensagemConfirmacao, barbearia.Slug);
 
 

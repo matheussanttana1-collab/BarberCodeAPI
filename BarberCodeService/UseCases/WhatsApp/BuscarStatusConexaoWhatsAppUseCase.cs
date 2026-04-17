@@ -21,7 +21,7 @@ public class BuscarStatusConexaoWhatsAppUseCase
 		if (barbearia is null)
 			return ResultData<string>.Failure(ResultType.NotFound, "Barbearia Não Cadastrada");
 
-		var statusResult = await _whatsAppService.BuscarStatusConexaoWhatsApp(barbearia.Slug);
+		var statusResult = await _whatsAppService.BuscarStatusConexaoWhatsAppAsync(barbearia.Slug);
 		if (!statusResult.IsSuccess)
 			return ResultData<string>.Failure(statusResult.Type, statusResult.Message);
 

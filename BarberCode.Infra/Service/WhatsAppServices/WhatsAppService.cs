@@ -1,6 +1,7 @@
 ﻿using BarberCode.Application.Interfaces;
 using BarberCode.Domain.Entities.Barbearias;
 using BarberCode.Domain.Shared;
+using Microsoft.Extensions.Options;
 using System.Text;
 using System.Text.Json;
 
@@ -16,7 +17,7 @@ public class WhatsAppService : IWhatsAppService
 		_httpClient = httpClient;
 	}
 
-	public async Task<ResultData> EnviarMensagem(string numero, string texto, string instance)
+	public async Task<ResultData> EnviarMensagemAsync(string numero, string texto, string instance)
 	{
 		var url = $"/message/sendText/{instance}";
 
@@ -55,7 +56,7 @@ public class WhatsAppService : IWhatsAppService
 		return ResultData.Success();
 	}
 
-	public async Task<ResultData<string>> GerarQrCodeDeCadastroWhatsApp(string instanceName)
+	public async Task<ResultData<string>> GerarQrCodeDeCadastroWhatsAppAsync(string instanceName)
 	{
 		var url = "/instance/create";
 		var payload = new
@@ -81,7 +82,7 @@ public class WhatsAppService : IWhatsAppService
 		var data = JsonSerializer.Deserialize<EvolutionCreateResponse>(jsonString);
 		return ResultData<string>.Success(data!.QrCodeData.Base64);
 	}
-	public async Task<ResultData<string>> GerarNovoQrCodeWhatsApp(string instanceName)
+	public async Task<ResultData<string>> GerarNovoQrCodeWhatsAppAsync(string instanceName)
 	{
 		var url = $"/instance/connect/{instanceName}";
 
@@ -101,7 +102,7 @@ public class WhatsAppService : IWhatsAppService
 		return ResultData<string>.Success(data.Base64);
 	}
 
-	public async Task<ResultData> LogoutWhatsAppBarbearia(string instanceName)
+	public async Task<ResultData> LogoutWhatsAppBarbeariaAsync(string instanceName)
 	{
 		var url = $"/instance/logout/{instanceName}";
 
@@ -119,7 +120,7 @@ public class WhatsAppService : IWhatsAppService
 		return ResultData.Success();
 	}
 
-	public async Task<ResultData<string>> BuscarStatusConexaoWhatsApp(string instanceName)
+	public async Task<ResultData<string>> BuscarStatusConexaoWhatsAppAsync(string instanceName)
 	{
 		var url = $"/instance/connectionState/{instanceName}";
 
@@ -140,7 +141,7 @@ public class WhatsAppService : IWhatsAppService
 		return ResultData<string>.Success(data!.Instance.State);
 	}
 
-	public async Task<ResultData> DeletarWhatsAppBarbearia(string instanceName)
+	public async Task<ResultData> DeletarWhatsAppBarbeariaAsync(string instanceName)
 	{
 		var url = $"/instance/delete/{instanceName}";
 

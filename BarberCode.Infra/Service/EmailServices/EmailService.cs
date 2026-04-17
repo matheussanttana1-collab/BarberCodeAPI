@@ -15,7 +15,7 @@ public class EmailService : IEmailService
 		_emailSettings = emailOptions.Value;
 	}
 
-	public async Task sendEmailAsync(string toEmail, string subject, string body)
+	public async Task SendEmailAsync(string toEmail, string subject, string body)
 	{
 		var message = new MimeMessage();
 

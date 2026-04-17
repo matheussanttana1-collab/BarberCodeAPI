@@ -21,7 +21,7 @@ public class LogoutWhatsAppUseCase
 		if (barbearia is null)
 			return ResultData.Failure(ResultType.NotFound, "Barbearia Não Cadastrada");
 
-		var logoutResult = await _whatsAppService.LogoutWhatsAppBarbearia(barbearia.Slug);
+		var logoutResult = await _whatsAppService.LogoutWhatsAppBarbeariaAsync(barbearia.Slug);
 		if (!logoutResult.IsSuccess)
 			return ResultData.Failure(logoutResult.Type, logoutResult.Message);
 

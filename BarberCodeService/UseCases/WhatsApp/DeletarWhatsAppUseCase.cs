@@ -21,7 +21,7 @@ public class DeletarWhatsAppUseCase
 		if (barbearia is null)
 			return ResultData.Failure(ResultType.NotFound, "Barbearia Não Cadastrada");
 
-		var deleteResult = await _whatsAppService.DeletarWhatsAppBarbearia(barbearia.Slug);
+		var deleteResult = await _whatsAppService.DeletarWhatsAppBarbeariaAsync(barbearia.Slug);
 		if (!deleteResult.IsSuccess)
 			return ResultData.Failure(deleteResult.Type, deleteResult.Message);
 

@@ -44,8 +44,8 @@ public class CriarBarbeiroUseCase
 
 		await _barbeiroRepo.SalvarBarbeiroAsync(barbeiro);
 
-        var body = _emailTemplateService.gerarTemplateBoasVindasBarbeiro(barbeiro.Nome, barbearia.Nome);
-		await _emailService.sendEmailAsync(request.Email, "Bem-vindo à BarberCode", body);
+		var body = _emailTemplateService.gerarTemplateBoasVindasBarbeiro(barbeiro.Nome, barbearia.Nome);
+		await _emailService.SendEmailAsync(request.Email, "Bem-vindo à BarberCode", body);
 
 		return ResultData<Guid>.Success(barbeariaId);
 	}

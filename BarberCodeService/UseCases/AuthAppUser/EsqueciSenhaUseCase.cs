@@ -36,7 +36,7 @@ public class EsqueciSenhaUseCase
 		var body = _emailTemplateService.gerarTemplateResetSenha(email, token);
 
 		// 5️ Monta e envia o e-mail
-		await _emailService.sendEmailAsync( email,"Recuperação de Senha", body);
+		await _emailService.SendEmailAsync(email, "Recuperação de Senha", body);
 		return ResultData<string>.Success("Email de recuperação enviado com sucesso");
 	}
 }
