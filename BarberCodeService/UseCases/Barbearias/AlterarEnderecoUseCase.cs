@@ -1,13 +1,8 @@
-﻿using AutoMapper;
-using BarberCode.Application.Interfaces;
+﻿using BarberCode.Application.Interfaces;
 using BarberCode.Domain.Entities.Barbearias;
 using BarberCode.Domain.Shared;
 using BarberCode.Service.Requests;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace BarberCode.Application.UseCases.Barbearias;
 

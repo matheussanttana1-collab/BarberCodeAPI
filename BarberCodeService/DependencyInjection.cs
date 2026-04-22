@@ -1,4 +1,6 @@
-﻿using BarberCode.Application.Profiles;
+﻿using BarberCode.Application.EventsHandlers;
+using BarberCode.Application.Interfaces;
+using BarberCode.Application.Profiles;
 using BarberCode.Application.UseCases.Agendamentos;
 using BarberCode.Application.UseCases.AuthAppUser;
 using BarberCode.Application.UseCases.Barbearias;
@@ -15,6 +17,7 @@ public static class DependencyInjection
 	{
 		services.AddAutoMapperConfiguration();
 		services.AddUseCases();
+		services.AddEvents();
 
 		return services;
 	}
@@ -71,6 +74,15 @@ public static class DependencyInjection
 		services.AddScoped<LogoutWhatsAppUseCase>();
 		services.AddScoped<BuscarStatusConexaoWhatsAppUseCase>();
 		services.AddScoped<DeletarWhatsAppUseCase>();
+
+		return services;
+	}
+
+	private static IServiceCollection AddEvents(this IServiceCollection services) 
+	{
+		services.AddScoped<IEventBus, MyEventBus>();
+		services.AddScoped<IEventHandler<EnviarMensagemEvent>, EnviarWhatsAppHandler>();
+		services.AddScoped<IEventHandler<EmailBoasVindasEvent>, EmailBoasVindasHandler>();
 
 		return services;
 	}

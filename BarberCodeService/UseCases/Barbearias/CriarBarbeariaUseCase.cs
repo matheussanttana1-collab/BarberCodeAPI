@@ -1,5 +1,6 @@
 namespace BarberCode.Application.UseCases.Barbearias;
 using AutoMapper;
+using BarberCode.Application.EventsHandlers;
 using BarberCode.Application.Interfaces;
 using BarberCode.Application.Models;
 using BarberCode.Domain.Entities.Barbearias;
@@ -11,17 +12,15 @@ public class CriarBarbeariaUseCase
 	private readonly IBarbeariaRepository _repository;
 	private readonly IMapper _mapper;
 	private readonly IAppUserService _userService;
-	private readonly IEmailService _emailService;
-	private readonly IEmailTemplateService _emailTemplateService;
+	private readonly IEventBus _eventBus;
 
   public CriarBarbeariaUseCase(IBarbeariaRepository repository, IMapper mapper, IAppUserService userService,
-	IEmailService emailService, IEmailTemplateService emailTemplateService)
+	IEventBus eventBus)
 	{
 		_repository = repository;
 		_mapper = mapper;
 		_userService = userService;
-		_emailService = emailService;
-		_emailTemplateService = emailTemplateService;
+		_eventBus = eventBus;
 	}
 
 	public async Task<ResultData<Guid>> ExecuteAsync(CriarBarbeariaRequest request)
@@ -38,8 +37,8 @@ public class CriarBarbeariaUseCase
 
 		await _repository.SalvarBarbeariaAsync(barbearia);
 
-		var body = _emailTemplateService.gerarTemplateBoasVindasBarbearia(barbearia.Nome);
-		await _emailService.SendEmailAsync(request.Email, "Bem-vindo à BarberCode", body);
+		await _eventBus.PublishAsync(new EmailBoasVindasEvent(request.Email, "Bem - vindo à BarberCode",
+		request.Name));
 
 		return ResultData<Guid>.Success(barbearia.Id);
 	}

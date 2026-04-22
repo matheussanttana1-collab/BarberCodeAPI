@@ -1,7 +1,9 @@
-﻿using BarberCode.Application.Interfaces;
+﻿using BarberCode.Application.EventsHandlers;
+using BarberCode.Application.Interfaces;
 using BarberCode.Domain.Entities.Barbearias;
 using BarberCode.Domain.Shared;
 using BarberCode.Service.Requests;
+using Microsoft.Extensions.Logging.Abstractions;
 
 
 namespace BarberCode.Application.UseCases.Agendamentos;
@@ -14,16 +16,17 @@ public class CriarAgendamentoUseCase
 	private readonly IClienteRepository _clienteRepo;
 	private readonly IAppUserService _appUserService;
 	private readonly IWhatsAppService _whatsAppService;
+	private readonly IEventBus _eventBus;
 
 	public CriarAgendamentoUseCase(IBarbeariaRepository barbeariaRepo, IAgendamentoRepository agendamentoRepo,
-	IClienteRepository clienteRepo, IAppUserService appUserService, IWhatsAppService whatsAppService)
+	IClienteRepository clienteRepo, IAppUserService appUserService, IWhatsAppService whatsAppService, IEventBus eventBus)
 	{
 		_barbeariaRepo = barbeariaRepo;
-
 		_agendamentoRepo = agendamentoRepo;
 		_clienteRepo = clienteRepo;
 		_appUserService = appUserService;
 		_whatsAppService = whatsAppService;
+		_eventBus = eventBus;
 	}
 	public async Task<ResultData<Guid>> ExecuteAsync(CriarAgendamentoRequest request)
 	{
@@ -76,9 +79,7 @@ public class CriarAgendamentoUseCase
 		_whatsAppService.GerarTemplateConfirmacaoAgendamento(barbearia.Nome,cliente.Name,request.Dia,
 			barbeiro.Nome,barbearia.Endereco);
 
-       var whatsResponse = await _whatsAppService.EnviarMensagemAsync(
-	   cliente.Celular, mensagemConfirmacao, barbearia.Slug);
-
+		await _eventBus.PublishAsync(new EnviarMensagemEvent(cliente.Celular, mensagemConfirmacao, barbearia.Slug));
 
 		return ResultData<Guid>.Success(agendamentoResult.Data!.Id);
 	}
