@@ -81,8 +81,16 @@ public static class DependencyInjection
 	private static IServiceCollection AddEvents(this IServiceCollection services) 
 	{
 		services.AddScoped<IEventBus, MyEventBus>();
-		services.AddScoped<IEventHandler<EnviarMensagemEvent>, EnviarWhatsAppHandler>();
+
+		// Email Events
+		services.AddScoped<IEventHandler<EnviarMensagemEvent>, EnviarConfirmacaoWhatsAppHandler>();
 		services.AddScoped<IEventHandler<EmailBoasVindasEvent>, EmailBoasVindasHandler>();
+		services.AddScoped<IEventHandler<EmailResetSenhaEvent>, EnviarEmailResetSenhaHandler>();
+
+		// WhatsApp Events - Agendamentos
+		services.AddScoped<IEventHandler<ConcluirAgendamentoEvent>, ConcluirAgendamentoWhatsAppHandler>();
+		services.AddScoped<IEventHandler<CancelarAgendamentoBarbeiroEvent>, CancelarAgendamentoBarbeiroWhatsAppHandler>();
+		services.AddScoped<IEventHandler<CancelarAgendamentoClienteEvent>, CancelarAgendamentoClienteWhatsAppHandler>();
 
 		return services;
 	}

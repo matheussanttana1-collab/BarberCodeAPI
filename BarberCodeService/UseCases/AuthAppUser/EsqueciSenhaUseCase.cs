@@ -1,4 +1,5 @@
 using BarberCode.Application.Interfaces;
+using BarberCode.Application.EventsHandlers;
 using BarberCode.Domain.Shared;
 
 namespace BarberCode.Application.UseCases.AuthAppUser;
@@ -10,15 +11,12 @@ namespace BarberCode.Application.UseCases.AuthAppUser;
 public class EsqueciSenhaUseCase
 {
 	private readonly IAppUserService _userService;
-	private readonly IEmailService _emailService;
-	private readonly IEmailTemplateService _emailTemplateService;
+	private readonly IEventBus _eventBus;
 
- public EsqueciSenhaUseCase(IAppUserService userService, IEmailService emailService,
-	IEmailTemplateService emailTemplateService)
+ public EsqueciSenhaUseCase(IAppUserService userService, IEventBus eventBus)
 	{
 		_userService = userService;
-		_emailService = emailService;
-       _emailTemplateService = emailTemplateService;
+		_eventBus = eventBus;
 	}
 
 	public async Task<ResultData<string>> ExecuteAsync(string email)
@@ -33,10 +31,10 @@ public class EsqueciSenhaUseCase
 			return ResultData<string>.Failure(ResultType.NotFound, "Email não encontrado");
 
 		var token = await _userService.GerarTokenDeResetSenhaAsync(user);
-		var body = _emailTemplateService.gerarTemplateResetSenha(email, token);
 
-		// 5️ Monta e envia o e-mail
-		await _emailService.SendEmailAsync(email, "Recuperação de Senha", body);
+		// 3️ Publica evento para enviar email
+		await _eventBus.PublishAsync(new EmailResetSenhaEvent(email, token));
+
 		return ResultData<string>.Success("Email de recuperação enviado com sucesso");
 	}
 }

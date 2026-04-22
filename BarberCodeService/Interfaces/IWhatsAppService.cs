@@ -17,6 +17,17 @@ public interface IWhatsAppService
 	public Task<ResultData> LogoutWhatsAppBarbeariaAsync(string instanceName);
 	public Task<ResultData<string>> BuscarStatusConexaoWhatsAppAsync(string instanceName);
 	public Task<ResultData> DeletarWhatsAppBarbeariaAsync(string instanceName);
+
 	public string GerarTemplateConfirmacaoAgendamento(string nomeBarbearia, string nomeCliente, DateOnly dataAgendamento,
 		string nomeProfissional, Endereco endereco);
+
+	public string GerarTemplateConcluirAgendamento(string nomeBarbearia, string nomeCliente, DateOnly dataAgendamento,
+		string nomeProfissional);
+
+	public string GerarTemplateCancelarAgendamentoBarbeiro(string nomeBarbearia, string nomeCliente, DateOnly dataAgendamento,
+		string nomeProfissional);
+
+	public string GerarTemplateCancelarAgendamentoCliente(string nomeBarbearia, string nomeCliente, DateOnly dataAgendamento,
+		string nomeProfissional);
 }
+

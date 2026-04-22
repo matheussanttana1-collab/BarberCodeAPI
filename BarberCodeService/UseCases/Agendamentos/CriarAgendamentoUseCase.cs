@@ -15,17 +15,15 @@ public class CriarAgendamentoUseCase
 	private readonly IAgendamentoRepository _agendamentoRepo;
 	private readonly IClienteRepository _clienteRepo;
 	private readonly IAppUserService _appUserService;
-	private readonly IWhatsAppService _whatsAppService;
 	private readonly IEventBus _eventBus;
 
 	public CriarAgendamentoUseCase(IBarbeariaRepository barbeariaRepo, IAgendamentoRepository agendamentoRepo,
-	IClienteRepository clienteRepo, IAppUserService appUserService, IWhatsAppService whatsAppService, IEventBus eventBus)
+	IClienteRepository clienteRepo, IAppUserService appUserService, IEventBus eventBus)
 	{
 		_barbeariaRepo = barbeariaRepo;
 		_agendamentoRepo = agendamentoRepo;
 		_clienteRepo = clienteRepo;
 		_appUserService = appUserService;
-		_whatsAppService = whatsAppService;
 		_eventBus = eventBus;
 	}
 	public async Task<ResultData<Guid>> ExecuteAsync(CriarAgendamentoRequest request)
@@ -75,11 +73,8 @@ public class CriarAgendamentoUseCase
 
 		await _agendamentoRepo.SalvarAgendadamentoAsync(agendamentoResult.Data!);
 
-		var mensagemConfirmacao = 
-		_whatsAppService.GerarTemplateConfirmacaoAgendamento(barbearia.Nome,cliente.Name,request.Dia,
-			barbeiro.Nome,barbearia.Endereco);
-
-		await _eventBus.PublishAsync(new EnviarMensagemEvent(cliente.Celular, mensagemConfirmacao, barbearia.Slug));
+		await _eventBus.PublishAsync(new EnviarMensagemEvent(cliente.Celular, barbearia.Slug, barbearia.Nome, 
+		cliente.Name, request.Dia,barbeiro.Nome, barbearia.Endereco));
 
 		return ResultData<Guid>.Success(agendamentoResult.Data!.Id);
 	}

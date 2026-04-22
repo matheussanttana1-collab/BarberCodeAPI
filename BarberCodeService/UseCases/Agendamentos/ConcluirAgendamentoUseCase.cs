@@ -1,22 +1,20 @@
 ﻿using BarberCode.Application.Interfaces;
+using BarberCode.Application.EventsHandlers;
 using BarberCode.Domain.Shared;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
- 
+
 namespace BarberCode.Application.UseCases.Agendamentos;
 
 public class ConcluirAgendamentoUseCase
 {
 	private readonly IAgendamentoRepository _repo;
 	private readonly IBarbeariaRepository _barbeariaRepo;
+	private readonly IEventBus _eventBus;
 
-	public ConcluirAgendamentoUseCase(IAgendamentoRepository repo, IBarbeariaRepository barbeariaRepo)
+	public ConcluirAgendamentoUseCase(IAgendamentoRepository repo, IBarbeariaRepository barbeariaRepo, IEventBus eventBus)
 	{
 		_repo = repo;
 		_barbeariaRepo = barbeariaRepo;
+		_eventBus = eventBus;
 	}
 
 	public async Task<ResultData> ExecuteAsync(Guid agendamentoId, Guid userId)
@@ -31,7 +29,18 @@ public class ConcluirAgendamentoUseCase
 		var concluirResult = agendamento.ConcluirAgendamento();
 		if (!concluirResult.IsSuccess)
 			return ResultData.Failure(concluirResult.Type, concluirResult.Message);
+
 		await _repo.AtualizarAgendadamentoAsync();
+
+		// Publica evento para enviar WhatsApp
+		await _eventBus.PublishAsync(new ConcluirAgendamentoEvent(
+			agendamento.Cliente.Celular,
+			agendamento.Cliente.Name,
+			agendamento.Barbearia.Nome,
+			agendamento.Barbeiro.Nome,
+			agendamento.Dia,
+			agendamento.Barbearia.Slug
+		));
 
 		return ResultData.Success();
 	}

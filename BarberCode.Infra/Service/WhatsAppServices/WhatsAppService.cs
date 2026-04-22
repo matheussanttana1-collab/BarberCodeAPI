@@ -159,11 +159,29 @@ public class WhatsAppService : IWhatsAppService
 		return ResultData.Success();
 	}
 
-	
+
 	public string GerarTemplateConfirmacaoAgendamento(string nomeBarbearia,string nomeCliente,DateOnly dataAgendamento,
 	string nomeProfissional,Endereco endereco)
 	{
 		return WhatsAppTemplates.GerarTemplateConfirmacaoAgendamento(nomeBarbearia,nomeCliente,dataAgendamento,
 			nomeProfissional,endereco);
+	}
+
+	public string GerarTemplateConcluirAgendamento(string nomeBarbearia, string nomeCliente, DateOnly dataAgendamento,
+		string nomeProfissional)
+	{
+		return WhatsAppTemplates.GerarTemplateConcluirAgendamento(nomeBarbearia, nomeCliente, dataAgendamento, nomeProfissional);
+	}
+
+	public string GerarTemplateCancelarAgendamentoBarbeiro(string nomeBarbearia, string nomeCliente, DateOnly dataAgendamento,
+		string nomeProfissional)
+	{
+		return WhatsAppTemplates.GerarTemplateCancelarAgendamentoBarbeiro(nomeBarbearia, nomeCliente, dataAgendamento, nomeProfissional);
+	}
+
+	public string GerarTemplateCancelarAgendamentoCliente(string nomeBarbearia, string nomeCliente, DateOnly dataAgendamento,
+		string nomeProfissional)
+	{
+		return WhatsAppTemplates.GerarTemplateCancelarAgendamentoCliente(nomeBarbearia, nomeCliente, dataAgendamento, nomeProfissional);
 	}
 }
