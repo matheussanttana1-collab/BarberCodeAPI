@@ -88,8 +88,8 @@ public static class DependencyInjections
 	/// </summary>
 	private static IServiceCollection AddWhatsAppSettings(this IServiceCollection services, IConfiguration configuration)
 	{
-		var baseUrl = configuration["WhatsApp:BaseUrl"];
-		var apiKey = configuration["WhatsApp:ApiKey"];
+		var baseUrl = configuration["WHATSAPP_BASE_URL"];
+		var apiKey = configuration["WHATSAPP_API_KEY"];
 
 	
 
@@ -109,6 +109,7 @@ public static class DependencyInjections
 	{
 		using (var scope = serviceProvider.CreateScope())
 		{
+			
 			var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
 			// Lista de roles a serem criadas

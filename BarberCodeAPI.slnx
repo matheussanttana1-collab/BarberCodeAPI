@@ -1,9 +1,10 @@
 <Solution>
   <Folder Name="/Itens de Solução/">
     <File Path=".gitignore" />
+    <File Path="docker-compose.yml" />
   </Folder>
-  <Project Path="BarberCode.API/BarberCode.API.csproj" Id="b2666bf2-1dd1-41c9-9035-6640310b94eb" />
-  <Project Path="BarberCode.Domain/BarberCode.Domain.csproj" Id="17f66fd1-a852-41e4-b066-0ae0ff7e5eaf" />
-  <Project Path="BarberCode.Infra/BarberCode.Infra.csproj" Id="be758221-e72e-44fd-8bda-0bbb9990856a" />
-  <Project Path="BarberCodeService/BarberCode.Application.csproj" Id="667dfc71-411d-4562-bd07-e9997671b412" />
+  <Project Path="src/BarberCode.API/BarberCode.API.csproj" />
+  <Project Path="src/BarberCode.Application/BarberCode.Application.csproj" />
+  <Project Path="src/BarberCode.Domain/BarberCode.Domain.csproj" />
+  <Project Path="src/BarberCode.Infra/BarberCode.Infra.csproj" />
 </Solution>

@@ -26,7 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BarberCode.Domain\BarberCode.Domain.csproj" />
-    <ProjectReference Include="..\BarberCodeService\BarberCode.Application.csproj" />
+    <ProjectReference Include="..\BarberCode.Application\BarberCode.Application.csproj" />
   </ItemGroup>
 
 </Project>

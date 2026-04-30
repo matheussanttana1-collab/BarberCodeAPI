@@ -3,8 +3,10 @@ using BarberCode.Application;
 using BarberCode.Application.Validators;
 using BarberCode.Domain.Shared;
 using BarberCode.Infra;
+using BarberCode.Infra.Banco;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json;
@@ -28,10 +30,13 @@ builder.Services.AddAuthentication
 
 })
 .AddJwtBearer(opts => {
+	var secretKey = builder.Configuration["SymmetricSecurityKey"] 
+		?? throw new InvalidOperationException("JWT SecretKey não foi configurada. Defina a variável de ambiente 'SymmetricSecurityKey'.");
+
 	opts.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
 	{
 		ValidateIssuerSigningKey = true,
-		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["SymmetricSecurityKey"])),
+		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
 		ValidateAudience = false,
 		ValidateIssuer = false,
 		ClockSkew = TimeSpan.Zero
@@ -87,6 +92,7 @@ builder.Services.AddAuthorization(opts =>
 		policy.RequireRole("Barbearia", "Barbeiro"));
 });
 
+
 // ------------------------------- Config (Tranformar enum's em Strings) --------------------------------------------
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
@@ -114,6 +120,12 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
+// Aplicar migrations e criar banco de dados automaticamente
+using (var scope = app.Services.CreateScope())
+{
+	var dbContext = scope.ServiceProvider.GetRequiredService<BarberCodeContext>();
+	dbContext.Database.Migrate();
+}
 // Seed roles padrão do sistema
 await app.Services.SeedRolesAsync();
 

@@ -47,7 +47,7 @@ public static class ResultsExtends
 				result.Message,
 			}),
 
-			ResultType.Failure => Results.InternalServerError(new 
+			ResultType.Failure => Results.BadRequest(new 
 			{
 				result.Type,
 				result.Message,

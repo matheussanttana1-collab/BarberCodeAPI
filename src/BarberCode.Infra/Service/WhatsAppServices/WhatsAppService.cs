@@ -56,12 +56,13 @@ public class WhatsAppService : IWhatsAppService
 		return ResultData.Success();
 	}
 
-	public async Task<ResultData<string>> GerarQrCodeDeCadastroWhatsAppAsync(string instanceName)
+	public async Task<ResultData<string>> CadastrarWhatsAppAsync(string instanceName)
 	{
 		var url = "/instance/create";
 		var payload = new
 		{
 			instanceName = instanceName,
+			token = Guid.NewGuid().ToString(),
 			qrcode = true
 		};
 
@@ -74,7 +75,7 @@ public class WhatsAppService : IWhatsAppService
 		{
 			var error = await response.Content.ReadAsStringAsync();
 			var errorData = JsonSerializer.Deserialize<EvolutionErrorReponse>(error);
-			return ResultData<string>.Failure(ResultType.Failure, $"Erro ao Gerar qrCode: " +
+			return ResultData<string>.Failure(ResultType.Failure, $"Erro ao Cadastrar WhatsApp: " +
 			$"{errorData!.Response.Message.First()}.");	
 		}
 

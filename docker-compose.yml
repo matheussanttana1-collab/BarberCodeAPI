@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  db-mysql:
+    image: mysql:8.0
+    container_name: barber-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - barber-network
+
+  evolution-api:
+    image: atendai/evolution-api:v1.8.2
+    container_name: evolution-api-barber
+    restart: always
+    environment:
+      - AUTHENTICATION_API_KEY=${WHATSAPP_API_KEY}
+    ports:
+      - "8018:8080"
+    volumes:
+      - evolution_intances:/evolution/instances
+    networks:
+      - barber-network
+
+  barber-api:
+    build:
+      context: .
+      dockerfile: src/BarberCode.API/Dockerfile
+    container_name: barber-api
+    restart: always
+    depends_on:
+      - db-mysql
+      - evolution-api
+    environment:
+      - ConnectionStrings__BarberCodeConnection=${ConnectionStrings__BarberCodeConnection}
+      - SymmetricSecurityKey=${JWT_SECRET_KEY}
+      - EmailSettings__Password=${EMAIL_PASSWORD}
+      - WHATSAPP_BASE_URL=${WHATSAPP_BASE_URL}
+      - WHATSAPP_API_KEY=${WHATSAPP_API_KEY}
+    ports:
+      - "8085:8080"
+    networks:
+      - barber-network
+
+volumes:
+  mysql_data:
+  evolution_intances:
+
+networks:
+  barber-network:
+    driver: bridge

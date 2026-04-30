@@ -1,10 +1,6 @@
 ﻿using BarberCode.Domain.Entities.Barbearias;
 using BarberCode.Domain.Shared;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace BarberCode.Application.Interfaces;
 
@@ -12,7 +8,7 @@ public interface IWhatsAppService
 {
 	public Task<ResultData> EnviarMensagemAsync(string numero,string texto, string instance);
 
-	public Task<ResultData<string>> GerarQrCodeDeCadastroWhatsAppAsync(string instanceName);
+	public Task<ResultData<string>> CadastrarWhatsAppAsync(string instanceName);
 	public Task<ResultData<string>> GerarNovoQrCodeWhatsAppAsync(string instanceName);
 	public Task<ResultData> LogoutWhatsAppBarbeariaAsync(string instanceName);
 	public Task<ResultData<string>> BuscarStatusConexaoWhatsAppAsync(string instanceName);

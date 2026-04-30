@@ -21,7 +21,7 @@ public class CadastrarWhatsAppUseCase
 		if (barbearia is null)
 			return ResultData<string>.Failure(ResultType.NotFound, "Barbearia Não Cadastrada");
 
-		var qrCodeResult = await _whatsAppService.GerarQrCodeDeCadastroWhatsAppAsync(barbearia.Slug);
+		var qrCodeResult = await _whatsAppService.CadastrarWhatsAppAsync(barbearia.Slug);
 		if (!qrCodeResult.IsSuccess)
 			return ResultData<string>.Failure(qrCodeResult.Type, qrCodeResult.Message);
 		return ResultData<string>.Success(qrCodeResult.Data!);
