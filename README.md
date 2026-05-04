@@ -17,8 +17,10 @@ Você pode testar e interagir com os endpoints agora mesmo através do Swagger:
 
 Para facilitar a avaliação técnica, o banco de dados em produção já possui um *Data Seeding* (dados iniciais pré-cadastrados). Você pode testar o fluxo de agendamento de ponta a ponta sem precisar de login, Ou se Quiser Crie sua propria Barbearia, e cadastre e logue seu WhatsApp!
 
-Barbearia Teste:
+Barbearia Teste Login:
+
 email: barbeariaTeste@gmail.com
+
 senha:Senha123@Teste
 
 **Siga este passo a passo rápido no Swagger:**
