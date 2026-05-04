@@ -6,6 +6,7 @@ using BarberCode.Domain.Shared;
 using BarberCode.Service.Requests;
 using BarberCode.Service.Responses;
 using System.Security.Claims;
+using System.Text;
 
 namespace BarberCode.API.Endpoins;
 
@@ -41,9 +42,12 @@ public static class AuthEndpoints
 		.WithSummary("Login para clientes")
 		.WithDescription("Autentica um cliente do sistema e retorna um token JWT válido.");
 
-		group.MapPost("/alterar-senha/{token}", async (string email, string token, AlterarSenhaRequest request, AlterarSenhaUseCase useCase) =>
+		group.MapPost("/alterar-senha{token}", async (string email,string token ,AlterarSenhaRequest request, 
+		AlterarSenhaUseCase useCase) =>
 		{
-			var result = await useCase.ExecuteAsync(email, token, request.SenhaNova);
+			byte[] decodedBytes = Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlDecode(token);
+			string tokenOriginal = Encoding.UTF8.GetString(decodedBytes);
+			var result = await useCase.ExecuteAsync(email,tokenOriginal, request.SenhaNova);
 
 			return result.ToOkSingleResult();
 		})

@@ -35,6 +35,6 @@ public class EsqueciSenhaUseCase
 		// 3️ Publica evento para enviar email
 		await _eventBus.PublishAsync(new EmailResetSenhaEvent(email, token));
 
-		return ResultData<string>.Success("Email de recuperação enviado com sucesso");
+		return ResultData<string>.Success("Email Enviado Com Sucesso");
 	}
 }

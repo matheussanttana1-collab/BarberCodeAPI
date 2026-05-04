@@ -4,6 +4,7 @@ using BarberCode.Domain.Shared;
 using BarberCode.Infra.Banco;
 using BarberCode.Infra.Models;
 using Microsoft.AspNetCore.Identity;
+using System.Text;
 
 namespace BarberCode.Infra.Service;
 
@@ -148,7 +149,7 @@ public class AppUserService : IAppUserService
 	/// </summary>
 	public async Task<ResultData> AlterarSenhaAsync(AuthUser user, string token, string novaSenha)
 	{
-		var appUser = await _userManager.FindByIdAsync(user.Id);
+		var appUser = await _userManager.FindByEmailAsync(user.Email);
 
 		var result = await _userManager.ResetPasswordAsync(appUser!, token, novaSenha);
 
@@ -168,7 +169,8 @@ public class AppUserService : IAppUserService
 
 		var token = await _userManager.GeneratePasswordResetTokenAsync(Appuser!);
 
-		return token;
+		byte[] tokenBytes = Encoding.UTF8.GetBytes(token);
+		return Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlEncode(tokenBytes);
 	}
 
 	public async Task DeletarUsuarioAsync(Guid id)
