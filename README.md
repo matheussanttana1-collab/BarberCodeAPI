@@ -1,178 +1,122 @@
-# 💈 BarbeCode API
+# ✂️ BarberCode API
 
-Sistema de agendamento para barbearias desenvolvido com foco em boas práticas de arquitetura, escalabilidade e organização de código.
+![.NET](https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
+![Status](https://img.shields.io/badge/Status-Em_Produ%C3%A7%C3%A3o-success?style=for-the-badge)
 
----
+Uma API REST completa e escalável desenvolvida em **ASP.NET Core 8** para gestão de agendamentos, clientes e serviços de barbearias. O projeto foi construído focando em **Clean Architecture**, **Desacoplamento** e **Arquitetura Orientada a Eventos**.
 
-## 📌 Sobre o projeto
-
-O **BarbeCode** é uma API REST que permite o gerenciamento de usuários, autenticação e agendamentos de serviços em barbearias.
-
-O projeto foi construído com foco em:
-
-* Separação de responsabilidades
-* Regras de negócio bem definidas
-* Integração com serviços externos
-* Código limpo e manutenível
+🌐 **A API ESTÁ ONLINE!**  
+Você pode testar e interagir com os endpoints agora mesmo através do Swagger:  
+👉 **https://barbercodex.duckdns.org/swagger/index.html**
 
 ---
 
-## 🚀 Tecnologias utilizadas
+## 💡 Como testar na prática (Sem precisar criar conta)
 
-* C#
-* .NET / ASP.NET Core
-* Entity Framework Core
-* SQL Server (ou outro banco que você estiver usando)
-* JWT (autenticação)
-* Clean Architecture
-* DDD (Domain-Driven Design)
-* Result Pattern
-* Integração com APIs externas (Email e WhatsApp)
+Para facilitar a avaliação técnica, o banco de dados em produção já possui um *Data Seeding* (dados iniciais pré-cadastrados). Você pode testar o fluxo de agendamento de ponta a ponta sem precisar de login, Ou se Quiser Crie sua propria Barbearia, e cadastre e logue seu WhatsApp!
 
----
+Barbearia Teste:
+email: barbeariaTeste@gmail.com
+senha:Senha123@Teste
 
-## 🧠 Arquitetura
+**Siga este passo a passo rápido no Swagger:**
 
-O projeto segue os princípios de **Clean Architecture**, organizado nas seguintes camadas:
+1. **Buscando as referências (IDs):**
+   * Chame o endpoint `GET /api/barbearias` para ver a barbearia de demonstração e copie o `id` dela.
+   * Chame `GET /api/barbeiros` e copie o `id` do barbeiro disponível.
+   * Chame `GET /api/servicos` e copie o `id` do serviço que deseja agendar.
+Execute! Se tudo der certo, você receberá um 200 OK e o nosso sistema de eventos fará o processamento das notificações em segundo plano!
 
-* **Domain**
-  Contém entidades, regras de negócio e contratos.
+🚀 Tecnologias Utilizadas
+C# & .NET 8 (ASP.NET Core Web API)
 
-* **Application**
-  Contém os casos de uso da aplicação.
+Entity Framework Core (Code-First)
 
-* **Infrastructure**
-  Implementações de acesso a dados e integrações externas.
+MySQL (Banco de Dados Relacional)
 
-* **API**
-  Camada de entrada (controllers, configuração, middlewares).
+Docker & Docker Compose (Containerização)
 
-### 🔄 Regra de dependência:
+ASP.NET Core Identity & JWT (Autenticação e Autorização)
 
-As dependências sempre apontam para o **Domain**, garantindo baixo acoplamento.
+Evolution API (Integração para disparos de WhatsApp)
 
----
+Arquitetura Orientada a Eventos (EventBus customizado e Domain Events)
 
-## 📦 Funcionalidades
 
-* Cadastro de usuários
-* Autenticação com JWT
-* Agendamento de serviços
-* Validação de regras de negócio
-* Envio de notificações (Email e WhatsApp)
+🐳 Como rodar o projeto localmente (Docker)
+O projeto está totalmente containerizado, o que significa que você só precisa do Docker instalado na sua máquina para rodar a API e o Banco de Dados simultaneamente.
 
----
+Clone o repositório:
 
-## 🔌 Integrações externas
+Bash
+git clone [https://github.com/matheussanttana1-collab/BarberCodeAPI.git](https://github.com/matheussanttana1-collab/BarberCodeAPI.git)
+cd BarberCode
+Configure as variáveis de ambiente:
+Renomeie o arquivo appsettings.Development.example.json para appsettings.Development.json e insira suas chaves (caso queira testar o fluxo de WhatsApp real com a Evolution API).
 
-O sistema integra com serviços externos para:
+Suba os containers:
 
-* 📧 Envio de e-mails
-* 📱 Notificações via WhatsApp
+Bash
+docker-compose up -d
+Acesse localmente:
+A API estará rodando e disponível em: http://localhost:8080/swagger (ajuste a porta conforme o seu ambiente). O banco de dados MySQL também já estará rodando na porta 3306 (ou 3308 externamente, dependendo do seu compose).
 
----
+### 📱 Configurando o WhatsApp (Rodando Localmente)
 
-## 🧭 Fluxo básico do sistema
+Se você estiver rodando o projeto localmente e quiser testar o disparo de mensagens, precisará conectar o seu WhatsApp à instância da Evolution API que subiu no Docker:
 
-1. Usuário se cadastra
-2. Realiza login
-3. Agenda um serviço
-4. Sistema valida disponibilidade
-5. Notificação é enviada ao usuário
+1. Com os containers rodando, acesse a documentação local ou o gerenciador da Evolution API (geralmente em `http://localhost:8081`).
+2. Crie uma nova instância (ex: `BarberCodeInstance`).
+3. Gere o QR Code e escaneie com o WhatsApp que fará os disparos (recomenda-se usar um número de testes).
+4. Copie a `ApiKey` e a `BaseUrl` da sua instância e atualize o seu arquivo `appsettings.Development.json` no projeto da API.
+5. Pronto! Os eventos de agendamento já vão disparar mensagens reais.
 
----
-
-## ▶️ Como executar o projeto
-
-### Pré-requisitos
-
-* .NET SDK instalado
-* Banco de dados configurado
-
----
-
-### Passos
-
-```bash
-# Clonar o repositório
-git clone https://github.com/seu-usuario/barbecode.git
-
-# Entrar na pasta
-cd barbecode
-
-# Restaurar dependências
-dotnet restore
-
-# Rodar a aplicação
-dotnet run
-```
-
----
-
-## 🔐 Variáveis de ambiente
-
-Configure as variáveis abaixo antes de executar:
-
-```
-JWT_SECRET=your_secret_key
-DATABASE_CONNECTION=your_connection_string
-EMAIL_API_KEY=your_email_key
-WHATSAPP_API_URL=your_whatsapp_url
-```
-
----
-
-## ⚙️ Decisões técnicas
-
-### ✔️ Uso de Clean Architecture
-
-Separar responsabilidades e facilitar manutenção e testes.
-
-### ✔️ Uso de DDD
-
-Organizar o domínio de forma clara, com foco nas regras de negócio.
-
-### ✔️ Uso de Result Pattern
-
-Evitar o uso excessivo de exceções para controle de fluxo.
-
-### ✔️ Integrações externas isoladas
-
-Serviços externos são abstraídos na camada de infraestrutura.
-
----
-
-## 📖 Documentação da API
-
-A API pode ser explorada via Swagger após iniciar o projeto:
-
-```
-/swagger
-```
-
----
-
-## 📂 Estrutura do projeto
-
-```
+📂 Estrutura do projeto
 /src
  ├── Domain
  ├── Application
  ├── Infrastructure
  └── API
-```
 
----
+ ⚙️ Decisões técnicas
+✔️ Uso de Clean Architecture
+Separar responsabilidades e facilitar manutenção e testes.
 
-## 🧩 Possíveis melhorias futuras
+✔️ Uso de DDD
+Organizar o domínio de forma clara, com foco nas regras de negócio.
 
-* Adição de testes automatizados
-* Implementação de filas para processamento assíncrono
-* Pipeline CI/CD
-* Logs estruturados
-* Monitoramento
+✔️ Uso de Result Pattern
+Evitar o uso excessivo de exceções para controle de fluxo.
 
----
+✔️ Integrações externas isoladas
+Serviços externos são abstraídos na camada de infraestrutura.
+
+ 
+🗺️ Roadmap e Próximos Passos
+O backend core está finalizado e em produção, mas o projeto continua evoluindo:
+
+[x] CRUD de Barbearias, Barbeiros e Serviços
+
+[x] Sistema de Agendamento de Horários
+
+[x] Autenticação segura via JWT e Identity
+
+[x] Fluxo seguro de recuperação de senha (Base64UrlEncoding)
+
+[x] Notificações via E-mail e WhatsApp (Event Driven)
+
+[x] Containerização com Docker
+
+[x] Deploy em Nuvem
+
+[ ] Testes Unitários: Implementação de testes automatizados (Em Progresso ⏳)
+
+[ ] Front-end: Desenvolvimento da interface de usuário para consumir esta API (Em Progresso ⏳)
+
+[ ] Mensageria: Substituição do EventBus em memória por RabbitMQ.
+
 
 ## 👨‍💻 Autor
 
