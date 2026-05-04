@@ -27,7 +27,10 @@ public static class AgendamentoEndpoints
 		})
 		.WithName("GetAllAgendamentos")
 		.WithOpenApi()
-		.RequireAuthorization("managerOrEmployee");
+		.RequireAuthorization("managerOrEmployee")
+		.WithSummary("Lista agendamentos de um barbeiro")
+		.WithDescription("Retorna todos os agendamentos de um barbeiro específico, podendo filtrar por status e data.")
+		.Produces<ResultData<object>>(StatusCodes.Status200OK);
 
 		group.MapGet("/{id}", async (Guid id, IAgendamentoRepository repo, IMapper mapper) =>
 		{
@@ -39,7 +42,10 @@ public static class AgendamentoEndpoints
 			.ToOkSingleResult();
 		})
 		.WithName("GetAgendamentoById")
-		.WithOpenApi();
+		.WithOpenApi()
+		.WithSummary("Obtém informações de um agendamento específico")
+		.WithDescription("Retorna os detalhes de um agendamento (barbeiro, cliente, serviço, horário, etc.).")
+		.Produces<ResultData<AgendamentoResponse>>(StatusCodes.Status200OK);
 
 		group.MapPatch("/{id}/concluir", async (Guid id,
 		ConcluirAgendamentoUseCase useCase, ClaimsPrincipal user) =>
@@ -50,7 +56,10 @@ public static class AgendamentoEndpoints
 		})
 		.WithName("ConcluirAgendamento")
 		.WithOpenApi()
-		.RequireAuthorization("managerOrEmployee");
+		.RequireAuthorization("managerOrEmployee")
+		.WithSummary("Marca um agendamento como concluído")
+		.WithDescription("Permite que o barbeiro ou gerenciador finalize um agendamento realizado.")
+		.Produces(StatusCodes.Status204NoContent);
 
 		group.MapPost("/", async (CriarAgendamentoRequest request, CriarAgendamentoUseCase useCase) =>
 		{
@@ -59,7 +68,10 @@ public static class AgendamentoEndpoints
 		})
 		.WithName("CreateAgendamento")
 		.WithOpenApi()
-		.AddEndpointFilter<ValidationFilter<CriarAgendamentoRequest>>(); 
+		.AddEndpointFilter<ValidationFilter<CriarAgendamentoRequest>>()
+		.WithSummary("Cria um novo agendamento")
+		.WithDescription("Permite que um cliente agende um serviço com um barbeiro em uma data e horário específicos.")
+		.Produces(StatusCodes.Status201Created);
 
 		group.MapDelete("/{id}", async (Guid id, CancelarAgendamentoUseCase useCase, ClaimsPrincipal user) =>
 		{
@@ -69,6 +81,9 @@ public static class AgendamentoEndpoints
 		})
 		.WithName("DeleteAgendamento")
 		.WithOpenApi()
-		.RequireAuthorization("managerOrEmployee"); ;
+		.RequireAuthorization("managerOrEmployee")
+		.WithSummary("Cancela um agendamento")
+		.WithDescription("Permite que o barbeiro ou gerenciador cancele um agendamento marcado.")
+		.Produces(StatusCodes.Status204NoContent);
 	}
 }

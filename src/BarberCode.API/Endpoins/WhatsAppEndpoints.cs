@@ -17,7 +17,10 @@ public static class WhatsAppEndpoints
 			return result.ToCreateResult($"/api/WhatsApp/Cadastrar/{result}");
 		})
 		.WithName("CadastrarWhatsApp")
-		.WithOpenApi();
+		.WithOpenApi()
+		.WithSummary("Registra uma nova conexão WhatsApp")
+		.WithDescription("Cadastra e vincula uma nova conexão WhatsApp à barbearia do gerenciador autenticado.")
+		.Produces(StatusCodes.Status201Created);
 
 		group.MapGet("/QrCode", async (GerarNovoQrCodeUseCase useCase, ClaimsPrincipal user) =>
 		{
@@ -26,7 +29,10 @@ public static class WhatsAppEndpoints
 			return result.ToOkSingleResult();
 		})
 		.WithName("QrCodeWhatsApp")
-		.WithOpenApi();
+		.WithOpenApi()
+		.WithSummary("Gera novo QR Code para autenticação WhatsApp")
+		.WithDescription("Gera um novo QR Code para escanear e autenticar a conexão WhatsApp da barbearia.")
+		.Produces(StatusCodes.Status200OK);
 
 		group.MapGet("/ConnectionState", async (BuscarStatusConexaoWhatsAppUseCase useCase, ClaimsPrincipal user) =>
 		{
@@ -35,7 +41,10 @@ public static class WhatsAppEndpoints
 			return result.ToOkSingleResult();
 		})
 		.WithName("ConnectionStateWhatsApp")
-		.WithOpenApi();
+		.WithOpenApi()
+		.WithSummary("Verifica o estado da conexão WhatsApp")
+		.WithDescription("Retorna o status atual da conexão WhatsApp (conectado, desconectado, etc.) da barbearia.")
+		.Produces(StatusCodes.Status200OK);
 
 		group.MapDelete("/Logout", async (LogoutWhatsAppUseCase useCase, ClaimsPrincipal user) =>
 		{
@@ -44,7 +53,10 @@ public static class WhatsAppEndpoints
 			return result.ToNoContentResult();
 		})
 		.WithName("LogoutWhatsApp")
-		.WithOpenApi();
+		.WithOpenApi()
+		.WithSummary("Faz logout da conexão WhatsApp")
+		.WithDescription("Desconecta a sessão WhatsApp da barbearia, mas mantém a configuração registrada.")
+		.Produces(StatusCodes.Status204NoContent);
 
 
 		group.MapDelete("/", async (DeletarWhatsAppUseCase useCase, ClaimsPrincipal user) =>
@@ -54,6 +66,9 @@ public static class WhatsAppEndpoints
 			return result.ToNoContentResult();
 		})
 		.WithName("DeletarWhatsApp")
-		.WithOpenApi();
+		.WithOpenApi()
+		.WithSummary("Remove a conexão WhatsApp")
+		.WithDescription("Deleta completamente a configuração de conexão WhatsApp da barbearia.")
+		.Produces(StatusCodes.Status204NoContent);
 	}
 }

@@ -1,4 +1,5 @@
 using BarberCode.API.Endpoins;
+using BarberCode.API.Models;
 using BarberCode.Application;
 using BarberCode.Application.Validators;
 using BarberCode.Domain.Shared;
@@ -8,6 +9,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -112,6 +114,37 @@ builder.Services.AddSwaggerGen(c =>
 		Version = "v1",
 		Description = "API para gerenciamento de barbearias e agendamentos"
 	});
+	// ======================== CONFIGURAÇÃO DE SEGURANÇA JWT NO SWAGGER ========================
+
+	// Define o esquema de segurança Bearer/JWT no Swagger
+	// OpenApiSecurityScheme: Define o tipo de autenticação que a API utiliza
+	// Neste caso, configuramos o Bearer Token (JWT) para validar requisições autenticadas
+	c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+	{
+		// Descrição exibida no Swagger UI explicando ao usuário como usar o token
+		Description = "Insira o token JWT desta maneira: Bearer {seu_token}",
+
+		// Nome do header que receberá o token (Authorization)
+		Name = "Authorization",
+
+		// Tipo de esquema utilizado (Bearer Token)
+		Scheme = "Bearer",
+
+		// Formato específico do token (JWT - Json Web Token)
+		BearerFormat = "JWT",
+
+		// Localização do token na requisição (Header)
+		In = ParameterLocation.Header,
+
+		// Tipo de segurança (ApiKey significa que é um token/chave na requisição)
+		Type = SecuritySchemeType.ApiKey
+	});
+
+	// ======================== APLICAR REQUISITO DE SEGURANÇA AOS ENDPOINTS ========================
+
+	// AddSecurityRequirement: Informa que todos os endpoints (exceto os públicos) requerem autenticação
+	// Isso garante que o Swagger UI mostre um botão de "Authorize" para o usuário inserir o token JWT
+	c.OperationFilter<SwaggerFilters>();
 });
 
 
@@ -130,7 +163,7 @@ using (var scope = app.Services.CreateScope())
 await app.Services.SeedRolesAsync();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
 	app.MapOpenApi();
 
@@ -140,6 +173,8 @@ if (app.Environment.IsDevelopment())
 	{
 		c.SwaggerEndpoint("/swagger/v1/swagger.json", "BarberCode API v1");
 		c.RoutePrefix = "swagger";
+		// Salva o token no cache do navegador para não perder no F5!
+		c.EnablePersistAuthorization();
 	});
 }
 

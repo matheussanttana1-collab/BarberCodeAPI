@@ -19,14 +19,17 @@ public static class ServicoEndpoints
 
 		group.MapGet("/", async (Guid barbeariaId,IServicoRepository repo, IMapper mapper) =>
 		{
-			
+
 			var servicos = await repo.BuscarServicosAsync(barbeariaId);
 			return ResultData<List<ServicoResponse>>.Success(mapper.Map<List<ServicoResponse>>(servicos))
 			.ToOkSingleResult();
 		})
 		.WithName("GetAllServicos")
 		.WithOpenApi()
-		.AllowAnonymous();
+		.AllowAnonymous()
+		.WithSummary("Lista todos os serviços de uma barbearia")
+		.WithDescription("Retorna a lista completa de serviços (cortes, barbas, etc.) ofertados por uma barbearia específica.")
+		.Produces<ResultData<List<ServicoResponse>>>(StatusCodes.Status200OK);
 
 		group.MapGet("/{id}", async (Guid id, IServicoRepository repo, IMapper mapper) =>
 		{
@@ -39,7 +42,10 @@ public static class ServicoEndpoints
 		})
 		.WithName("GetServicoById")
 		.WithOpenApi()
-		.AllowAnonymous();
+		.AllowAnonymous()
+		.WithSummary("Obtém detalhes de um serviço específico")
+		.WithDescription("Retorna as informações completas (preço, duração, descrição) de um serviço pelo seu ID.")
+		.Produces<ResultData<ServicoResponse>>(StatusCodes.Status200OK);
 
 		group.MapPatch("/{id}", async (Guid id, AtualizarServicoRequest request, AlterarServicoUseCase useCase, 
 		ClaimsPrincipal user) =>
@@ -50,7 +56,10 @@ public static class ServicoEndpoints
 		})
 		.WithName("UpdateServico")
 		.WithOpenApi()
-		.AddEndpointFilter<ValidationFilter<AtualizarServicoRequest>>();
+		.AddEndpointFilter<ValidationFilter<AtualizarServicoRequest>>()
+		.WithSummary("Atualiza informações de um serviço")
+		.WithDescription("Permite que o gerenciador modifique detalhes de um serviço (preço, duração, descrição).")
+		.Produces(StatusCodes.Status204NoContent);
 
 		group.MapPost("/", async (CriarServicoRequest request, CriarServicoUseCase useCase, ClaimsPrincipal user) =>
 		{
@@ -60,7 +69,10 @@ public static class ServicoEndpoints
 		})
 		.WithName("CreateServico")
 		.WithOpenApi()
-		.AddEndpointFilter<ValidationFilter<CriarServicoRequest>>(); ;
+		.AddEndpointFilter<ValidationFilter<CriarServicoRequest>>()
+		.WithSummary("Cria um novo serviço na barbearia")
+		.WithDescription("Permite que o gerenciador registre um novo serviço (corte, barba, etc.) na barbearia.")
+		.Produces(StatusCodes.Status201Created);
 
 		group.MapDelete("/{id}", async (Guid id, DeletarServicoUseCase useCase, ClaimsPrincipal user) =>
 		{
@@ -69,6 +81,9 @@ public static class ServicoEndpoints
 			return result.ToNoContentResult();
 		})
 		.WithName("DeleteServico")
-		.WithOpenApi();
+		.WithOpenApi()
+		.WithSummary("Remove um serviço da barbearia")
+		.WithDescription("Permite que o gerenciador delete um serviço registrado na barbearia.")
+		.Produces(StatusCodes.Status204NoContent);
 	}
 }

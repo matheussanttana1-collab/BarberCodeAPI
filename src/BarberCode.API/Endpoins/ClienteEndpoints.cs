@@ -22,7 +22,10 @@ public static class ClienteEndpoints
 		})
 		.WithName("GetAllClienteInfos")
 		.WithOpenApi()
-		.RequireAuthorization("manager");
+		.RequireAuthorization("manager")
+		.WithSummary("Lista todos os clientes da barbearia")
+		.WithDescription("Retorna uma lista completa de todos os clientes registrados na barbearia do gerenciador autenticado.")
+		.Produces<ResultData<List<ClienteInfoResponse>>>(StatusCodes.Status200OK);
 
 		group.MapGet("/{id}", async (Guid id, IClienteRepository repo, IMapper mapper) =>
 		{
@@ -35,7 +38,10 @@ public static class ClienteEndpoints
 		})
 		.WithName("GetClienteInfoById")
 		.WithOpenApi()
-		.RequireAuthorization("manager");
+		.RequireAuthorization("manager")
+		.WithSummary("Obtém informações de um cliente específico")
+		.WithDescription("Retorna os dados detalhados de um cliente pelo seu ID.")
+		.Produces<ResultData<ClienteInfoResponse>>(StatusCodes.Status200OK);
 
 		group.MapGet("/me", async (IClienteRepository repo, IMapper mapper, ClaimsPrincipal user) =>
 		{
@@ -49,7 +55,10 @@ public static class ClienteEndpoints
 		})
 		.WithName("GetMeInfoById")
 		.WithOpenApi()
-		.RequireAuthorization("user");
+		.RequireAuthorization("user")
+		.WithSummary("Obtém informações do cliente autenticado")
+		.WithDescription("Retorna os dados detalhados do cliente logado (perfil próprio).")
+		.Produces<ResultData<ClienteInfoResponse>>(StatusCodes.Status200OK);
 
 
 
@@ -64,7 +73,10 @@ public static class ClienteEndpoints
 		})
 		.WithName("AgendamentosDoCliente")
 		.WithOpenApi()
-		.RequireAuthorization("user");
+		.RequireAuthorization("user")
+		.WithSummary("Lista agendamentos do cliente autenticado")
+		.WithDescription("Retorna todos os agendamentos do cliente logado (futuros e passados).")
+		.Produces<ResultData<List<AgendamentoResponse>>>(StatusCodes.Status200OK);
 
 		group.MapDelete("/agendamentos", async ( Guid agendamentoId,
 		CancelarAgendamentoClienteUseCase useCase, ClaimsPrincipal user) =>
@@ -75,7 +87,10 @@ public static class ClienteEndpoints
 		})
 		.WithName("CancelarAgendamentoCliente")
 		.WithOpenApi()
-		.RequireAuthorization("user");
+		.RequireAuthorization("user")
+		.WithSummary("Cancela um agendamento do cliente")
+		.WithDescription("Permite que o cliente autenticado cancele um de seus agendamentos.")
+		.Produces(StatusCodes.Status204NoContent);
 
 		//group.MapDelete("/{id}", (Guid id) =>
 		//      {

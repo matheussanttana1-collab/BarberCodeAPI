@@ -25,7 +25,10 @@ public static class BarbeariaEndpoints
 			.ToOkSingleResult();
 		})
 		.WithName("GetAllBarbearia")
-		.WithOpenApi();
+		.WithOpenApi()
+		.WithSummary("Lista todas as barbearias registradas")
+		.WithDescription("Retorna a lista completa de todas as barbearias cadastradas no sistema.")
+		.Produces<ResultData<List<BarbeariaResponse>>>(StatusCodes.Status200OK);
 
 		group.MapGet("/{id}", async (Guid id, IBarbeariaRepository repo, IMapper mapper) =>
 		{
@@ -39,7 +42,10 @@ public static class BarbeariaEndpoints
 		})
 		.WithName("GetBarbeariaById")
 		.WithOpenApi()
-		.AllowAnonymous();
+		.AllowAnonymous()
+		.WithSummary("Obtém informações de uma barbearia específica")
+		.WithDescription("Retorna os dados detalhados de uma barbearia (nome, endereço, telefone, serviços, etc.).")
+		.Produces<ResultData<BarbeariaResponse>>(StatusCodes.Status200OK);
 
 		group.MapPost("/", async (CriarBarbeariaRequest request, CriarBarbeariaUseCase useCase) =>
 		{
@@ -50,7 +56,10 @@ public static class BarbeariaEndpoints
 		.WithName("CreateBarbearia")
 		.WithOpenApi()
 		.AddEndpointFilter<ValidationFilter<CriarBarbeariaRequest>>()
-		.AllowAnonymous();
+		.AllowAnonymous()
+		.WithSummary("Registra uma nova barbearia no sistema")
+		.WithDescription("Permite o cadastro de uma nova barbearia com nome, endereço, telefone e horários de funcionamento.")
+		.Produces(StatusCodes.Status201Created);
 
 		group.MapPatch("/endereco", async (EnderecoRequest request, AlterarEnderecoUseCase useCase, 
 		ClaimsPrincipal user) =>
@@ -61,7 +70,10 @@ public static class BarbeariaEndpoints
 		})
 		.WithName("AlterarEndereco")
 		.WithOpenApi()
-		.AddEndpointFilter<ValidationFilter<EnderecoRequest>>();
+		.AddEndpointFilter<ValidationFilter<EnderecoRequest>>()
+		.WithSummary("Atualiza o endereço de uma barbearia")
+		.WithDescription("Permite que o gerenciador modifique o endereço (rua, número, bairro, etc.) da barbearia.")
+		.Produces(StatusCodes.Status204NoContent);
 
 		group.MapPatch("/funcionamento", async ( List<HorarioFuncionamentoRequest> request,
 			AlterarHorarioFuncionamentoUseCase useCase, ClaimsPrincipal user) =>
@@ -72,7 +84,10 @@ public static class BarbeariaEndpoints
 		})
 		.WithName("AlterarFuncionamento")
 		.WithOpenApi()
-		.AddEndpointFilter<ValidationFilter<List<HorarioFuncionamentoRequest>>>();
+		.AddEndpointFilter<ValidationFilter<List<HorarioFuncionamentoRequest>>>()
+		.WithSummary("Atualiza os horários de funcionamento")
+		.WithDescription("Permite que o gerenciador modifique o horário de abertura e fechamento por dia da semana.")
+		.Produces(StatusCodes.Status204NoContent);
 
 		group.MapDelete("/", async (DeletarBarbeariaUseCase useCase, ClaimsPrincipal user) =>
 		{
@@ -81,7 +96,10 @@ public static class BarbeariaEndpoints
 			return result.ToNoContentResult();
 		})
 		.WithName("DeleteBarbearia")
-		.WithOpenApi();
+		.WithOpenApi()
+		.WithSummary("Remove uma barbearia do sistema")
+		.WithDescription("Permite que o gerenciador delete sua barbearia e todos os seus dados associados.")
+		.Produces(StatusCodes.Status204NoContent);
 	}
 
 

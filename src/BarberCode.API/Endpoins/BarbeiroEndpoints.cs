@@ -24,7 +24,10 @@ public static class BarbeiroEndpoints
 			.ToOkSingleResult();
 		})
 		.WithName("GetAllBarbeiros")
-		.WithOpenApi();
+		.WithOpenApi()
+		.WithSummary("Lista todos os barbeiros de uma barbearia")
+		.WithDescription("Retorna a lista completa de barbeiros registrados em uma barbearia específica.")
+		.Produces<ResultData<List<BarbeiroResponse>>>(StatusCodes.Status200OK);
 
 		group.MapGet("/{id}", async (Guid id, IBarbeiroRepository repo, IMapper mapper) =>
 		{
@@ -36,7 +39,10 @@ public static class BarbeiroEndpoints
 			.ToOkSingleResult();
 		})
 		.WithName("GetBarbeiroById")
-		.WithOpenApi();
+		.WithOpenApi()
+		.WithSummary("Obtém informações de um barbeiro específico")
+		.WithDescription("Retorna os dados detalhados de um barbeiro (experiência, especialidades, etc.) pelo seu ID.")
+		.Produces<ResultData<BarbeiroResponse>>(StatusCodes.Status200OK);
 
 		group.MapGet("/{id}/slots", async (Guid id,DateOnly diaEscolhido,
 			Guid servicoId, GerarSlotsUseCase useCase) =>
@@ -45,7 +51,10 @@ public static class BarbeiroEndpoints
 			return slots.ToOkSingleResult();
 		})
 		.WithName("GerarSlotsBarbeiro")
-		.WithOpenApi();
+		.WithOpenApi()
+		.WithSummary("Gera horários disponíveis para agendamento")
+		.WithDescription("Retorna os horários (slots) disponíveis de um barbeiro para um serviço e data específicos.")
+		.Produces<ResultData<object>>(StatusCodes.Status200OK);
 		
 
 		group.MapPatch("/{id}", async (Guid id, AtualizarBarbeiroRequest request, AlterarBarbeiroUseCase useCase
@@ -58,7 +67,10 @@ public static class BarbeiroEndpoints
 		.WithName("UpdateBarbeiro")
 		.WithOpenApi()
 		.AddEndpointFilter<ValidationFilter<AtualizarBarbeiroRequest>>()
-		.RequireAuthorization("managerOrEmployee");
+		.RequireAuthorization("managerOrEmployee")
+		.WithSummary("Atualiza informações de um barbeiro")
+		.WithDescription("Permite que o gerenciador ou o próprio barbeiro modifique seus dados profissionais.")
+		.Produces(StatusCodes.Status204NoContent);
 
 		group.MapPost("/", async (CriarBarbeiroRequest request,
 		CriarBarbeiroUseCase useCase, ClaimsPrincipal user) =>
@@ -70,7 +82,10 @@ public static class BarbeiroEndpoints
 		.WithName("CreateBarbeiro")
 		.WithOpenApi()
 		.AddEndpointFilter<ValidationFilter<CriarBarbeiroRequest>>()
-		.RequireAuthorization("manager");
+		.RequireAuthorization("manager")
+		.WithSummary("Registra um novo barbeiro na barbearia")
+		.WithDescription("Permite que o gerenciador cadastre um novo barbeiro com suas especialidades e agenda.")
+		.Produces(StatusCodes.Status201Created);
 
 		group.MapDelete("/{id}", async (Guid id, DeletarBarbeiroUseCase useCase, ClaimsPrincipal user) =>
 		{
@@ -80,6 +95,9 @@ public static class BarbeiroEndpoints
 		})
 		.WithName("DeleteBarbeiro")
 		.WithOpenApi()
-		.RequireAuthorization("manager");
+		.RequireAuthorization("manager")
+		.WithSummary("Remove um barbeiro da barbearia")
+		.WithDescription("Permite que o gerenciador delete um barbeiro do sistema.")
+		.Produces(StatusCodes.Status204NoContent);
 	}
 }

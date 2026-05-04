@@ -2,6 +2,7 @@ using AutoMapper;
 using BarberCode.API.Models;
 using BarberCode.Application.Interfaces;
 using BarberCode.Application.UseCases.AuthAppUser;
+using BarberCode.Domain.Shared;
 using BarberCode.Service.Requests;
 using BarberCode.Service.Responses;
 using System.Security.Claims;
@@ -22,9 +23,10 @@ public static class AuthEndpoints
 		})
 		.WithName("LoginBarbearia")
 		.WithOpenApi()
-		.Produces<string>(StatusCodes.Status200OK)
-		.Produces(StatusCodes.Status400BadRequest)
-		.AddEndpointFilter<ValidationFilter<LoginRequest>>();
+		.Produces<ResultData<string>>(StatusCodes.Status200OK)
+		.AddEndpointFilter<ValidationFilter<LoginRequest>>()
+		.WithSummary("Login para gerenciadores de barbearia")
+		.WithDescription("Autentica um gerenciador de barbearia e retorna um token JWT válido.");
 
 		group.MapPost("/login-cliente", async (LoginClienteRequest request, LoginClienteUseCase useCase) =>
 		{
@@ -34,10 +36,10 @@ public static class AuthEndpoints
 		})
 		.WithName("LoginCliente")
 		.WithOpenApi()
-		.Produces<string>(StatusCodes.Status200OK)
-		.Produces(StatusCodes.Status400BadRequest)
-		.Produces(StatusCodes.Status404NotFound)
-		.AddEndpointFilter<ValidationFilter<LoginClienteRequest>>();
+		.Produces<ResultData<string>>(StatusCodes.Status200OK)
+		.AddEndpointFilter<ValidationFilter<LoginClienteRequest>>()
+		.WithSummary("Login para clientes")
+		.WithDescription("Autentica um cliente do sistema e retorna um token JWT válido.");
 
 		group.MapPost("/alterar-senha/{token}", async (string email, string token, AlterarSenhaRequest request, AlterarSenhaUseCase useCase) =>
 		{
@@ -47,7 +49,10 @@ public static class AuthEndpoints
 		})
 		.WithName("AlterarSenha")
 		.WithOpenApi()
-		.AddEndpointFilter<ValidationFilter<AlterarSenhaRequest>>();
+		.Produces<ResultData<bool>>(StatusCodes.Status200OK)
+		.AddEndpointFilter<ValidationFilter<AlterarSenhaRequest>>()
+		.WithSummary("Altera a senha do usuário")
+		.WithDescription("Permite que um usuário modifique sua senha utilizando um token de reset válido.");
 
 		group.MapPost("/esqueci-senha", async (EsqueciSenhaRequest request, EsqueciSenhaUseCase useCase) =>
 		{
@@ -56,7 +61,10 @@ public static class AuthEndpoints
 			return result.ToOkSingleResult();
 		})
 		.WithName("EsqueciSenha")
-		.WithOpenApi();
+		.WithOpenApi()
+		.Produces<ResultData<bool>>(StatusCodes.Status200OK)
+		.WithSummary("Solicita recuperação de senha")
+		.WithDescription("Envia um email com um token de reset de senha para o usuário.");
 
 		group.MapPost("/refresh-token", (RefreshTokenRequest request, RefreshTokenUseCase useCase) =>
 		{
@@ -66,9 +74,10 @@ public static class AuthEndpoints
 		})
 		.WithName("RefreshToken")
 		.WithOpenApi()
-		.Produces<string>(StatusCodes.Status200OK)
-		.Produces(StatusCodes.Status400BadRequest)
-		.AddEndpointFilter<ValidationFilter<RefreshTokenRequest>>();
+		.Produces<ResultData<string>>(StatusCodes.Status200OK)
+		.AddEndpointFilter<ValidationFilter<RefreshTokenRequest>>()
+		.WithSummary("Renova o token de autenticação")
+		.WithDescription("Gera um novo token JWT válido a partir de um refresh token, mantendo a sessão ativa.");
 
 	}
 }

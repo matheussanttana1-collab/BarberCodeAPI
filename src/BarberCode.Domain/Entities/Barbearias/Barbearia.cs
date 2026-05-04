@@ -20,7 +20,7 @@ public class Barbearia
 		Funcionamento = funcionamento;
 		Celular = celular;
 		WhatsAppConctado = false;
-		Slug = GerarSlug(name);
+		Slug = GerarSlug(name, Id);
 	}
 
 	public Guid Id { get; private set; }
@@ -68,9 +68,14 @@ public class Barbearia
 		Funcionamento.AddRange(funcionamentos);
 	}
 
-	private string GerarSlug(string nome) 
+	/// <summary>
+	/// Gera um slug único para a barbearia a partir do nome e ID
+	/// </summary>
+	/// <param name="nome">Nome da barbearia</param>
+	/// <param name="id">ID único da barbearia</param>
+	/// <returns>Slug no formato: nome-slugificado-primeiros6digitos-do-id</returns>
+	private string GerarSlug(string nome, Guid id) 
 	{
-
 		// 1. Converter para minúsculo
 		var lower = nome.ToLowerInvariant();
 
@@ -99,7 +104,12 @@ public class Barbearia
 		var final = Regex.Replace(hyphenated, @"-+", "-");
 
 		// 6. Remover hífens no início/fim
-		return final.Trim('-');
+		var baseSlug = final.Trim('-');
+
+		// 7. Adicionar primeiros 6 dígitos do ID para garantir unicidade
+		var idPart = id.ToString().Replace("-", "").Substring(0, 8).ToLower();
+
+		return $"{baseSlug}-{idPart}";
 	}
 
 	public void ConfirmarConexaoWhatsApp () 
