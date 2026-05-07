@@ -1,0 +1,40 @@
+# Nome da automação que vai aparecer lá na aba "Actions" do GitHub
+name: Construir e Publicar BarberCode API no Docker Hub
+
+# 1. O GATILHO (Quando essa automação deve rodar?)
+# Aqui estamos dizendo: "Robô, só trabalhe quando código novo chegar na branch main"
+on:
+  push:
+    branches: [ "master" ]
+
+# 2. AS MISSÕES (Jobs)
+jobs:
+  build_e_push:
+    # Escolhemos um computador com Linux atualizado para rodar o processo
+    runs-on: ubuntu-latest
+
+    # 3. O PASSO A PASSO
+    steps:
+      - name: Passo 1 - Fazer o Checkout do Código
+        # Essa ferramenta do Marketplace baixa os arquivos do seu repositório para o computador temporário
+        uses: actions/checkout@v4
+
+      - name: Passo 2 - Fazer Login no Docker Hub
+        # Essa ferramenta do Docker faz o login de forma segura pegando as senhas do seu Cofre
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Passo 3 - Construir e Enviar a Imagem Docker (Build and Push)
+        # Essa é a ferramenta principal. Ela substitui os comandos manuais que você fazia no terminal.
+        uses: docker/build-push-action@v5
+        with:
+          # Contexto '.' garante que ele copia a pasta 'src' inteira corretamente
+          context: . 
+          # Aponta exatamente onde o Dockerfile está escondido
+          file: src/BarberCode.API/Dockerfile 
+          # O comando mágico que diz: "Sim, após construir, envie para o Docker Hub"
+          push: true 
+          # O nome e a versão da sua imagem. Usamos 'latest' para atualizar a principal.
+          tags: matheussanttana1/barbercode-api:latest

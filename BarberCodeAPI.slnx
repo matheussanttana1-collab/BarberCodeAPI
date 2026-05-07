@@ -1,7 +1,7 @@
 <Solution>
   <Folder Name="/.github/" />
   <Folder Name="/.github/workflows/">
-    <File Path="docker-publish.yml" />
+    <File Path=".github/workflows/docker-publish.yml" />
   </Folder>
   <Folder Name="/Itens de Solução/">
     <File Path=".gitignore" />
