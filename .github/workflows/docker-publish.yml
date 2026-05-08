@@ -66,9 +66,15 @@ jobs:
             # 2. Força a AWS a ir no Docker Hub e baixar a versão nova (latest)
             sudo docker compose pull
             
-            # 3. Recria o contêiner da API com o código novo sem travar o terminal (-d)
+            # 3. Derruba a API antiga de forma mais suave
+            sudo docker compose down
+            
+            # 4. Faz o robô esperar 10 segundos. 
+            # Esse é o tempo exato que a Aiven precisa para entender que a API caiu e limpar a memória.
+            sleep 10 
+            
+            # 5. Sobe a API nova, agora com o banco de dados aliviado e pronto pra recebê-la
             sudo docker compose up -d
-
          
   
     
