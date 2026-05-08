@@ -38,3 +38,37 @@ jobs:
           push: true 
           # O nome e a versão da sua imagem. Usamos 'latest' para atualizar a principal.
           tags: matheussanttana1/barbercode-api:latest
+
+  deploy:
+    # A MÁGICA DA DEPENDÊNCIA: O 'needs' diz ao robô que ele é estritamente 
+    # proibido de rodar este job se o job 'build' falhar. Isso impede que a 
+    # AWS seja atualizada se a imagem não foi gerada corretamente.
+    needs: build_e_push
+    
+    # O GitHub liga um computador Linux novinho em folha só para essa tarefa
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Ferramenta do Marketplace que sabe como acessar servidores remotos via SSH
+      - uses: appleboy/ssh-action@v1.0.3
+        with:
+          # Injeção das variáveis de segurança que guardamos no Secrets do GitHub
+          host: ${{ secrets.AWS_HOST }}
+          username: ${{ secrets.AWS_USERNAME }}
+          key: ${{ secrets.AWS_SSH_KEY }}
+          
+          # Aqui é o terminal fantasma. Tudo que está abaixo do pipe (|) será 
+          # digitado invisivelmente dentro da sua máquina na AWS.
+          script: |
+            # 1. Navega para a pasta exata onde o seu projeto vive no servidor
+            cd /home/ubuntu/barbercode
+            
+            # 2. Força a AWS a ir no Docker Hub e baixar a versão nova (latest)
+            sudo docker compose pull
+            
+            # 3. Recria o contêiner da API com o código novo sem travar o terminal (-d)
+            sudo docker compose up -d
+
+         
+  
+    
